@@ -2,7 +2,7 @@ import fetchURL from 'node-fetch';
 import fs from 'fs';
 import util from 'util';
 import { exec } from 'child_process';
-import cheerio from 'cheerio';
+import { load } from 'cheerio';
 import opteric from './opteric.mjs';
 
 const argParser = opteric(process.argv.join(' '));
@@ -39,14 +39,14 @@ async function getPage(pageUrl) {
 }
 async function downloadYTApk() {
     const versionsList = await getPage('https://www.apkmirror.com/apk/google-inc/youtube');
-    const $ = cheerio.load(versionsList);
+    const $ = load(versionsList);
     const apkVersionText = $('h5[class="appRowTitle wrapText marginZero block-on-mobile"]').first().attr('title');
-    const apkVersion = apkVersionText.replace('YouTube ', '').replace(/\./g, '-');
+    const apkVersion = apkVersionText.replace('YouTube ', '').replace(/\./g, '-').replace(' beta', '');
     const downloadLinkPage = await getPage(`https://www.apkmirror.com/apk/google-inc/youtube/youtube-${apkVersion}-release/youtube-${apkVersion}-android-apk-download/`);
-    const dlPage = cheerio.load(downloadLinkPage);
-    const pageLink = dlPage('a[rel="nofollow"]').get()[1].attribs.href;//||dlPage('a').filter((_, selector) => dlPage(selector).attr('class').startsWith('accent_bg btn btn-flat downloadButton')).first().attr('href');
+    const dlPage = load(downloadLinkPage);
+    const pageLink = dlPage('a[class^="accent_bg btn btn-flat downloadButton"]').first().attr('href');
     const downloadPage = await getPage(`https://www.apkmirror.com${pageLink}`);
-    const apkPage = cheerio.load(downloadPage);
+    const apkPage = load(downloadPage);
     const apkLink = apkPage('a[rel="nofollow"]').first().attr('href');
     const downloadRequest = await fetchURL(`https://www.apkmirror.com${apkLink}`);
     const file = fs.createWriteStream('youtube.apk');
