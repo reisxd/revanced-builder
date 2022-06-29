@@ -111,15 +111,16 @@ switch (argParser.flags[0]) {
         await downloadYTApk();
         await getADBDeviceID();
         let excludedPatches = '';
+        if (argParser.flags.options.exclude.includes('microg-support')) excludedPatches += '--mount';
         if (argParser.options.exclude) {
             for (const patch of argParser.options.exclude.split(',')) {
-                excludedPatches = `-e ${patch}`;
+                excludedPatches += `-e ${patch}`;
             }
         }
-        console.log('a');
+        console.log('Building ReVanced, please be patient!');
         const { stdout, stderr } = await actualExec(`java -jar ${jarNames.cli} -b ${jarNames.patchesJar} --experimental -a youtube.apk ${jarNames.deviceId} -o revanced.apk -m ${jarNames.integrations} ${excludedPatches}`);
-       console.log(stdout, stderr)
-        if (stdout.includes('INSTALL_FAILED_UPDATE_INCOMPATIBLE') ||stderr.includes('INSTALL_FAILED_UPDATE_INCOMPATIBLE')) {
+        console.log(stdout || stderr)
+        if (stdout.includes('INSTALL_FAILED_UPDATE_INCOMPATIBLE') || stderr.includes('INSTALL_FAILED_UPDATE_INCOMPATIBLE')) {
             console.log('Couldn\'t install ReVanced properly. Reinstalling ReVanced...');
             await actualExec('adb uninstall app.revanced.android.youtube');
             await actualExec('adb install revanced.apk');
