@@ -111,7 +111,7 @@ switch (argParser.flags[0]) {
         await downloadYTApk();
         await getADBDeviceID();
         let excludedPatches = '';
-        if (argParser.flags.options.exclude.includes('microg-support')) excludedPatches += '--mount';
+        if (argParser.options.exclude.includes('microg-support')) excludedPatches += '--mount';
         if (argParser.options.exclude) {
             for (const patch of argParser.options.exclude.split(',')) {
                 excludedPatches += `-e ${patch}`;
