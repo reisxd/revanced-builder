@@ -54,6 +54,7 @@ async function downloadYTApk() {
     const stream = downloadRequest.body.pipe(file);
     await new Promise((resolve) => {
         stream.once('finish', () => resolve());
+        stream.once('error', (err) => console.log(err));
     });
     return;
 }
@@ -108,13 +109,15 @@ switch (argParser.flags[0]) {
         console.log('Downloading latest patches, integrations and cli...');
         const filesToDownload = ['revanced-cli', 'revanced-patches', 'revanced-integrations'];
         await downloadFiles(filesToDownload);
-        await downloadYTApk();
+        if (!argParser.includes('manual-apk')) {
+            await downloadYTApk();
+        }
         await getADBDeviceID();
         let excludedPatches = '';
         if (argParser.options.exclude.includes('microg-support')) excludedPatches += '--mount';
         if (argParser.options.exclude) {
             for (const patch of argParser.options.exclude.split(',')) {
-                excludedPatches += `-e ${patch}`;
+                excludedPatches += ` -e ${patch}`;
             }
         }
         console.log('Building ReVanced, please be patient!');
