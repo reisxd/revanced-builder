@@ -15,16 +15,17 @@ const jarNames = {
   deviceId: null
 };
 
-async function overWriteJarNames(link) {
+async function overWriteJarNames (link) {
   const fileName = link.split('/').pop();
   // i have to use ifs for this sorry
   if (fileName.includes('revanced-cli')) jarNames.cli += fileName;
-  if (fileName.includes('revanced-patches') && fileName.endsWith('.jar'))
+  if (fileName.includes('revanced-patches') && fileName.endsWith('.jar')) {
     jarNames.patchesJar += fileName;
+  }
   if (fileName.endsWith('.apk')) jarNames.integrations += fileName;
 }
 
-async function getDownloadLink(repoName) {
+async function getDownloadLink (repoName) {
   const apiRequest = await fetchURL(
     `https://api.github.com/repos/revanced/${repoName}/releases/latest`
   );
@@ -32,7 +33,7 @@ async function getDownloadLink(repoName) {
   return jsonResponse.assets;
 }
 
-async function getPage(pageUrl) {
+async function getPage (pageUrl) {
   const pageRequest = await fetchURL(pageUrl, {
     headers: {
       'user-agent':
@@ -41,7 +42,8 @@ async function getPage(pageUrl) {
   });
   return await pageRequest.text();
 }
-async function downloadYTApk() {
+
+async function downloadYTApk () {
   const versionsList = await getPage(
     'https://www.apkmirror.com/apk/google-inc/youtube'
   );
@@ -49,10 +51,13 @@ async function downloadYTApk() {
   let apkVersionText = $(
     'h5[class="appRowTitle wrapText marginZero block-on-mobile"]'
   ).get()[0].attribs.title;
-  if (apkVersionText.includes('beta'))
+
+  if (apkVersionText.includes('beta')) {
     apkVersionText = $(
       'h5[class="appRowTitle wrapText marginZero block-on-mobile"]'
     ).get()[1].attribs.title;
+  }
+
   const apkVersion = apkVersionText
     .replace('YouTube ', '')
     .replace(/\./g, '-')
@@ -82,12 +87,15 @@ async function downloadYTApk() {
   await new Promise((resolve, reject) => {
     stream.once('finish', resolve);
     stream.once('error', (err) => {
-      fs.unlink(filePath, () => reject(new Error('Download failed.', err)));
+      fs.unlink('./revanced/youtube.apk', () =>
+        reject(new Error('Download failed.', err))
+      );
     });
   });
   return console.log('Download complete!');
 }
-async function downloadFile(assets) {
+
+async function downloadFile (assets) {
   for (const asset of assets) {
     const dir = fs.readdirSync('./revanced/');
     overWriteJarNames(asset.browser_download_url);
@@ -100,22 +108,25 @@ async function downloadFile(assets) {
     await new Promise((resolve, reject) => {
       stream.once('finish', resolve);
       stream.once('error', (err) => {
-        fs.unlink(filePath, () => reject(new Error('Download failed.', err)));
+        fs.unlink(
+          `./revanced/${asset.browser_download_url.split('/').pop()}`,
+          () => reject(new Error('Download failed.', err))
+        );
       });
     });
   }
 }
 
-async function downloadFiles(repos) {
+async function downloadFiles (repos) {
   for (const repo of repos) {
     const downloadLink = await getDownloadLink(repo);
     await downloadFile(downloadLink);
   }
 }
 
-async function getADBDeviceID() {
+async function getADBDeviceID () {
   let deviceId;
-  const { stdout, stderr } = await actualExec('adb devices');
+  const { stdout } = await actualExec('adb devices');
   const match = stdout.match(/^(\w+)\s+device$/m);
   if (match === null) {
     console.log('No device found! Fallback to only build.');
@@ -126,6 +137,7 @@ async function getADBDeviceID() {
   jarNames.deviceId = `-d ${deviceIdN.replace('device', '')} -c`;
   return deviceId;
 }
+
 switch (argParser.flags[0]) {
   case 'patches': {
     if (!fs.existsSync('./revanced')) {
@@ -158,8 +170,9 @@ switch (argParser.flags[0]) {
     await getADBDeviceID();
     let excludedPatches = '';
     if (argParser.options.exclude) {
-      if (argParser.options.exclude.includes('microg-support'))
+      if (argParser.options.exclude.includes('microg-support')) {
         excludedPatches += '--mount';
+      }
       for (const patch of argParser.options.exclude.split(',')) {
         excludedPatches += ` -e ${patch}`;
       }

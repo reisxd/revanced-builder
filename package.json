@@ -14,5 +14,12 @@
     "cheerio": "^1.0.0-rc.12",
     "node-fetch": "^3.2.6",
     "undici": "^5.5.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.18.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.2.3",
+    "eslint-plugin-promise": "^6.0.0"
   }
 }
