@@ -212,7 +212,7 @@ switch (argParser.flags[0]) {
         "Couldn't install ReVanced properly. Reinstalling ReVanced..."
       );
       await actualExec('adb uninstall app.revanced.android.youtube');
-      await actualExec('adb install revanced.apk');
+      await actualExec('adb install revanced/revanced.apk');
     }
     break;
   }
