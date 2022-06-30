@@ -1,2 +1,4 @@
 node_modules/
 ignore/
+revanced/
+package-lock.json
