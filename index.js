@@ -25,6 +25,7 @@ async function overWriteJarNames (link) {
   if (fileName.endsWith('.apk')) jarNames.integrations += fileName;
 }
 
+
 async function getDownloadLink (repoName) {
   const apiRequest = await fetchURL(
     `https://api.github.com/repos/revanced/${repoName}/releases/latest`
@@ -32,6 +33,7 @@ async function getDownloadLink (repoName) {
   const jsonResponse = await apiRequest.json();
   return jsonResponse.assets;
 }
+
 
 async function getPage (pageUrl) {
   const pageRequest = await fetchURL(pageUrl, {
@@ -42,6 +44,7 @@ async function getPage (pageUrl) {
   });
   return await pageRequest.text();
 }
+
 
 async function downloadYTApk () {
   const versionsList = await getPage(
@@ -81,9 +84,13 @@ async function downloadYTApk () {
       }
     }
   );
+
+
   const file = fs.createWriteStream('./revanced/youtube.apk');
   console.log("Downloading the YouTube APK, this'll take some time!");
   const stream = downloadRequest.body.pipe(file);
+
+
   await new Promise((resolve, reject) => {
     stream.once('finish', resolve);
     stream.once('error', (err) => {
@@ -95,6 +102,7 @@ async function downloadYTApk () {
   return console.log('Download complete!');
 }
 
+
 async function downloadFile (assets) {
   for (const asset of assets) {
     const dir = fs.readdirSync('./revanced/');
@@ -104,7 +112,9 @@ async function downloadFile (assets) {
     const file = fs.createWriteStream(
       `./revanced/${asset.browser_download_url.split('/').pop()}`
     );
+
     const stream = downloadRequest.body.pipe(file);
+
     await new Promise((resolve, reject) => {
       stream.once('finish', resolve);
       stream.once('error', (err) => {
@@ -117,12 +127,14 @@ async function downloadFile (assets) {
   }
 }
 
+
 async function downloadFiles (repos) {
   for (const repo of repos) {
     const downloadLink = await getDownloadLink(repo);
     await downloadFile(downloadLink);
   }
 }
+
 
 async function getADBDeviceID () {
   let deviceId;
@@ -138,14 +150,17 @@ async function getADBDeviceID () {
   return deviceId;
 }
 
+
 switch (argParser.flags[0]) {
   case 'patches': {
     if (!fs.existsSync('./revanced')) {
       fs.mkdirSync('./revanced');
     }
     console.log('Downloading latest patches and cli...');
+
     const filesToDownload = ['revanced-cli', 'revanced-patches'];
     await downloadFiles(filesToDownload);
+    
     const { stdout, stderr } = await actualExec(
       `java -jar ${jarNames.cli} -b ${jarNames.patchesJar} -l`
     );
@@ -157,18 +172,23 @@ switch (argParser.flags[0]) {
     if (!fs.existsSync('./revanced')) {
       fs.mkdirSync('./revanced');
     }
+
     console.log('Downloading latest patches, integrations and cli...');
+
     const filesToDownload = [
       'revanced-cli',
       'revanced-patches',
       'revanced-integrations'
     ];
     await downloadFiles(filesToDownload);
+
     if (!argParser.flags.includes('manual-apk')) {
       await downloadYTApk();
     }
+
     await getADBDeviceID();
     let excludedPatches = '';
+
     if (argParser.options.exclude) {
       if (argParser.options.exclude.includes('microg-support')) {
         excludedPatches += '--mount';
@@ -178,10 +198,12 @@ switch (argParser.flags[0]) {
       }
     }
     console.log('Building ReVanced, please be patient!');
+
     const { stdout, stderr } = await actualExec(
       `java -jar ${jarNames.cli} -b ${jarNames.patchesJar} --experimental -a ./revanced/youtube.apk ${jarNames.deviceId} -o ./revanced/revanced.apk -m ${jarNames.integrations} ${excludedPatches}`
     );
     console.log(stdout || stderr);
+
     if (
       stdout.includes('INSTALL_FAILED_UPDATE_INCOMPATIBLE') ||
       stderr.includes('INSTALL_FAILED_UPDATE_INCOMPATIBLE')
