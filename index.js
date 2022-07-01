@@ -13,7 +13,8 @@ const jarNames = {
   cli: './revanced/',
   patchesJar: './revanced/',
   integrations: './revanced/',
-  deviceId: null
+  deviceId: null,
+  microG: './revanced/'
 };
 
 async function overWriteJarNames (link) {
@@ -23,12 +24,13 @@ async function overWriteJarNames (link) {
   if (fileName.includes('revanced-patches') && fileName.endsWith('.jar')) {
     jarNames.patchesJar += fileName;
   }
-  if (fileName.endsWith('.apk')) jarNames.integrations += fileName;
+  if (fileName.endsWith('unsigned.apk')) jarNames.integrations += fileName;
+  if (fileName.startsWith('microg')) jarNames.microG += fileName
 }
 
-async function getDownloadLink (repoName) {
+async function getDownloadLink (json) {
   const apiRequest = await fetchURL(
-    `https://api.github.com/repos/revanced/${repoName}/releases/latest`
+    `https://api.github.com/repos/${json.owner}/${json.repo}/releases/latest`
   );
   const jsonResponse = await apiRequest.json();
   return jsonResponse.assets;
@@ -143,6 +145,26 @@ async function getADBDeviceID () {
   return deviceId;
 }
 
+async function checkForJavaADB () {
+  try {
+    const javaCheck = await actualExec('java -version');
+    const javaVer = Array.from(javaCheck.stderr.matchAll(/version\s([^:]+)/g)).map((match) => match[1])[0].match(/"(.*)"/)[1]
+    if (javaVer.split('.')[0] >= 17) {
+      console.log('You have an outdated version of JDK.\nPlease get it from here: https://www.azul.com/downloads/?version=java-17-lts&package=jdk');
+    return process.exit();
+    }
+
+    await actualExec('adb'); 
+  } catch(e) {
+    if (e.stderr.includes('java')) {
+      console.log('You don\' have JDK installed.\nPlease get it from here: https://www.azul.com/downloads/?version=java-17-lts&package=jdk');
+    }
+    if (e.stderr.includes('adb')) {
+      console.log('You don\' have ADB installed.\nPlease get it from here: https://developer.android.com/studio/releases/platform-tools\nIf you are confused on how you\'re gonna install it, watch some tutorials on YouTube!');
+    }
+  } 
+}
+
 switch (argParser.flags[0]) {
   case 'patches': {
     if (!fs.existsSync('./revanced')) {
@@ -150,8 +172,16 @@ switch (argParser.flags[0]) {
     }
     console.log('Downloading latest patches and cli...');
 
-    const filesToDownload = ['revanced-cli', 'revanced-patches'];
-    await downloadFiles(filesToDownload);
+    const filesToDownload = [
+      {
+        owner: 'revanced',
+        repo: 'revanced-cli'
+      },
+      {
+        owner: 'revanced',
+        repo: 'revanced-patches'
+      }
+    ];    await downloadFiles(filesToDownload);
 
     const { stdout, stderr } = await actualExec(
       `java -jar ${jarNames.cli} -b ${jarNames.patchesJar} -l`
@@ -164,13 +194,26 @@ switch (argParser.flags[0]) {
     if (!fs.existsSync('./revanced')) {
       fs.mkdirSync('./revanced');
     }
-
+    await checkForJavaADB()
     console.log('Downloading latest patches, integrations and cli...');
 
     const filesToDownload = [
-      'revanced-cli',
-      'revanced-patches',
-      'revanced-integrations'
+      {
+        owner: 'revanced',
+        repo: 'revanced-cli'
+      },
+      {
+        owner: 'revanced',
+        repo: 'revanced-patches'
+      },
+      {
+        owner: 'revanced',
+        repo: 'revanced-integrations'
+      },
+      {
+        owner: 'TeamVanced',
+        repo: 'VancedMicroG'
+      }
     ];
     await downloadFiles(filesToDownload);
 
@@ -201,27 +244,44 @@ switch (argParser.flags[0]) {
       stderr.includes('INSTALL_FAILED_UPDATE_INCOMPATIBLE')
     ) {
       console.log(
-        "Couldn't install ReVanced properly. Reinstalling ReVanced..."
+        'Couldn\'t install ReVanced properly. Reinstalling ReVanced...'
       );
       await actualExec('adb uninstall app.revanced.android.youtube');
       await actualExec('adb install revanced/revanced.apk');
     }
+    
+    console.log('Installing MicroG...');
+
+    await actualExec(`adb install ${jarNames.microG}`);
     break;
   }
 
   default: {
-    let patches;
+    let patches = '';
     let useManualAPK;
     if (!fs.existsSync('./revanced')) {
       fs.mkdirSync('./revanced');
     }
-
+    await checkForJavaADB();
     console.log('Downloading latest patches, integrations and cli...');
 
     const filesToDownload = [
-      'revanced-cli',
-      'revanced-patches',
-      'revanced-integrations'
+      {
+        owner: 'revanced',
+        repo: 'revanced-cli'
+      },
+      {
+        owner: 'revanced',
+        repo: 'revanced-patches'
+      },
+      {
+        owner: 'revanced',
+        repo: 'revanced-integrations'
+      },
+      {
+        owner: 'TeamVanced',
+        repo: 'VancedMicroG'
+      }
     ];
     await downloadFiles(filesToDownload);
 
@@ -243,7 +303,6 @@ switch (argParser.flags[0]) {
       });
     }
 
-    await new Promise(async () => {
       const patchesChoosed = await inquirer.prompt([
         {
           type: 'checkbox',
@@ -254,14 +313,12 @@ switch (argParser.flags[0]) {
       ]);
       for (const patch of patchesChoosed.patches) {
         if (patch === 'microg-support') {
-          patches += '--mount';
+          patches += ' --mount';
         }
-        patches += `-e ${patch}`;
+        patches += ` -e ${patch}`;
       }
-    });
 
-    if (fs.readdirSync('./revanced/youtube.apk')) {
-      await new Promise(async () => {
+    if (fs.existsSync('./revanced/youtube.apk')) {
         const useManualAPKAnswer = await inquirer.prompt([
           {
             type: 'confirm',
@@ -272,7 +329,6 @@ switch (argParser.flags[0]) {
           }
         ]);
         useManualAPK = useManualAPKAnswer.useManualAPK;
-      });
     }
 
     if (!useManualAPK) {
@@ -280,7 +336,6 @@ switch (argParser.flags[0]) {
     }
 
     console.log('Building ReVanced, please be patient!');
-
     const { stdout, stderr } = await actualExec(
       `java -jar ${jarNames.cli} -b ${jarNames.patchesJar} --experimental -a ./revanced/youtube.apk ${jarNames.deviceId} -o ./revanced/revanced.apk -m ${jarNames.integrations} ${patches}`
     );
@@ -291,11 +346,15 @@ switch (argParser.flags[0]) {
       stderr.includes('INSTALL_FAILED_UPDATE_INCOMPATIBLE')
     ) {
       console.log(
-        "Couldn't install ReVanced properly. Reinstalling ReVanced..."
+        'Couldn\'t install ReVanced properly. Reinstalling ReVanced...'
       );
       await actualExec('adb uninstall app.revanced.android.youtube');
       await actualExec('adb install revanced/revanced.apk');
     }
+
+    console.log('Installing MicroG...');
+
+    await actualExec(`adb install ${jarNames.microG}`);
     break;
   }
 }
