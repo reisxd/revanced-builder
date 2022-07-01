@@ -6,22 +6,26 @@ This project will allow you to build ReVanced and download YouTube APK easily!
 
 You'll need at least NodeJS v13, Zulu JDK 17 and ADB
 
+## The noob way
+
+If you aren't tech savy, you can download the prebuilt EXE file from [here](https://github.com/reisxd/revanced-builder/releases).
+
 ## How to build
 
-### First, clone or download the repository
+First, clone or download the repository
 
-### Second, install the modules (`npm i`)
+Second, install the modules (`npm i`)
 
-### Third, build ReVanced! (`node . --patch`)
+Third, build ReVanced! (`node . --patch`)
 
-### If you want to exclude a patch, add the `exclude` option:
+If you want to exclude a patch, add the `exclude` option:
 
-### `node . --patch --exclude disable-shorts-button`
+`node . --patch --exclude disable-shorts-button`
 
-### If you want to exclude more, seperate the patches with a comma:
+If you want to exclude more, seperate the patches with a comma:
 
-### `node . --patch --exclude disable-shorts-button,microg-support`
+`node . --patch --exclude disable-shorts-button,microg-support`
 
-### If you want to patch a specific YT version, download the APK, move it to this folder and rename it to `youtube.apk`:
+If you want to patch a specific YT version, download the APK, move it to this folder and rename it to `youtube.apk`:
 
-### `node . --patch --manual-apk`
+`node . --patch --manual-apk`

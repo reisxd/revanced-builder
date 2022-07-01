@@ -2,3 +2,6 @@ node_modules/
 ignore/
 revanced/
 package-lock.json
+revanced-builder-nodejs-macos
+revanced-builder-nodejs-linux
+revanced-builder-nodejs-win.exe

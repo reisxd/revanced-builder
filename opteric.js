@@ -11,13 +11,14 @@
  * @param {string} text The text to parse.
  * @returns {FlagsAndOptions} The parsed flags and options.
  */
-function parse(text) {
-  if (typeof text !== 'string')
+function parse (text) {
+  if (typeof text !== 'string') {
     throw new TypeError("Argument 'text' must be of type string.");
+  }
 
-  const flags = [],
-    options = {},
-    len = text.length + 1;
+  const flags = [];
+  const options = {};
+  const len = text.length + 1;
   let content;
 
   for (
@@ -29,9 +30,9 @@ function parse(text) {
     i < len;
     i++
   ) {
-    const char = text[i],
-      charPrev = text[i - 1],
-      charNext = text[i + 1];
+    const char = text[i];
+    const charPrev = text[i - 1];
+    const charNext = text[i + 1];
 
     if (isParsing) {
       if (char === ' ' || char === undefined) {
@@ -64,8 +65,9 @@ function parse(text) {
 
       if (charNext === '-') i++;
 
-      if (content === undefined)
+      if (content === undefined) {
         content = charPrev === undefined ? text : text.slice(0, truncateLen);
+      }
 
       parsing += text[i];
     }
@@ -76,4 +78,4 @@ function parse(text) {
   return { flags, options, content };
 }
 
-export default parse;
+module.exports = parse;
