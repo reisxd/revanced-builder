@@ -4,6 +4,7 @@ import util from 'util';
 import { exec } from 'child_process';
 import { load } from 'cheerio';
 import opteric from './opteric.mjs';
+import inquirer from 'inquirer';
 
 const argParser = opteric(process.argv.join(' '));
 const actualExec = util.promisify(exec);
@@ -25,7 +26,6 @@ async function overWriteJarNames (link) {
   if (fileName.endsWith('.apk')) jarNames.integrations += fileName;
 }
 
-
 async function getDownloadLink (repoName) {
   const apiRequest = await fetchURL(
     `https://api.github.com/repos/revanced/${repoName}/releases/latest`
@@ -33,7 +33,6 @@ async function getDownloadLink (repoName) {
   const jsonResponse = await apiRequest.json();
   return jsonResponse.assets;
 }
-
 
 async function getPage (pageUrl) {
   const pageRequest = await fetchURL(pageUrl, {
@@ -44,7 +43,6 @@ async function getPage (pageUrl) {
   });
   return await pageRequest.text();
 }
-
 
 async function downloadYTApk () {
   const versionsList = await getPage(
@@ -85,11 +83,9 @@ async function downloadYTApk () {
     }
   );
 
-
   const file = fs.createWriteStream('./revanced/youtube.apk');
   console.log("Downloading the YouTube APK, this'll take some time!");
   const stream = downloadRequest.body.pipe(file);
-
 
   await new Promise((resolve, reject) => {
     stream.once('finish', resolve);
@@ -101,7 +97,6 @@ async function downloadYTApk () {
   });
   return console.log('Download complete!');
 }
-
 
 async function downloadFile (assets) {
   for (const asset of assets) {
@@ -127,14 +122,12 @@ async function downloadFile (assets) {
   }
 }
 
-
 async function downloadFiles (repos) {
   for (const repo of repos) {
     const downloadLink = await getDownloadLink(repo);
     await downloadFile(downloadLink);
   }
 }
-
 
 async function getADBDeviceID () {
   let deviceId;
@@ -150,7 +143,6 @@ async function getADBDeviceID () {
   return deviceId;
 }
 
-
 switch (argParser.flags[0]) {
   case 'patches': {
     if (!fs.existsSync('./revanced')) {
@@ -160,7 +152,7 @@ switch (argParser.flags[0]) {
 
     const filesToDownload = ['revanced-cli', 'revanced-patches'];
     await downloadFiles(filesToDownload);
-    
+
     const { stdout, stderr } = await actualExec(
       `java -jar ${jarNames.cli} -b ${jarNames.patchesJar} -l`
     );
@@ -212,7 +204,97 @@ switch (argParser.flags[0]) {
         "Couldn't install ReVanced properly. Reinstalling ReVanced..."
       );
       await actualExec('adb uninstall app.revanced.android.youtube');
-      await actualExec('adb install revanced.apk');
+      await actualExec('adb install revanced/revanced.apk');
+    }
+    break;
+  }
+
+  default: {
+    let patches;
+    let useManualAPK;
+    if (!fs.existsSync('./revanced')) {
+      fs.mkdirSync('./revanced');
+    }
+
+    console.log('Downloading latest patches, integrations and cli...');
+
+    const filesToDownload = [
+      'revanced-cli',
+      'revanced-patches',
+      'revanced-integrations'
+    ];
+    await downloadFiles(filesToDownload);
+
+    await getADBDeviceID();
+
+    const getPatches = await actualExec(
+      `java -jar ${jarNames.cli} -b ${jarNames.patchesJar} -l`
+    );
+
+    const patchesArray =
+      getPatches.stdout.match(/INFO:\s([^:]+)/g) ||
+      getPatches.stderr.match(/INFO:\s([^:]+)/g);
+
+    const patchesChoice = [];
+
+    for (const patchName of patchesArray) {
+      patchesChoice.push({
+        name: patchName.replace('INFO: ', '')
+      });
+    }
+
+    await new Promise(async () => {
+      const patchesChoosed = await inquirer.prompt([
+        {
+          type: 'checkbox',
+          message: 'Select the patches you want to exclude.',
+          name: 'patches',
+          choices: patchesChoice
+        }
+      ]);
+      for (const patch of patchesChoosed.patches) {
+        if (patch === 'microg-support') {
+          patches += '--mount';
+        }
+        patches += `-e ${patch}`;
+      }
+    });
+
+    if (fs.readdirSync('./revanced/youtube.apk')) {
+      await new Promise(async () => {
+        const useManualAPKAnswer = await inquirer.prompt([
+          {
+            type: 'confirm',
+            name: 'useManualAPK',
+            message:
+              'The YouTube APK already exists in the revanced folder. Do you want to use it?',
+            default: false
+          }
+        ]);
+        useManualAPK = useManualAPKAnswer.useManualAPK;
+      });
+    }
+
+    if (!useManualAPK) {
+      await downloadYTApk();
+    }
+
+    console.log('Building ReVanced, please be patient!');
+
+    const { stdout, stderr } = await actualExec(
+      `java -jar ${jarNames.cli} -b ${jarNames.patchesJar} --experimental -a ./revanced/youtube.apk ${jarNames.deviceId} -o ./revanced/revanced.apk -m ${jarNames.integrations} ${patches}`
+    );
+    console.log(stdout || stderr);
+
+    if (
+      stdout.includes('INSTALL_FAILED_UPDATE_INCOMPATIBLE') ||
+      stderr.includes('INSTALL_FAILED_UPDATE_INCOMPATIBLE')
+    ) {
+      console.log(
+        "Couldn't install ReVanced properly. Reinstalling ReVanced..."
+      );
+      await actualExec('adb uninstall app.revanced.android.youtube');
+      await actualExec('adb install revanced/revanced.apk');
     }
     break;
   }

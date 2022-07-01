@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "cheerio": "^1.0.0-rc.12",
+    "inquirer": "^9.0.0",
     "node-fetch": "^3.2.6",
     "undici": "^5.5.1"
   },
