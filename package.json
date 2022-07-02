@@ -12,11 +12,15 @@
   "license": "ISC",
   "dependencies": {
     "cheerio": "^1.0.0-rc.12",
+    "cli-progress": "^3.11.2",
     "inquirer": "^8.2.2",
     "node-fetch": "2.6",
+    "node-fetch-progress": "^1.0.2",
     "undici": "^5.5.1"
   },
   "devDependencies": {
+    "@types/inquirer": "^8.2.1",
+    "@types/node-fetch": "^2.6.2",
     "eslint": "^8.18.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",

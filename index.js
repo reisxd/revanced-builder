@@ -1,4 +1,6 @@
 const fetchURL = require('node-fetch');
+const Progress = require('node-fetch-progress');
+const { SingleBar: ProgressBar, Presets } = require('cli-progress');
 const fs = require('fs');
 const util = require('util');
 const { exec } = require('child_process');
@@ -28,7 +30,7 @@ process.on('uncaughtException', async (err, origin) => {
   await new Promise(() => process.stdin.on('data', () => process.exit()));
 });
 
-process.on('unhandledRejection', async (reason, promise) => {
+process.on('unhandledRejection', async (reason) => {
   console.log(
     `Unhandled Rejection\nReason: ${reason}\nPlease make an issue at https://github.com/reisxd/revanced-builder/issues.`
   );
@@ -38,7 +40,7 @@ process.on('unhandledRejection', async (reason, promise) => {
   await new Promise(() => process.stdin.on('data', () => process.exit()));
 });
 
-async function overWriteJarNames (link) {
+async function overWriteJarNames(link) {
   const fileName = link.split('/').pop();
   // i have to use ifs for this sorry
   if (fileName.includes('revanced-cli')) jarNames.cli += fileName;
@@ -49,7 +51,7 @@ async function overWriteJarNames (link) {
   if (fileName.startsWith('microg')) jarNames.microG += fileName;
 }
 
-async function getDownloadLink (json) {
+async function getDownloadLink(json) {
   const apiRequest = await fetchURL(
     `https://api.github.com/repos/${json.owner}/${json.repo}/releases/latest`
   );
@@ -57,7 +59,7 @@ async function getDownloadLink (json) {
   return jsonResponse.assets;
 }
 
-async function getPage (pageUrl) {
+async function getPage(pageUrl) {
   const pageRequest = await fetchURL(pageUrl, {
     headers: {
       'user-agent':
@@ -67,7 +69,53 @@ async function getPage (pageUrl) {
   return await pageRequest.text();
 }
 
-async function downloadYTApk (ytVersion) {
+async function dloadFromURL(url, outputPath) {
+  const request = await fetchURL(url, {
+    headers: {
+      'user-agent':
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36'
+    }
+  });
+  const writeStream = fs.createWriteStream(outputPath);
+  const downloadStream = request.body.pipe(writeStream);
+
+  const progress = new Progress(request, { throttle: 50 });
+  const pbar = new ProgressBar(
+    {
+      format: `[${outputPath
+        .split('/')
+        .pop()}] {bar} | {percentage}% | ETA: {eta_formatted} | Speed: {rate}`,
+      barCompleteChar: '\u2588',
+      barIncompleteChar: '\u2591',
+      hideCursor: true,
+      clearOnComplete: true
+    },
+    Presets.shades_classic
+  );
+  pbar.start(100, 0);
+
+  return new Promise((resolve, reject) => {
+    progress.on('progress', (p) => {
+      pbar.update(parseInt(p.progress * 100), {
+        rate: p.rateh
+      });
+    });
+    downloadStream.once('finish', () => {
+      pbar.stop();
+      console.log(`[${outputPath.split('/').pop()}] \u2713`);
+      resolve();
+    });
+    downloadStream.once('error', (err) => {
+      fs.unlink(outputPath, () => {
+        pbar.stop();
+        console.log(`[${outputPath.split('/').pop()}] \u2714`);
+        reject(new Error('Download failed.', err));
+      });
+    });
+  });
+}
+
+async function downloadYTApk(ytVersion) {
   const versionsList = await getPage(
     'https://www.apkmirror.com/apk/google-inc/youtube'
   );
@@ -97,63 +145,35 @@ async function downloadYTApk (ytVersion) {
   const downloadPage = await getPage(`https://www.apkmirror.com${pageLink}`);
   const apkPage = load(downloadPage);
   const apkLink = apkPage('a[rel="nofollow"]').first().attr('href');
-  const downloadRequest = await fetchURL(
-    `https://www.apkmirror.com${apkLink}`,
-    {
-      headers: {
-        'user-agent':
-          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36'
-      }
-    }
-  );
 
-  const file = fs.createWriteStream('./revanced/youtube.apk');
   console.log("Downloading the YouTube APK, this'll take some time!");
-  const stream = downloadRequest.body.pipe(file);
-
-  await new Promise((resolve, reject) => {
-    stream.once('finish', resolve);
-    stream.once('error', (err) => {
-      fs.unlink('./revanced/youtube.apk', () =>
-        reject(new Error('Download failed.', err))
-      );
-    });
-  });
+  await dloadFromURL(
+    `https://www.apkmirror.com${apkLink}`,
+    './revanced/youtube.apk'
+  );
   return console.log('Download complete!');
 }
 
-async function downloadFile (assets) {
+async function downloadFile(assets) {
   for (const asset of assets) {
     const dir = fs.readdirSync('./revanced/');
     overWriteJarNames(asset.browser_download_url);
     if (dir.includes(asset.browser_download_url.split('/').pop())) continue;
-    const downloadRequest = await fetchURL(asset.browser_download_url);
-    const file = fs.createWriteStream(
+    await dloadFromURL(
+      asset.browser_download_url,
       `./revanced/${asset.browser_download_url.split('/').pop()}`
     );
-
-    const stream = downloadRequest.body.pipe(file);
-
-    await new Promise((resolve, reject) => {
-      stream.once('finish', resolve);
-      stream.once('error', (err) => {
-        fs.unlink(
-          `./revanced/${asset.browser_download_url.split('/').pop()}`,
-          () => reject(new Error('Download failed.', err))
-        );
-      });
-    });
   }
 }
 
-async function downloadFiles (repos) {
+async function downloadFiles(repos) {
   for (const repo of repos) {
     const downloadLink = await getDownloadLink(repo);
     await downloadFile(downloadLink);
   }
 }
 
-async function getADBDeviceID () {
+async function getADBDeviceID() {
   let deviceId;
   const { stdout } = await actualExec('adb devices');
   const match = stdout.match(/^(\w+)\s+device$/m);
@@ -167,7 +187,7 @@ async function getADBDeviceID () {
   return deviceId;
 }
 
-async function checkForJavaADB () {
+async function checkForJavaADB() {
   try {
     const javaCheck = await actualExec('java -version');
     const javaVer = Array.from(javaCheck.stderr.matchAll(/version\s([^:]+)/g))
@@ -195,7 +215,7 @@ async function checkForJavaADB () {
   }
 }
 
-async function getYTVersion () {
+async function getYTVersion() {
   const { stdout, stderr } = await actualExec(
     'adb shell dumpsys package com.google.android.youtube'
   );
