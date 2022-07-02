@@ -1,31 +1,43 @@
 # ReVanced Builder
 
-This project will allow you to build ReVanced and download YouTube APK easily!
+This project will allow you to download the YouTube APK and build ReVanced easily!
 
 ## Required
 
-You'll need at least [NodeJS v13](https://nodejs.org/), [Zulu JDK 17](https://www.azul.com/downloads/?version=java-17-lts&package=jdk) and [ADB](https://developer.android.com/studio/command-line/adb) (optional, required for root)
+You'll need at least [NodeJS v13](https://nodejs.org/), [Zulu JDK 17](https://www.azul.com/downloads/?version=java-17-lts&package=jdk) and [ADB](https://developer.android.com/studio/command-line/adb) (optional, required for root).
 
 ## The noob way
 
-If you aren't tech savy, you can download the prebuilt EXE file from [here](https://github.com/reisxd/revanced-builder/releases).
+If you aren't tech savvy, you can download the prebuilt EXE file from [here](https://github.com/reisxd/revanced-builder/releases).
 
 ## How to build
 
-First, clone or download the repository
+1. Clone or download the repository.
+```bash
+$ git clone https://github.com/reisxd/revanced-builder
+```
 
-Second, install the modules (`npm i`)
+2. Install the modules.
+```bash
+$ npm install
+```
 
-Third, build ReVanced! (`node . --patch`)
+3. Build ReVanced!
+```bash
+$ node . --patch
+```
 
-If you want to exclude a patch, add the `exclude` option:
-
-`node . --patch --exclude disable-shorts-button`
+If you want to exclude a patch, use the `--exclude` option:
+```bash
+$ node . --patch --exclude disable-shorts-button
+```
 
 If you want to exclude more, seperate the patches with a comma:
-
-`node . --patch --exclude disable-shorts-button,microg-support`
+```bash
+$ node . --patch --exclude disable-shorts-button,microg-support
+```
 
 If you want to patch a specific YT version, download the APK, move it to this folder and rename it to `youtube.apk`:
-
-`node . --patch --manual-apk`
+```bash
+$ node . --patch --manual-apk
+```
