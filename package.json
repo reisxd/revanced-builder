@@ -15,8 +15,7 @@
     "cli-progress": "^3.11.2",
     "inquirer": "^8.2.2",
     "node-fetch": "2.6",
-    "node-fetch-progress": "^1.0.2",
-    "undici": "^5.5.1"
+    "node-fetch-progress": "^1.0.2"
   },
   "devDependencies": {
     "@types/inquirer": "^8.2.1",
