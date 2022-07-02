@@ -28,7 +28,7 @@ process.on('uncaughtException', async (err, origin) => {
   await new Promise(() => process.stdin.on('data', () => process.exit()));
 });
 
-process.on('unhandledRejection', async (reason, promise) => {
+process.on('unhandledRejection', async reason => {
   console.log(
     `Unhandled Rejection\nReason: ${reason}\nPlease make an issue at https://github.com/reisxd/revanced-builder/issues.`
   );
