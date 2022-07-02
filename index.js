@@ -222,7 +222,7 @@ async function getYTVersion () {
   const dumpSysOut = stdout || stderr;
   return dumpSysOut
     .match(/versionName=([^=]+)/)[1]
-    .replace('\r\n    splits', '');
+    .match(/^\d+(\.\d+)*$/)[0];
 }
 
 (async () => {
