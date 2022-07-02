@@ -13,7 +13,7 @@ jobs:
         run: |
           sudo apt update -y
           sudo apt upgrade -y
-          sudo apt install -y nodejs ldid
+          sudo apt install -y nodejs
       - name: Clone repo
         uses: actions/checkout@v3
       - name: Set env
