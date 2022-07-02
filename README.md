@@ -4,7 +4,7 @@ This project will allow you to build ReVanced and download YouTube APK easily!
 
 ## Required
 
-You'll need at least NodeJS v13, Zulu JDK 17 and ADB
+You'll need at least NodeJS v13, Zulu JDK 17 and ADB (optional, required for root)
 
 ## The noob way
 
