@@ -18,6 +18,26 @@ const jarNames = {
   microG: './revanced/'
 };
 
+process.on('uncaughtException', async (err, origin) => {
+  console.log(
+    `Caught exception: ${err}\nException origin: ${origin}\nPlease make an issue at https://github.com/reisxd/revanced-builder/issues.`
+  );
+  console.log('Press any key to exit...');
+  process.stdin.setRawMode(true);
+  process.stdin.resume();
+  await new Promise(() => process.stdin.on('data', () => process.exit()));
+});
+
+process.on('unhandledRejection', async (reason, promise) => {
+  console.log(
+    `Unhandled Rejection\nReason: ${reason}\nPlease make an issue at https://github.com/reisxd/revanced-builder/issues.`
+  );
+  console.log('Press any key to exit...');
+  process.stdin.setRawMode(true);
+  process.stdin.resume();
+  await new Promise(() => process.stdin.on('data', () => process.exit()));
+});
+
 async function overWriteJarNames (link) {
   const fileName = link.split('/').pop();
   // i have to use ifs for this sorry
