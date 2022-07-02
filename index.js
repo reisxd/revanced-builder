@@ -28,7 +28,7 @@ process.on('uncaughtException', async (err, origin) => {
   await new Promise(() => process.stdin.on('data', () => process.exit()));
 });
 
-process.on('unhandledRejection', async reason => {
+process.on('unhandledRejection', async (reason) => {
   console.log(
     `Unhandled Rejection\nReason: ${reason}\nPlease make an issue at https://github.com/reisxd/revanced-builder/issues.`
   );
@@ -38,7 +38,7 @@ process.on('unhandledRejection', async reason => {
   await new Promise(() => process.stdin.on('data', () => process.exit()));
 });
 
-async function overWriteJarNames (link) {
+async function overWriteJarNames(link) {
   const fileName = link.split('/').pop();
   // i have to use ifs for this sorry
   if (fileName.includes('revanced-cli')) jarNames.cli += fileName;
@@ -49,7 +49,7 @@ async function overWriteJarNames (link) {
   if (fileName.startsWith('microg')) jarNames.microG += fileName;
 }
 
-async function getDownloadLink (json) {
+async function getDownloadLink(json) {
   const apiRequest = await fetchURL(
     `https://api.github.com/repos/${json.owner}/${json.repo}/releases/latest`
   );
@@ -57,7 +57,7 @@ async function getDownloadLink (json) {
   return jsonResponse.assets;
 }
 
-async function getPage (pageUrl) {
+async function getPage(pageUrl) {
   const pageRequest = await fetchURL(pageUrl, {
     headers: {
       'user-agent':
@@ -67,7 +67,7 @@ async function getPage (pageUrl) {
   return await pageRequest.text();
 }
 
-async function downloadYTApk (ytVersion) {
+async function downloadYTApk(ytVersion) {
   const versionsList = await getPage(
     'https://www.apkmirror.com/apk/google-inc/youtube'
   );
@@ -122,7 +122,7 @@ async function downloadYTApk (ytVersion) {
   return console.log('Download complete!');
 }
 
-async function downloadFile (assets) {
+async function downloadFile(assets) {
   for (const asset of assets) {
     const dir = fs.readdirSync('./revanced/');
     overWriteJarNames(asset.browser_download_url);
@@ -146,14 +146,14 @@ async function downloadFile (assets) {
   }
 }
 
-async function downloadFiles (repos) {
+async function downloadFiles(repos) {
   for (const repo of repos) {
     const downloadLink = await getDownloadLink(repo);
     await downloadFile(downloadLink);
   }
 }
 
-async function getADBDeviceID () {
+async function getADBDeviceID() {
   let deviceId;
   const { stdout } = await actualExec('adb devices');
   const match = stdout.match(/^(\w+)\s+device$/m);
@@ -167,7 +167,7 @@ async function getADBDeviceID () {
   return deviceId;
 }
 
-async function checkForJavaADB () {
+async function checkForJavaADB() {
   try {
     const javaCheck = await actualExec('java -version');
     const javaVer = Array.from(javaCheck.stderr.matchAll(/version\s([^:]+)/g))
@@ -195,7 +195,7 @@ async function checkForJavaADB () {
   }
 }
 
-async function getYTVersion () {
+async function getYTVersion() {
   const { stdout, stderr } = await actualExec(
     'adb shell dumpsys package com.google.android.youtube'
   );
