@@ -17,6 +17,8 @@
     "undici": "^5.5.1"
   },
   "devDependencies": {
+    "@types/inquirer": "^8.2.1",
+    "@types/node-fetch": "^2.6.2",
     "eslint": "^8.18.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
