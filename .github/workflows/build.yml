@@ -1,0 +1,33 @@
+name: Build binaries and Release
+
+on:
+  push:
+    tags:
+      - v*.*.*
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install dependencies
+        run: |
+          sudo apt update -y
+          sudo apt upgrade -y
+          sudo apt install -y nodejs ldid
+      - name: Clone repo
+        uses: actions/checkout@v3
+      - name: Set env
+        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+      - name: Install npm dependencies
+        run: |
+          npm install --production
+      - name: Install pkg
+        run: sudo npm install -g pkg
+      - name: Build
+        run: pkg -t linux-x64,macos-x64,win-x64 --out-path dist --public
+      - name: Upload to Releases
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            dist/*
+          tag_name: ${{ env.RELEASE_VERSION }}
