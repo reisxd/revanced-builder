@@ -126,27 +126,31 @@ async function downloadYTApk (ytVersion) {
   const $ = load(versionsList);
 
   if (!ytVersion) {
-    for (const version of $('h5[class="appRowTitle wrapText marginZero block-on-mobile"]').get()) {
+    for (const version of $(
+      'h5[class="appRowTitle wrapText marginZero block-on-mobile"]'
+    ).get()) {
       if (indx === 10) continue;
-      let versionName = version.attribs.title.replace('YouTube ', '');
-      indx++
+      const versionName = version.attribs.title.replace('YouTube ', '');
+      indx++;
       if (versionName.includes('beta')) continue;
       versionList.push({
         name: versionName
       });
     }
 
-   versionChoosen = await inquirer.prompt([
-    {
-      type: 'list',
-      name: 'version',
-      message: 'Select a YT version to download.',
-      choices: versionList,
-    }
-  ]);
-
+    versionChoosen = await inquirer.prompt([
+      {
+        type: 'list',
+        name: 'version',
+        message: 'Select a YT version to download.',
+        choices: versionList
+      }
+    ]);
   }
-  const apkVersion = versionChoosen.version.replace(/\./g, '-') || ytVersion.replace(/\./g, '-');
+  let apkVersion;
+
+  if (ytVersion) apkVersion = ytVersion.replace(/\./g, '-');
+  if (versionChoosen) apkVersion = versionChoosen.version.replace(/\./g, '-');
 
   const downloadLinkPage = await getPage(
     `https://www.apkmirror.com/apk/google-inc/youtube/youtube-${apkVersion}-release/youtube-${apkVersion}-android-apk-download/`
@@ -299,7 +303,9 @@ async function getYTVersion () {
       if (argParser.options.exclude) {
         if (argParser.options.exclude.includes('microg-support')) {
           if (!adbExists) {
-            console.log("You don't have ADB installed.\nPlease get it from here: https://developer.android.com/studio/releases/platform-tools\n");
+            console.log(
+              "You don't have ADB installed.\nPlease get it from here: https://developer.android.com/studio/releases/platform-tools\n"
+            );
             process.exit();
           }
           ytVersion = await getYTVersion();
@@ -417,7 +423,9 @@ async function getYTVersion () {
       for (const patch of patchesChoosed.patches) {
         if (patch === 'microg-support') {
           if (!adbExists) {
-            console.log("You don't have ADB installed.\nPlease get it from here: https://developer.android.com/studio/releases/platform-tools\n");
+            console.log(
+              "You don't have ADB installed.\nPlease get it from here: https://developer.android.com/studio/releases/platform-tools\n"
+            );
             process.exit();
           }
           ytVersion = await getYTVersion();
