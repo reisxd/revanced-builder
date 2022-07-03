@@ -4,11 +4,11 @@ This project will allow you to download the YouTube APK and build ReVanced easil
 
 ## Required
 
-You'll need at least [NodeJS v13](https://nodejs.org/), [Zulu JDK 17](https://www.azul.com/downloads/?version=java-17-lts&package=jdk) and [ADB](https://developer.android.com/studio/command-line/adb) (optional, required for root).
+You'll need at least [NodeJS v13](https://nodejs.org/), [Zulu JDK 17](https://www.azul.com/downloads/?version=java-17-lts&package=jdk) and [ADB](https://developer.android.com/studio/command-line/adb) (optional, required only for rooted phones).
 
 ## The noob way
 
-If you aren't tech savvy, you can download the prebuilt EXE file from [here](https://github.com/reisxd/revanced-builder/releases).
+If you aren't tech savvy, you can download the precompiled EXE file from [here](https://github.com/reisxd/revanced-builder/releases/latest).
 
 ## How to build
 
@@ -30,7 +30,7 @@ $ npm install
 $ node . --patch
 ```
 
-If you want to exclude a patch, use the `--exclude` option:
+If you want to exclude a patch, use the `--exclude` option, example:
 
 ```bash
 $ node . --patch --exclude disable-shorts-button
