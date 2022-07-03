@@ -26,7 +26,7 @@ jobs:
       - name: Install pkg
         run: sudo npm install -g pkg
       - name: Build
-        run: pkg -t linux-x64,macos-x64,win-x64 --out-path dist --public
+        run: pkg -t linux-x64,macos-x64,win-x64 --out-path dist --public index.js
       - name: Upload to Releases
         uses: softprops/action-gh-release@v1
         with:
