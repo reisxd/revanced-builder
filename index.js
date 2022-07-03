@@ -237,6 +237,9 @@ async function getYTVersion () {
     'adb shell dumpsys package com.google.android.youtube'
   );
   const dumpSysOut = stdout || stderr;
+  if (!dumpSysOut.match(/versionName=([^=]+)/)[1]) {
+    throw new Error('YouTube is not installed on your device\nIt\'s needed for rooted ReVanced.');
+  }
   return dumpSysOut
     .match(/versionName=([^=]+)/)[1]
     .replace('\r\n    ', '')
@@ -398,17 +401,18 @@ async function getYTVersion () {
         `java -jar ${jarNames.cli} -b ${jarNames.patchesJar} -l`
       );
 
+      const patchesText = getPatches.stderr || getPatches.stdout;
+      const firstWord = patchesText.slice(0, patchesText.indexOf(' '));
+      const regex = new RegExp(`${firstWord}\\s([^\\t]+)`, 'g');
+      console.log(regex.toString());
       const patchesArray =
-        getPatches.stdout.match(/INFO:\s([^:]+)/g) ||
-        getPatches.stderr.match(/INFO:\s([^:]+)/g) ||
-        getPatches.stdout.match(/INFORMATION:\s([^:]+)/g) ||
-        getPatches.stderr.match(/INFORMATION:\s([^:]+)/g);
+        getPatches.stdout.match(regex) || getPatches.stderr.match(regex);
 
       const patchesChoice = [];
 
       for (const patchName of patchesArray) {
         patchesChoice.push({
-          name: patchName.replace('INFO: ', '').replace('INFORMATION: ', '')
+          name: patchName.replace(firstWord, '')
         });
       }
 
