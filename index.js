@@ -119,22 +119,35 @@ async function downloadYTApk (ytVersion) {
   const versionsList = await getPage(
     'https://www.apkmirror.com/apk/google-inc/youtube'
   );
+
+  const versionList = [];
+  let indx = 0;
+  let versionChoosen;
   const $ = load(versionsList);
-  let apkVersionText =
-    ytVersion ||
-    $('h5[class="appRowTitle wrapText marginZero block-on-mobile"]').get()[0]
-      .attribs.title;
 
-  if (apkVersionText.includes('beta')) {
-    apkVersionText = $(
-      'h5[class="appRowTitle wrapText marginZero block-on-mobile"]'
-    ).get()[1].attribs.title;
+  if (!ytVersion) {
+    for (const version of $('h5[class="appRowTitle wrapText marginZero block-on-mobile"]').get()) {
+      if (indx === 10) continue;
+      let versionName = version.attribs.title.replace('YouTube ', '');
+      indx++
+      if (versionName.includes('beta')) continue;
+      versionList.push({
+        name: versionName
+      });
+    }
+
+   versionChoosen = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'version',
+      message: 'Select a YT version to download.',
+      choices: versionList,
+    }
+  ]);
+
   }
+  const apkVersion = versionChoosen.version.replace(/\./g, '-') || ytVersion.replace(/\./g, '-');
 
-  const apkVersion = apkVersionText
-    .replace('YouTube ', '')
-    .replace(/\./g, '-')
-    .replace(' beta', '');
   const downloadLinkPage = await getPage(
     `https://www.apkmirror.com/apk/google-inc/youtube/youtube-${apkVersion}-release/youtube-${apkVersion}-android-apk-download/`
   );
@@ -256,6 +269,7 @@ async function getYTVersion () {
     case 'patch': {
       let excludedPatches = '';
       let ytVersion;
+      let isRooted = false;
       if (!fs.existsSync('./revanced')) {
         fs.mkdirSync('./revanced');
       }
@@ -284,8 +298,16 @@ async function getYTVersion () {
 
       if (argParser.options.exclude) {
         if (argParser.options.exclude.includes('microg-support')) {
+          if (!adbExists) {
+            console.log("You don't have ADB installed.\nPlease get it from here: https://developer.android.com/studio/releases/platform-tools\n");
+            process.exit();
+          }
           ytVersion = await getYTVersion();
           excludedPatches += '--mount';
+          isRooted = true;
+        }
+        if (!argParser.options.exclude.includes(',')) {
+          excludedPatches = ` -e ${argParser.options.exclude}`;
         }
         for (const patch of argParser.options.exclude.split(',')) {
           excludedPatches += ` -e ${patch}`;
@@ -318,7 +340,7 @@ async function getYTVersion () {
         await actualExec('adb install revanced/revanced.apk');
       }
 
-      if (adbExists) {
+      if (adbExists && !isRooted) {
         console.log('Installing MicroG...');
 
         await actualExec(`adb install ${jarNames.microG}`);
@@ -335,6 +357,7 @@ async function getYTVersion () {
       let patches = '';
       let useManualAPK;
       let ytVersion;
+      let isRooted;
       if (!fs.existsSync('./revanced')) {
         fs.mkdirSync('./revanced');
       }
@@ -393,13 +416,18 @@ async function getYTVersion () {
       ]);
       for (const patch of patchesChoosed.patches) {
         if (patch === 'microg-support') {
+          if (!adbExists) {
+            console.log("You don't have ADB installed.\nPlease get it from here: https://developer.android.com/studio/releases/platform-tools\n");
+            process.exit();
+          }
           ytVersion = await getYTVersion();
           patches += ' --mount';
+          isRooted = true;
         }
         patches += ` -e ${patch}`;
       }
 
-      if (fs.existsSync('./revanced/youtube.apk')) {
+      if (fs.existsSync('./revanced/youtube.apk') && !isRooted) {
         const useManualAPKAnswer = await inquirer.prompt([
           {
             type: 'confirm',
@@ -433,7 +461,7 @@ async function getYTVersion () {
         await actualExec('adb install revanced/revanced.apk');
       }
 
-      if (adbExists) {
+      if (adbExists && !isRooted) {
         console.log('Installing MicroG...');
 
         await actualExec(`adb install ${jarNames.microG}`);
