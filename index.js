@@ -425,7 +425,7 @@ async function getYTVersion () {
         }
       ]);
       for (const patch of patchesChoosed.patches) {
-        if (patch === 'microg-support') {
+        if (patch.includes('microg-support')) {
           if (!adbExists) {
             console.log(
               "You don't have ADB installed.\nPlease get it from here: https://developer.android.com/studio/releases/platform-tools\n"
