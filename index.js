@@ -24,21 +24,24 @@ process.on('uncaughtException', async (err, origin) => {
   console.log(
     `Caught exception: ${err}\nException origin: ${origin}\nPlease make an issue at https://github.com/reisxd/revanced-builder/issues.`
   );
-  console.log('Press any key to exit...');
-  process.stdin.setRawMode(true);
-  process.stdin.resume();
-  await new Promise(() => process.stdin.on('data', () => process.exit()));
+
+  await exitProcess();
 });
 
 process.on('unhandledRejection', async (reason) => {
   console.log(
     `Unhandled Rejection\nReason: ${reason}\nPlease make an issue at https://github.com/reisxd/revanced-builder/issues.`
   );
+
+  await exitProcess();
+});
+
+async function exitProcess () {
   console.log('Press any key to exit...');
   process.stdin.setRawMode(true);
   process.stdin.resume();
   await new Promise(() => process.stdin.on('data', () => process.exit()));
-});
+}
 
 async function overWriteJarNames (link) {
   const fileName = link.split('/').pop();
@@ -214,7 +217,15 @@ async function checkForJavaADB () {
       console.log(
         'You have an outdated version of JDK.\nPlease get it from here: https://www.azul.com/downloads/?version=java-17-lts&package=jdk'
       );
-      return process.exit();
+      return await exitProcess();
+    }
+
+    if (!javaCheck.stderr.includes('Zulu')) {
+      console.log(
+        'You have Java, but not Zulu JDK. You need to install it because of signing problems.\nPlease get it from here: https://www.azul.com/downloads/?version=java-17-lts&package=jdk'
+      );
+
+      return await exitProcess();
     }
     await actualExec('adb');
   } catch (e) {
@@ -222,6 +233,8 @@ async function checkForJavaADB () {
       console.log(
         "You don't have JDK installed.\nPlease get it from here: https://www.azul.com/downloads/?version=java-17-lts&package=jdk"
       );
+
+      return await exitProcess();
     }
     if (e.stderr.includes('adb')) {
       console.log(
@@ -237,8 +250,10 @@ async function getYTVersion () {
     'adb shell dumpsys package com.google.android.youtube'
   );
   const dumpSysOut = stdout || stderr;
-  if (!dumpSysOut.match(/versionName=([^=]+)/)[1]) {
-    throw new Error('YouTube is not installed on your device\nIt\'s needed for rooted ReVanced.');
+  if (!dumpSysOut.match(/versionName=([^=]+)/)) {
+    throw new Error(
+      "YouTube is not installed on your device\nIt's needed for rooted ReVanced."
+    );
   }
   return dumpSysOut
     .match(/versionName=([^=]+)/)[1]
@@ -309,10 +324,10 @@ async function getYTVersion () {
             console.log(
               "You don't have ADB installed.\nPlease get it from here: https://developer.android.com/studio/releases/platform-tools\n"
             );
-            process.exit();
+           return await exitProcess();
           }
           ytVersion = await getYTVersion();
-          excludedPatches +=  '--mount';
+          excludedPatches += ' --mount';
           isRooted = true;
         }
         if (!argParser.options.exclude.includes(',')) {
@@ -412,7 +427,7 @@ async function getYTVersion () {
 
       for (const patchName of patchesArray) {
         patchesChoice.push({
-          name: patchName.replace(firstWord, '')
+          name: patchName.replace(firstWord, '').replace(/\s/g, '')
         });
       }
 
@@ -430,7 +445,7 @@ async function getYTVersion () {
             console.log(
               "You don't have ADB installed.\nPlease get it from here: https://developer.android.com/studio/releases/platform-tools\n"
             );
-            process.exit();
+            return await exitProcess();
           }
           ytVersion = await getYTVersion();
           patches += ' --mount';
