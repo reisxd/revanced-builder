@@ -178,7 +178,15 @@ async function downloadFile (assets) {
   for (const asset of assets) {
     const dir = fs.readdirSync('./revanced/');
     overWriteJarNames(asset.browser_download_url);
-    if (dir.includes(asset.browser_download_url.split('/').pop())) continue;
+    if (dir.includes(asset.browser_download_url.split('/').pop())) {
+      console.log(asset.browser_download_url.split('/').pop());
+      if (
+        asset.browser_download_url.split('/').pop() !==
+        'app-release-unsigned.apk'
+      ) {
+        if (asset.browser_download_url.split('/').pop() !== 'microg.apk') { continue; }
+      }
+    }
     await dloadFromURL(
       asset.browser_download_url,
       `./revanced/${asset.browser_download_url.split('/').pop()}`
@@ -324,7 +332,7 @@ async function getYTVersion () {
             console.log(
               "You don't have ADB installed.\nPlease get it from here: https://developer.android.com/studio/releases/platform-tools\n"
             );
-           return await exitProcess();
+            return await exitProcess();
           }
           ytVersion = await getYTVersion();
           excludedPatches += ' --mount';
