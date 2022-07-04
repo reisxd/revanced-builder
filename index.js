@@ -60,6 +60,9 @@ async function getDownloadLink (json) {
     `https://api.github.com/repos/${json.owner}/${json.repo}/releases/latest`
   );
   const jsonResponse = await apiRequest.json();
+  if (jsonResponse.error) {
+    throw new Error('Looks like you got ratelimited.\nTry waiting 30 minutes.');
+  }
   return jsonResponse.assets;
 }
 
@@ -184,7 +187,9 @@ async function downloadFile (assets) {
         asset.browser_download_url.split('/').pop() !==
         'app-release-unsigned.apk'
       ) {
-        if (asset.browser_download_url.split('/').pop() !== 'microg.apk') { continue; }
+        if (asset.browser_download_url.split('/').pop() !== 'microg.apk') {
+          continue;
+        }
       }
     }
     await dloadFromURL(
