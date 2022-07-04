@@ -312,7 +312,7 @@ async function getYTVersion () {
             process.exit();
           }
           ytVersion = await getYTVersion();
-          excludedPatches += '--mount';
+          excludedPatches +=  '--mount';
           isRooted = true;
         }
         if (!argParser.options.exclude.includes(',')) {
@@ -404,7 +404,7 @@ async function getYTVersion () {
       const patchesText = getPatches.stderr || getPatches.stdout;
       const firstWord = patchesText.slice(0, patchesText.indexOf(' '));
       const regex = new RegExp(`${firstWord}\\s([^\\t]+)`, 'g');
-      console.log(regex.toString());
+
       const patchesArray =
         getPatches.stdout.match(regex) || getPatches.stderr.match(regex);
 
