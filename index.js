@@ -179,7 +179,6 @@ async function downloadFile (assets) {
     const dir = fs.readdirSync('./revanced/');
     overWriteJarNames(asset.browser_download_url);
     if (dir.includes(asset.browser_download_url.split('/').pop())) {
-      console.log(asset.browser_download_url.split('/').pop());
       if (
         asset.browser_download_url.split('/').pop() !==
         'app-release-unsigned.apk'
