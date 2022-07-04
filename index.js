@@ -12,6 +12,7 @@ const argParser = opteric(process.argv.join(' '));
 const actualExec = util.promisify(exec);
 
 let adbExists = true;
+let foundDevice = false;
 const jarNames = {
   cli: './revanced/',
   patchesJar: './revanced/',
@@ -211,6 +212,7 @@ async function getADBDeviceID () {
 
   const [deviceIdN] = match;
   jarNames.deviceId = `-d ${deviceIdN.replace('device', '')} -c`;
+  foundDevice = true;
   return deviceId;
 }
 
@@ -299,6 +301,7 @@ async function getYTVersion () {
       let excludedPatches = '';
       let ytVersion;
       let isRooted = false;
+
       if (!fs.existsSync('./revanced')) {
         fs.mkdirSync('./revanced');
       }
@@ -371,14 +374,16 @@ async function getYTVersion () {
         await actualExec('adb install revanced/revanced.apk');
       }
 
-      if (adbExists && !isRooted) {
+      if (adbExists && !isRooted && foundDevice) {
         console.log('Installing MicroG...');
 
         await actualExec(`adb install ${jarNames.microG}`);
+        await exitProcess();
       } else {
         console.log(
           'You now can install ReVanced and MicroG by transferring revanced/revanced.apk and revaned/microg.apk!'
         );
+        await exitProcess();
       }
 
       break;
@@ -495,14 +500,16 @@ async function getYTVersion () {
         await actualExec('adb install revanced/revanced.apk');
       }
 
-      if (adbExists && !isRooted) {
+      if (adbExists && !isRooted && foundDevice) {
         console.log('Installing MicroG...');
 
         await actualExec(`adb install ${jarNames.microG}`);
+        await exitProcess();
       } else {
         console.log(
           'You now can install ReVanced and MicroG by transferring revanced/revanced.apk and revaned/microg.apk!'
         );
+        await exitProcess();
       }
 
       break;
