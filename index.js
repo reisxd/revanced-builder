@@ -341,9 +341,16 @@ async function getYTVersion () {
             );
             return await exitProcess();
           }
-          ytVersion = await getYTVersion();
-          excludedPatches += ' --mount';
-          isRooted = true;
+
+          if (foundDevice) {
+            ytVersion = await getYTVersion();
+            excludedPatches += ' --mount';
+            isRooted = true;
+          } else {
+            throw new Error(
+              "Couldn't find the device. Please plug in the device."
+            );
+          }
         }
         if (!argParser.options.exclude.includes(',')) {
           excludedPatches = ` -e ${argParser.options.exclude}`;
@@ -443,8 +450,12 @@ async function getYTVersion () {
       const patchesChoice = [];
 
       for (const patchName of patchesArray) {
+        let patch = patchName.replace(firstWord, '').replace(/\s/g, '');
+        if (patch === 'microg-support') patch += ' (Root required)';
+        if (patch === 'hide-cast-button') patch += ' (Root required)';
+
         patchesChoice.push({
-          name: patchName.replace(firstWord, '').replace(/\s/g, '')
+          name: patch
         });
       }
 
@@ -456,6 +467,13 @@ async function getYTVersion () {
           choices: patchesChoice
         }
       ]);
+
+      if (patchesChoice.length === patchesChoosed.patches.length) {
+        throw new Error(
+          'You excluded every single patch... I guess you want to use YouTube?'
+        );
+      }
+
       for (const patch of patchesChoosed.patches) {
         if (patch.includes('microg-support')) {
           if (!adbExists) {
@@ -464,11 +482,17 @@ async function getYTVersion () {
             );
             return await exitProcess();
           }
-          ytVersion = await getYTVersion();
-          patches += ' --mount';
-          isRooted = true;
+          if (foundDevice) {
+            ytVersion = await getYTVersion();
+            patches += ' --mount';
+            isRooted = true;
+          } else {
+            throw new Error(
+              "Couldn't find the device. Please plug in the device."
+            );
+          }
         }
-        patches += ` -e ${patch}`;
+        patches += ` -e ${patch.replace(' (Root required)', '')}`;
       }
 
       if (fs.existsSync('./revanced/youtube.apk') && !isRooted) {
