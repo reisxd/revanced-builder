@@ -314,7 +314,7 @@ async function getYTVersion () {
       if (fs.existsSync('./revanced-cache')) {
         fs.rmSync('./revanced-cache', { recursive: true, force: true });
       }
-      
+
       await checkForJavaADB();
       console.log('Downloading latest patches, integrations and cli...');
 
@@ -457,23 +457,25 @@ async function getYTVersion () {
       const patchesArray =
         getPatches.stdout.match(regex) || getPatches.stderr.match(regex);
 
-      const patchDescsArray = getPatches.stdout.match(/\t(.*) \r\n/g) || 
-      getPatches.stderr.match(/\t(.*) \r\n/g);
+      const patchDescsArray =
+        getPatches.stdout.match(/\t(.*) \r\n/g) ||
+        getPatches.stderr.match(/\t(.*) \r\n/g);
 
       const patchesChoice = [];
       let index = 0;
 
       for (const patchName of patchesArray) {
         let patch = patchName.replace(firstWord, '').replace(/\s/g, '');
-        if (patch === 'microg-support') patch += ' (Root required)';
-        if (patch === 'hide-cast-button') patch += ' (Root required)';
-        patch += `| ${patchDescsArray[index].replace('\t', '').replace('\r\n', '')}`
-        
+        patch += `| ${patchDescsArray[index]
+          .replace('\t', '')
+          .replace('\r\n', '')}`;
+        if (patch.includes('microg-support')) patch += '(Root required)';
+        if (patch.includes('hide-cast-button')) patch += '(Root required)';
         patchesChoice.push({
           name: patch
         });
 
-        index++
+        index++;
       }
 
       const patchesChoosed = await inquirer.prompt([
@@ -509,7 +511,7 @@ async function getYTVersion () {
             );
           }
         }
-        let patchName = patch.replace(/\|.+(.*)$/, '');
+        const patchName = patch.replace(/\|.+(.*)$/, '');
         patches += ` -e ${patchName}`;
       }
 
