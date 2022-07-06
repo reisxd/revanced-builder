@@ -145,6 +145,8 @@ async function downloadYTApk (ytVersion) {
       });
     }
 
+    console.log('Due to issue, please select 17.25.24. The GitHub issue: https://github.com/reisxd/revanced-builder/issues/30');
+    
     versionChoosen = await inquirer.prompt([
       {
         type: 'list',
