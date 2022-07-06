@@ -209,14 +209,14 @@ async function downloadFiles (repos) {
 async function getADBDeviceID () {
   let deviceId;
   const { stdout } = await actualExec('adb devices');
-  const match = stdout.match(/^(\w+)\s+device$/m);
+  const match = stdout.match(/\r\n(.*?)\t/);
   if (match === null) {
     console.log('No device found! Fallback to only build.');
     return;
   }
 
-  const [deviceIdN] = match;
-  jarNames.deviceId = `-d ${deviceIdN.replace('device', '')} -c`;
+  const deviceIdN = match[1];
+  jarNames.deviceId = `-d ${deviceIdN} -c`;
   foundDevice = true;
   return deviceId;
 }
@@ -310,6 +310,11 @@ async function getYTVersion () {
       if (!fs.existsSync('./revanced')) {
         fs.mkdirSync('./revanced');
       }
+
+      if (fs.existsSync('./revanced-cache')) {
+        fs.rmSync('./revanced-cache', { recursive: true, force: true });
+      }
+      
       await checkForJavaADB();
       console.log('Downloading latest patches, integrations and cli...');
 
@@ -409,6 +414,11 @@ async function getYTVersion () {
       if (!fs.existsSync('./revanced')) {
         fs.mkdirSync('./revanced');
       }
+
+      if (fs.existsSync('./revanced-cache')) {
+        fs.rmSync('./revanced-cache', { recursive: true, force: true });
+      }
+
       await checkForJavaADB();
       console.log('Downloading latest patches, integrations and cli...');
 
@@ -447,16 +457,23 @@ async function getYTVersion () {
       const patchesArray =
         getPatches.stdout.match(regex) || getPatches.stderr.match(regex);
 
+      const patchDescsArray = getPatches.stdout.match(/\t(.*) \r\n/g) || 
+      getPatches.stderr.match(/\t(.*) \r\n/g);
+
       const patchesChoice = [];
+      let index = 0;
 
       for (const patchName of patchesArray) {
         let patch = patchName.replace(firstWord, '').replace(/\s/g, '');
         if (patch === 'microg-support') patch += ' (Root required)';
         if (patch === 'hide-cast-button') patch += ' (Root required)';
-
+        patch += `| ${patchDescsArray[index].replace('\t', '').replace('\r\n', '')}`
+        
         patchesChoice.push({
           name: patch
         });
+
+        index++
       }
 
       const patchesChoosed = await inquirer.prompt([
@@ -492,7 +509,8 @@ async function getYTVersion () {
             );
           }
         }
-        patches += ` -e ${patch.replace(' (Root required)', '')}`;
+        let patchName = patch.replace(/\|.+(.*)$/, '');
+        patches += ` -e ${patchName}`;
       }
 
       if (fs.existsSync('./revanced/youtube.apk') && !isRooted) {
