@@ -145,8 +145,6 @@ async function downloadYTApk (ytVersion) {
       });
     }
 
-    console.log('Due to an issue, please select 17.25.24. The GitHub issue: https://github.com/reisxd/revanced-builder/issues/30');
-
     versionChoosen = await inquirer.prompt([
       {
         type: 'list',
@@ -157,13 +155,20 @@ async function downloadYTApk (ytVersion) {
     ]);
   }
   let apkVersion;
+  let apkVerSecond;
 
   if (ytVersion) apkVersion = ytVersion.replace(/\./g, '-');
   if (versionChoosen) apkVersion = versionChoosen.version.replace(/\./g, '-');
+  apkVerSecond = apkVersion;
+  const apkVersionSplit = apkVersion.split('-');
+  if (apkVersionSplit[1] >= 25) {
+    if (apkVersionSplit[2] >= 35) apkVerSecond += '-2';
+  }
 
   const downloadLinkPage = await getPage(
-    `https://www.apkmirror.com/apk/google-inc/youtube/youtube-${apkVersion}-release/youtube-${apkVersion}-android-apk-download/`
+    `https://www.apkmirror.com/apk/google-inc/youtube/youtube-${apkVersion}-release/youtube-${apkVerSecond}-android-apk-download/`
   );
+
   const dlPage = load(downloadLinkPage);
   const pageLink = dlPage('a[class^="accent_bg btn btn-flat downloadButton"]')
     .first()
