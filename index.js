@@ -39,7 +39,11 @@ process.on('unhandledRejection', async (reason) => {
 
 async function exitProcess () {
   console.log('Press any key to exit...');
-  process.stdin.setRawMode(true);
+  try {
+    process.stdin.setRawMode(true);
+  } catch (e) {
+    // ignored
+  }
   process.stdin.resume();
   await new Promise(() => process.stdin.on('data', () => process.exit()));
 }
@@ -60,7 +64,24 @@ async function getDownloadLink (json) {
     `https://api.github.com/repos/${json.owner}/${json.repo}/releases/latest`
   );
   const jsonResponse = await apiRequest.json();
-  if (jsonResponse.error) {
+  if (jsonResponse.error || !apiRequest.ok) {
+    const webRequest = await fetchURL(
+      `https://github.com/${json.owner}/${json.repo}/releases/latest`
+    );
+    if (!webRequest.ok) {
+      throw new Error('Looks like you got ratelimited.\nTry waiting 30 minutes.');
+    }
+    const result = [];
+    const body = await webRequest.text();
+    const regexFindDownloadLinks = /href="(.*?\/releases\/download\/.*?)"/img;
+    let match = regexFindDownloadLinks.exec(body);
+    while (match != null) {
+      result.push({ browser_download_url: `https://github.com${match[1]}` });
+      match = regexFindDownloadLinks.exec(body);
+    }
+    if (result.length > 0) {
+      return result;
+    }
     throw new Error('Looks like you got ratelimited.\nTry waiting 30 minutes.');
   }
   return jsonResponse.assets;
