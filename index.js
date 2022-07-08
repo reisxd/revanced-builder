@@ -60,10 +60,31 @@ async function getDownloadLink (json) {
     `https://api.github.com/repos/${json.owner}/${json.repo}/releases/latest`
   );
   const jsonResponse = await apiRequest.json();
+  let assets = jsonResponse?.assets;
   if (jsonResponse.error) {
-    throw new Error('Looks like you got ratelimited.\nTry waiting 30 minutes.');
+    const assetsGH = [];
+    const releasesPage = await fetchURL(
+      `https://github.com/${json.owner}/${json.repo}/releases/latest`
+    );
+    if (!releasesPage.ok) {
+      throw new Error(
+        'You got ratelimited from GitHub\n...Completely? What did you even do?'
+      );
+    }
+    const releasePage = await releasesPage.text();
+    const $ = load(releasePage);
+    for (const downloadLink of $('a[data-skip-pjax=""]').get()) {
+      if (!downloadLink.attribs.href.endsWith('.tar.gz')) {
+        if (!downloadLink.attribs.href.endsWith('.zip')) {
+          assetsGH.push({
+            browser_download_url: `https://github.com${downloadLink.attribs.href}`
+          });
+        }
+      }
+    }
+    assets = assetsGH;
   }
-  return jsonResponse.assets;
+  return assets;
 }
 
 async function getPage (pageUrl) {
@@ -325,6 +346,10 @@ async function getYTVersion () {
       await checkForJavaADB();
       console.log('Downloading latest patches, integrations and cli...');
 
+      if (adbExists) {
+        await getADBDeviceID();
+      }
+
       const filesToDownload = [
         {
           owner: 'revanced',
@@ -374,10 +399,6 @@ async function getYTVersion () {
 
       if (!argParser.flags.includes('manual-apk')) {
         await downloadYTApk(ytVersion);
-      }
-
-      if (adbExists) {
-        await getADBDeviceID();
       }
 
       console.log('Building ReVanced, please be patient!');
