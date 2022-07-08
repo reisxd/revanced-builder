@@ -30,10 +30,9 @@ process.on('uncaughtException', async (err, origin) => {
 });
 
 process.on('unhandledRejection', async (reason) => {
-  console.log(
-    `Unhandled Rejection\nReason: ${reason}\nPlease make an issue at https://github.com/reisxd/revanced-builder/issues.`
-  );
-
+  console.log('An error occured.');
+  console.log(reason);
+  console.log('\nPlease make an issue at https://github.com/reisxd/revanced-builder/issues.');
   await exitProcess();
 });
 
