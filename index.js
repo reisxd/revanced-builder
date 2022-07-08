@@ -302,6 +302,27 @@ async function getYTVersion () {
     .match(/[\d]+(\.\d+)+/g)[0];
 }
 
+async function cleanupTempFolders() {
+  console.log(
+    "Cleaning up the temporary files"
+  );
+
+  if (fs.existsSync('./revanced-cache')) {
+    fs.rmSync('./revanced-cache', { recursive: true, force: true });
+  }
+
+  if (fs.existsSync('./revanced')) {
+    const resultFiles = ["revanced.apk", "microg.apk"];
+    fs.readdir('./revanced', (err, files) => {
+      for (var i = 0, len = files.length; i < len; i++) {
+        if(resultFiles.indexOf(files[i]) === -1) {
+          fs.unlink("./revanced/" + files[i], (err) => {});
+        }
+      }
+    });
+  }
+}
+
 (async () => {
   switch (argParser.flags[0]) {
     case 'patches': {
@@ -406,6 +427,8 @@ async function getYTVersion () {
         `java -jar ${jarNames.cli} -b ${jarNames.patchesJar} --experimental -a ./revanced/youtube.apk ${jarNames.deviceId} -o ./revanced/revanced.apk -m ${jarNames.integrations} ${excludedPatches}`
       );
       console.log(stdout || stderr);
+
+      await cleanupTempFolders();
 
       if (
         stdout.includes('INSTALL_FAILED_UPDATE_INCOMPATIBLE') ||
@@ -564,6 +587,8 @@ async function getYTVersion () {
         `java -jar ${jarNames.cli} -b ${jarNames.patchesJar} --experimental -a ./revanced/youtube.apk ${jarNames.deviceId} -o ./revanced/revanced.apk -m ${jarNames.integrations} ${patches}`
       );
       console.log(stdout || stderr);
+
+      await cleanupTempFolders();
 
       if (
         stdout.includes('INSTALL_FAILED_UPDATE_INCOMPATIBLE') ||
