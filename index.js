@@ -354,6 +354,10 @@ async function getYTVersion () {
             return await exitProcess();
           }
 
+          if (adbExists) {
+            await getADBDeviceID();
+          }
+
           if (foundDevice) {
             ytVersion = await getYTVersion();
             excludedPatches += ' --mount';
