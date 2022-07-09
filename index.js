@@ -483,13 +483,10 @@ async function getYTVersion() {
       const firstWord = patchesText.slice(0, patchesText.indexOf(' '));
       const patchRegex = new RegExp(`${firstWord}\\s([^\\t]+)`, 'g');
 
-      const patchesArray =
-        getPatches.stdout.match(regex) || getPatches.stderr.match(regex);
+      const patchesArray = patchesText.match(patchRegex);
 
       const patchDescRegex = new RegExp(`\\t(.*) ${require('os').EOL}`, 'g');
-      const patchDescsArray =
-        getPatches.stdout.match(patchDescRegex) ||
-        getPatches.stderr.match(patchDescRegex);
+      const patchDescsArray = patchesText.match(patchDescRegex);
 
       const patchesChoice = [];
       let index = 0;
