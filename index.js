@@ -253,7 +253,8 @@ async function getADBDeviceID () {
 async function checkForJavaADB () {
   try {
     const javaCheck = await actualExec('java -version');
-    const javaVer = Array.from(javaCheck.stderr.matchAll(/version\s([^:]+)/g))
+    const javaVerLog = javaCheck.stderr || javaCheck.stdout;
+    const javaVer = Array.from(javaVerLog.matchAll(/version\s([^:]+)/g))
       .map((match) => match[1])[0]
       .match(/"(.*)"/)[1];
     if (javaVer.split('.')[0] < 17) {
@@ -263,7 +264,7 @@ async function checkForJavaADB () {
       return await exitProcess();
     }
 
-    if (!javaCheck.stderr.includes('Zulu')) {
+    if (!javaVerLog.includes('Zulu')) {
       console.log(
         'You have Java, but not Zulu JDK. You need to install it because of signing problems.\nPlease get it from here: https://www.azul.com/downloads/?version=java-17-lts&package=jdk'
       );
