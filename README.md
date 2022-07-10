@@ -44,7 +44,7 @@ If you want to exclude more, seperate the patches with a comma:
 $ node . --patch --exclude disable-shorts-button,microg-support
 ```
 
-If you want to explicitely include a patch, use the `--include` option, example:
+If you want to explicitly include a patch, use the `--include` option, example:
 
 ```bash
 $ node . --patch --include autorepeat-by-default
