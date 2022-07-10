@@ -177,20 +177,19 @@ async function downloadYTApk (ytVersion) {
     ]);
   }
   let apkVersion;
-  let apkVerSecond;
 
   if (ytVersion) apkVersion = ytVersion.replace(/\./g, '-');
   if (versionChoosen) apkVersion = versionChoosen.version.replace(/\./g, '-');
-  apkVerSecond = apkVersion;
-  const apkVersionSplit = apkVersion.split('-');
-  if (apkVersionSplit[1] >= 25) {
-    if (apkVersionSplit[2] >= 35) apkVerSecond += '-2';
-  }
 
-  const downloadLinkPage = await getPage(
-    `https://www.apkmirror.com/apk/google-inc/youtube/youtube-${apkVersion}-release/youtube-${apkVerSecond}-android-apk-download/`
-  );
+  const versionDownload = await fetchURL(`https://www.apkmirror.com/apk/google-inc/youtube/youtube-${apkVersion}-release/`);
+  const versionDownloadList = await versionDownload.text();
 
+  const vDLL = load(versionDownloadList);
+  const dlLink = vDLL('span[class="apkm-badge"]').first().parent().children('a[class="accent_color"]').first().attr('href');
+
+  const downloadLink = await fetchURL(`https://www.apkmirror.com${dlLink}`);
+  const downloadLinkPage = await downloadLink.text();
+  
   const dlPage = load(downloadLinkPage);
   const pageLink = dlPage('a[class^="accent_bg btn btn-flat downloadButton"]')
     .first()
@@ -496,7 +495,7 @@ async function getYTVersion () {
         let patch = patchName.replace(firstWord, '').replace(/\s/g, '');
         patch += `| ${patchDescsArray[index]
           .replace('\t', '')
-          .replace('\r\n', '')}`;
+          .replace(require('os').EOL, '')}`;
         if (patch.includes('microg-support')) patch += '(Root required)';
         if (patch.includes('hide-cast-button')) patch += '(Root required)';
         patchesChoice.push({
