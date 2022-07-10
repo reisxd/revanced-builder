@@ -44,6 +44,14 @@ If you want to exclude more, seperate the patches with a comma:
 $ node . --patch --exclude disable-shorts-button,microg-support
 ```
 
+If you want to explicitely include a patch, use the `--include` option, example:
+
+```bash
+$ node . --patch --include autorepeat-by-default
+```
+
+If you want to include more, seperate the patches with a comma (same as the exclude option).
+
 If you want to patch a specific YT version, download the APK, move it to this folder and rename it to `youtube.apk`:
 
 ```bash

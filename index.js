@@ -340,6 +340,7 @@ async function getYTVersion () {
 
     case 'patch': {
       let excludedPatches = '';
+      let includedPatches = '';
       let ytVersion;
       let isRooted = false;
 
@@ -399,9 +400,20 @@ async function getYTVersion () {
         }
         if (!argParser.options.exclude.includes(',')) {
           excludedPatches = ` -e ${argParser.options.exclude}`;
+        } else {
+          for (const patch of argParser.options.exclude.split(',')) {
+            excludedPatches += ` -e ${patch}`;
+          }
         }
-        for (const patch of argParser.options.exclude.split(',')) {
-          excludedPatches += ` -e ${patch}`;
+      }
+
+      if (argParser.options.include) {
+        if (!argParser.options.include.includes(',')) {
+          includedPatches = ` -i ${argParser.options.include}`;
+        } else {
+          for (const patch of argParser.options.include.split(',')) {
+            includedPatches += ` -i ${patch}`;
+          }
         }
       }
 
@@ -412,7 +424,7 @@ async function getYTVersion () {
       console.log('Building ReVanced, please be patient!');
 
       const { stdout, stderr } = await actualExec(
-        `java -jar ${jarNames.cli} -b ${jarNames.patchesJar} --experimental -a ./revanced/youtube.apk ${jarNames.deviceId} -o ./revanced/revanced.apk -m ${jarNames.integrations} ${excludedPatches}`,
+        `java -jar ${jarNames.cli} -b ${jarNames.patchesJar} --experimental -a ./revanced/youtube.apk ${jarNames.deviceId} -o ./revanced/revanced.apk -m ${jarNames.integrations} ${excludedPatches} ${includedPatches}`,
         { maxBuffer: 5120 * 1024 }
       );
       console.log(stdout || stderr);
