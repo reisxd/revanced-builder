@@ -62,7 +62,7 @@ async function getDownloadLink (json) {
   );
   const jsonResponse = await apiRequest.json();
   let assets = jsonResponse?.assets;
-  if (jsonResponse.error) {
+  if (jsonResponse.error || !apiRequest.ok) {
     const assetsGH = [];
     const releasesPage = await fetchURL(
       `https://github.com/${json.owner}/${json.repo}/releases/latest`
@@ -181,15 +181,22 @@ async function downloadYTApk (ytVersion) {
   if (ytVersion) apkVersion = ytVersion.replace(/\./g, '-');
   if (versionChoosen) apkVersion = versionChoosen.version.replace(/\./g, '-');
 
-  const versionDownload = await fetchURL(`https://www.apkmirror.com/apk/google-inc/youtube/youtube-${apkVersion}-release/`);
+  const versionDownload = await fetchURL(
+    `https://www.apkmirror.com/apk/google-inc/youtube/youtube-${apkVersion}-release/`
+  );
   const versionDownloadList = await versionDownload.text();
 
   const vDLL = load(versionDownloadList);
-  const dlLink = vDLL('span[class="apkm-badge"]').first().parent().children('a[class="accent_color"]').first().attr('href');
+  const dlLink = vDLL('span[class="apkm-badge"]')
+    .first()
+    .parent()
+    .children('a[class="accent_color"]')
+    .first()
+    .attr('href');
 
   const downloadLink = await fetchURL(`https://www.apkmirror.com${dlLink}`);
   const downloadLinkPage = await downloadLink.text();
-  
+
   const dlPage = load(downloadLinkPage);
   const pageLink = dlPage('a[class^="accent_bg btn btn-flat downloadButton"]')
     .first()
@@ -405,7 +412,8 @@ async function getYTVersion () {
       console.log('Building ReVanced, please be patient!');
 
       const { stdout, stderr } = await actualExec(
-        `java -jar ${jarNames.cli} -b ${jarNames.patchesJar} --experimental -a ./revanced/youtube.apk ${jarNames.deviceId} -o ./revanced/revanced.apk -m ${jarNames.integrations} ${excludedPatches}`
+        `java -jar ${jarNames.cli} -b ${jarNames.patchesJar} --experimental -a ./revanced/youtube.apk ${jarNames.deviceId} -o ./revanced/revanced.apk -m ${jarNames.integrations} ${excludedPatches}`,
+        { maxBuffer: 5120 * 1024 }
       );
       console.log(stdout || stderr);
 
@@ -564,7 +572,8 @@ async function getYTVersion () {
 
       console.log('Building ReVanced, please be patient!');
       const { stdout, stderr } = await actualExec(
-        `java -jar ${jarNames.cli} -b ${jarNames.patchesJar} --experimental -a ./revanced/youtube.apk ${jarNames.deviceId} -o ./revanced/revanced.apk -m ${jarNames.integrations} ${patches}`
+        `java -jar ${jarNames.cli} -b ${jarNames.patchesJar} --experimental -a ./revanced/youtube.apk ${jarNames.deviceId} -o ./revanced/revanced.apk -m ${jarNames.integrations} ${patches}`,
+        { maxBuffer: 5120 * 1024 }
       );
       console.log(stdout || stderr);
 
