@@ -244,7 +244,8 @@ async function downloadFiles (repos) {
 async function getADBDeviceID () {
   let deviceId;
   const { stdout } = await actualExec('adb devices');
-  const match = stdout.match(/\r\n(.*?)\t/);
+  const adbDeviceIdRegex = new RegEx(`${require('os').EOL}(.*?)\t`);
+  const match = stdout.match(adbDeviceIdRegex);
   if (match === null) {
     console.log('No device found! Fallback to only build.');
     return;
