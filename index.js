@@ -308,7 +308,7 @@ async function getYTVersion () {
   }
   return dumpSysOut
     .match(/versionName=([^=]+)/)[1]
-    .replace('\r\n    ', '')
+    .replace(`${require('os').EOL}    `, '')
     .match(/[\d]+(\.\d+)+/g)[0];
 }
 
