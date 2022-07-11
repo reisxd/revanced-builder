@@ -496,7 +496,7 @@ async function getYTVersion () {
       }
 
       const getPatches = await actualExec(
-        `java -jar ${jarNames.cli} -b ${jarNames.patchesJar} -l`
+        `java -jar ${jarNames.cli} -a ${jarNames.integrations} -b ${jarNames.patchesJar} -l`
       );
 
       const patchesText = getPatches.stderr || getPatches.stdout;
