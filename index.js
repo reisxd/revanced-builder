@@ -330,13 +330,13 @@ async function preflight (listOnly) {
       owner: 'revanced',
       repo: 'revanced-patches'
     },
-    {
-      owner: 'revanced',
-      repo: 'revanced-integrations'
-    } // You see, since the CLI has a bug wherein it is required to supply the input APK, even if we want to just list the patches. Thus, we download the Integrations anyway because of a dirty workaround: we'll supply its own Integrations APK to itself. Why Integrations? Because its really small (much smaller compared to the actual YouTube APK) and it just works (CLI doesn't care about what APK you supplied, it only wants an APK; sure is a really weird bug).
   ];
   if (!listOnly) {
     filesToDownload.push(
+      {
+      owner: 'revanced',
+      repo: 'revanced-integrations'
+      },
       {
         owner: 'TeamVanced',
         repo: 'VancedMicroG'
@@ -359,7 +359,7 @@ async function preflight (listOnly) {
     case 'patches': {
       await preflight(true);
       const { stdout, stderr } = await actualExec(
-        `java -jar ${jarNames.cli} -a ${jarNames.integrations} -b ${jarNames.patchesJar} -l`
+        `java -jar ${jarNames.cli} -a NeverGonnaGiveYouUp -b ${jarNames.patchesJar} -l`
       );
       console.log(stdout || stderr);
       break;
