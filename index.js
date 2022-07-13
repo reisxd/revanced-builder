@@ -329,13 +329,13 @@ async function preflight (listOnly) {
     {
       owner: 'revanced',
       repo: 'revanced-patches'
-    },
+    }
   ];
   if (!listOnly) {
     filesToDownload.push(
       {
-      owner: 'revanced',
-      repo: 'revanced-integrations'
+        owner: 'revanced',
+        repo: 'revanced-integrations'
       },
       {
         owner: 'TeamVanced',
@@ -352,7 +352,6 @@ async function preflight (listOnly) {
     }
   }
 }
-
 
 (async () => {
   switch (argParser.flags[0]) {
