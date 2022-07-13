@@ -312,26 +312,52 @@ async function getYTVersion () {
     .match(/[\d]+(\.\d+)+/g)[0];
 }
 
+async function preflight (listOnly) {
+  if (!fs.existsSync('./revanced')) {
+    fs.mkdirSync('./revanced');
+  }
+  if (fs.existsSync('./revanced-cache')) {
+    fs.rmSync('./revanced-cache', { recursive: true, force: true });
+  }
+  console.log('Downloading required files...');
+
+  const filesToDownload = [
+    {
+      owner: 'revanced',
+      repo: 'revanced-cli'
+    },
+    {
+      owner: 'revanced',
+      repo: 'revanced-patches'
+    },
+    {
+      owner: 'revanced',
+      repo: 'revanced-integrations'
+    } // You see, since the CLI has a bug wherein it is required to supply the input APK, even if we want to just list the patches. Thus, we download the Integrations anyway because of a dirty workaround: we'll supply its own Integrations APK to itself. Why Integrations? Because its really small (much smaller compared to the actual YouTube APK) and it just works (CLI doesn't care about what APK you supplied, it only wants an APK; sure is a really weird bug).
+  ];
+  if (!listOnly) {
+    filesToDownload.push(
+      {
+        owner: 'TeamVanced',
+        repo: 'VancedMicroG'
+      }
+    );
+  }
+  await downloadFiles(filesToDownload);
+
+  if (!listOnly) {
+    await checkForJavaADB();
+    if (adbExists) {
+      await getADBDeviceID();
+    }
+  }
+}
+
+
 (async () => {
   switch (argParser.flags[0]) {
     case 'patches': {
-      if (!fs.existsSync('./revanced')) {
-        fs.mkdirSync('./revanced');
-      }
-      console.log('Downloading latest patches and cli...');
-
-      const filesToDownload = [
-        {
-          owner: 'revanced',
-          repo: 'revanced-cli'
-        },
-        {
-          owner: 'revanced',
-          repo: 'revanced-patches'
-        }
-      ];
-      await downloadFiles(filesToDownload);
-
+      await preflight(true);
       const { stdout, stderr } = await actualExec(
         `java -jar ${jarNames.cli} -a ${jarNames.integrations} -b ${jarNames.patchesJar} -l`
       );
@@ -345,40 +371,7 @@ async function getYTVersion () {
       let ytVersion;
       let isRooted = false;
 
-      if (!fs.existsSync('./revanced')) {
-        fs.mkdirSync('./revanced');
-      }
-
-      if (fs.existsSync('./revanced-cache')) {
-        fs.rmSync('./revanced-cache', { recursive: true, force: true });
-      }
-
-      await checkForJavaADB();
-      console.log('Downloading latest patches, integrations and cli...');
-
-      if (adbExists) {
-        await getADBDeviceID();
-      }
-
-      const filesToDownload = [
-        {
-          owner: 'revanced',
-          repo: 'revanced-cli'
-        },
-        {
-          owner: 'revanced',
-          repo: 'revanced-patches'
-        },
-        {
-          owner: 'revanced',
-          repo: 'revanced-integrations'
-        },
-        {
-          owner: 'TeamVanced',
-          repo: 'VancedMicroG'
-        }
-      ];
-      await downloadFiles(filesToDownload);
+      await preflight(false);
 
       if (argParser.options.exclude) {
         if (argParser.options.exclude.includes('microg-support')) {
@@ -461,40 +454,12 @@ async function getYTVersion () {
       let useManualAPK;
       let ytVersion;
       let isRooted;
-      if (!fs.existsSync('./revanced')) {
-        fs.mkdirSync('./revanced');
-      }
-
-      if (fs.existsSync('./revanced-cache')) {
-        fs.rmSync('./revanced-cache', { recursive: true, force: true });
-      }
-
       await checkForJavaADB();
-      console.log('Downloading latest patches, integrations and cli...');
-
-      const filesToDownload = [
-        {
-          owner: 'revanced',
-          repo: 'revanced-cli'
-        },
-        {
-          owner: 'revanced',
-          repo: 'revanced-patches'
-        },
-        {
-          owner: 'revanced',
-          repo: 'revanced-integrations'
-        },
-        {
-          owner: 'TeamVanced',
-          repo: 'VancedMicroG'
-        }
-      ];
-      await downloadFiles(filesToDownload);
-
       if (adbExists) {
         await getADBDeviceID();
       }
+
+      await preflight(false);
 
       const getPatches = await actualExec(
         `java -jar ${jarNames.cli} -a ${jarNames.integrations} -b ${jarNames.patchesJar} -l`
