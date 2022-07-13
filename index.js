@@ -333,7 +333,7 @@ async function getYTVersion () {
       await downloadFiles(filesToDownload);
 
       const { stdout, stderr } = await actualExec(
-        `java -jar ${jarNames.cli} -b ${jarNames.patchesJar} -l`
+        `java -jar ${jarNames.cli} -a ${jarNames.integrations} -b ${jarNames.patchesJar} -l`
       );
       console.log(stdout || stderr);
       break;
