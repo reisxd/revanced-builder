@@ -448,7 +448,7 @@ async function getYTVersion () {
         await exitProcess();
       } else {
         console.log(
-          'You now can install ReVanced and MicroG by transferring revanced/revanced.apk and revaned/microg.apk!'
+          'You now can install ReVanced and MicroG by transferring revanced/revanced.apk and revanced/microg.apk!'
         );
         await exitProcess();
       }
