@@ -454,10 +454,6 @@ async function preflight (listOnly) {
       let useManualAPK;
       let ytVersion;
       let isRooted;
-      await checkForJavaADB();
-      if (adbExists) {
-        await getADBDeviceID();
-      }
 
       await preflight(false);
 
