@@ -57,3 +57,11 @@ If you want to patch a specific YT version, download the APK, move it to this fo
 ```bash
 $ node . --patch --manual-apk
 ```
+
+## Docker
+
+If you want to build revanced using docker with this node implementation, you can use the included Dockerfile.
+```bash
+$ docker build -t revanced-builder .
+$ docker run --rm -v $(pwd):/app -it revanced-builder
+```
