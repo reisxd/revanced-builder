@@ -1,29 +1,26 @@
 {
-  "name": "revanced-builder-nodejs",
+  "name": "revanced-builder-gui",
   "version": "1.0.0",
-  "description": "",
-  "bin": "index.js",
   "main": "index.js",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "webpack --mode production",
+    "start": "webpack && qode ./dist/index.js",
+    "debug": "webpack && qode --inspect ./dist/index.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
+    "@nodegui/nodegui": "^0.55.0",
     "cheerio": "^1.0.0-rc.12",
-    "cli-progress": "^3.11.2",
-    "inquirer": "^8.2.2",
     "node-fetch": "2.6",
     "node-fetch-progress": "^1.0.2"
   },
   "devDependencies": {
-    "@types/inquirer": "^8.2.1",
-    "@types/node-fetch": "^2.6.2",
-    "eslint": "^8.18.0",
-    "eslint-config-standard": "^17.0.0",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-n": "^15.2.3",
-    "eslint-plugin-promise": "^6.0.0"
+    "@nodegui/packer": "^1.4.1",
+    "@types/node": "^16.4.13",
+    "clean-webpack-plugin": "^3.0.0",
+    "file-loader": "^6.2.0",
+    "native-addon-loader": "^2.0.1",
+    "webpack": "^5.49.0",
+    "webpack-cli": "^4.7.2"
   }
 }

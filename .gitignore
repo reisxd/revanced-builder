@@ -1,7 +1,7 @@
-node_modules/
-ignore/
+node_modules
+dist/
+*.log
+.vscode
 revanced/
 package-lock.json
-revanced-builder-nodejs-macos
-revanced-builder-nodejs-linux
-revanced-builder-nodejs-win.exe
+ignore/
