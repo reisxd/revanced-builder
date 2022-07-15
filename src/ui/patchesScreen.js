@@ -5,7 +5,6 @@ const {
   QPushButton
 } = require('@nodegui/nodegui');
 const { deleteWidgets } = require('../utils/index.js');
-const { errorScreen } = require('./index.js');
 
 function patchesScreen (selectedPatches, layout, variables, widgetsArray) {
   const selectPatchesLabel = new QLabel();
@@ -19,6 +18,7 @@ function patchesScreen (selectedPatches, layout, variables, widgetsArray) {
   continueButton.setText('Continue');
   widgetsArray = [selectPatchesLabel, listWidget, continueButton];
   continueButton.addEventListener('clicked', async () => {
+    const { errorScreen } = require('./index.js');
     const { getYTVersions, getYTVersion } = require('../utils/builder.js');
     let ytVersion;
     for (const listItem of listWidget.selectedItems()) {
@@ -38,7 +38,8 @@ function patchesScreen (selectedPatches, layout, variables, widgetsArray) {
         } else {
           deleteWidgets(widgetsArray);
           return errorScreen(
-            "Couldn't find the device. Please plug in the device."
+            "Couldn't find the device. Please plug in the device.",
+            layout
           );
         }
       }
