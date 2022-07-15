@@ -33,7 +33,7 @@ const vars = {
   foundDevice: false
 };
 
-async function getADBDeviceID() {
+async function getADBDeviceID () {
   let deviceId;
   const { stdout } = await actualExec('adb devices');
   const adbDeviceIdRegex = new RegExp(`${require('os').EOL}(.*?)\t`);
@@ -48,7 +48,7 @@ async function getADBDeviceID() {
   return deviceId;
 }
 
-async function getPage(pageUrl) {
+async function getPage (pageUrl) {
   const pageRequest = await fetchURL(pageUrl, {
     headers: {
       'user-agent':
@@ -58,7 +58,7 @@ async function getPage(pageUrl) {
   return await pageRequest.text();
 }
 
-async function overWriteJarNames(link) {
+async function overWriteJarNames (link) {
   const fileName = link.split('/').pop();
   if (fileName.includes('revanced-cli')) jarNames.cli += fileName;
   if (fileName.includes('revanced-patches') && fileName.endsWith('.jar')) {
@@ -68,7 +68,7 @@ async function overWriteJarNames(link) {
   if (fileName.startsWith('microg')) jarNames.microG += fileName;
 }
 
-async function preflight(listOnly, gLayout) {
+async function preflight (listOnly, gLayout) {
   layout = gLayout;
   if (!fs.existsSync('./revanced')) {
     fs.mkdirSync('./revanced');
@@ -109,14 +109,14 @@ async function preflight(listOnly, gLayout) {
   }
 }
 
-async function downloadFiles(repos) {
+async function downloadFiles (repos) {
   for (const repo of repos) {
     const downloadLink = await getDownloadLink(repo);
     await downloadFile(downloadLink);
   }
 }
 
-async function getDownloadLink(json) {
+async function getDownloadLink (json) {
   const apiRequest = await fetchURL(
     `https://api.github.com/repos/${json.owner}/${json.repo}/releases/latest`
   );
@@ -149,7 +149,7 @@ async function getDownloadLink(json) {
   return assets;
 }
 
-async function downloadFile(assets) {
+async function downloadFile (assets) {
   for (const asset of assets) {
     const dir = fs.readdirSync('./revanced/');
     overWriteJarNames(asset.browser_download_url);
@@ -170,7 +170,7 @@ async function downloadFile(assets) {
   }
 }
 
-async function checkForJavaADB() {
+async function checkForJavaADB () {
   deleteWidgets(widgetsArray);
   const label = new QLabel();
   label.setObjectName('h');
@@ -191,17 +191,25 @@ async function checkForJavaADB() {
       .map((match) => match[1])[0]
       .match(/"(.*)"/)[1];
     if (javaVer.split('.')[0] < 17) {
-        return errorScreen('You have an outdated version of JDK.\nPlease get it from here: https://www.azul.com/downloads/?version=java-17-lts&package=jdk', layout);
+      return errorScreen(
+        'You have an outdated version of JDK.\nPlease get it from here: https://www.azul.com/downloads/?version=java-17-lts&package=jdk',
+        layout
+      );
     }
 
     if (!javaVerLog.includes('Zulu')) {
-      return errorScreen('You have Java, but not Zulu JDK. You need to install it because of signing problems.\nPlease get it from here: https://www.azul.com/downloads/?version=java-17-lts&package=jdk', layout);
+      return errorScreen(
+        'You have Java, but not Zulu JDK. You need to install it because of signing problems.\nPlease get it from here: https://www.azul.com/downloads/?version=java-17-lts&package=jdk',
+        layout
+      );
     }
     await actualExec('adb');
   } catch (e) {
     if (e.stderr.includes('java')) {
-      return errorScreen("You don't have JDK installed.\nPlease get it from here: https://www.azul.com/downloads/?version=java-17-lts&package=jdk", layout);
-      return;
+      return errorScreen(
+        "You don't have JDK installed.\nPlease get it from here: https://www.azul.com/downloads/?version=java-17-lts&package=jdk",
+        layout
+      );
     }
     if (e.stderr.includes('adb')) {
       vars.adbExists = false;
@@ -211,7 +219,7 @@ async function checkForJavaADB() {
   }
 }
 
-async function getYTVersion() {
+async function getYTVersion () {
   const { stdout, stderr } = await actualExec(
     'adb shell dumpsys package com.google.android.youtube'
   );
@@ -229,7 +237,7 @@ async function getYTVersion() {
     .match(/[\d]+(\.\d+)+/g)[0];
 }
 
-async function dloadFromURL(url, outputPath) {
+async function dloadFromURL (url, outputPath) {
   deleteWidgets(widgetsArray);
   const label = new QLabel();
   label.setObjectName('h');
@@ -270,7 +278,7 @@ async function dloadFromURL(url, outputPath) {
   });
 }
 
-async function excludePatches(layout) {
+async function excludePatches (layout) {
   const getPatches = await actualExec(
     `java -jar ${jarNames.cli} -a ${jarNames.integrations} -b ${jarNames.patchesJar} -l`
   );
@@ -301,7 +309,7 @@ async function excludePatches(layout) {
   patchesScreen(patchesChoice, layout, vars, widgetsArray);
 }
 
-async function getYTVersions(ytVersion) {
+async function getYTVersions (ytVersion) {
   if (ytVersion) return downloadYTApk(ytVersion);
   const versionsList = await getPage(
     'https://www.apkmirror.com/apk/google-inc/youtube'
@@ -326,7 +334,7 @@ async function getYTVersions(ytVersion) {
   }
 }
 
-async function downloadYTApk(apkVersion) {
+async function downloadYTApk (apkVersion) {
   const versionDownload = await fetchURL(
     `https://www.apkmirror.com/apk/google-inc/youtube/youtube-${apkVersion}-release/`
   );
@@ -358,7 +366,7 @@ async function downloadYTApk(apkVersion) {
   return await buildReVanced();
 }
 
-async function buildReVanced() {
+async function buildReVanced () {
   deleteWidgets(widgetsArray);
   patchingScreen(layout, widgetsArray);
   const { stdout, stderr } = await actualExec(
