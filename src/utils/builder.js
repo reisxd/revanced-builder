@@ -240,6 +240,7 @@ async function dloadFromURL(url, outputPath) {
   progressBar.setMaximum(100);
   progressBar.setValue(0);
   progressBar.setFixedSize(250, 25);
+  progressBar.setTextVisible(false);
   layout.addWidget(label);
   layout.addWidget(progressBar);
   widgetsArray = [label, progressBar];
