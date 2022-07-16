@@ -8,7 +8,7 @@ With version 2.0.0, now ReVanced Builder is no longer a CLI application, but a G
 
 You'll need at least [Zulu JDK 17](https://www.azul.com/downloads/?version=java-17-lts&package=jdk) and [ADB](https://developer.android.com/studio/command-line/adb) (optional, required only for rooted phones).
 
-If you plan to use it from source, you'll also require [NodeJS >=13](https://nodejs.org/).
+If you plan to use it from source, you'll also require [NodeJS >=16](https://nodejs.org/).
 
 ## How to use
 
