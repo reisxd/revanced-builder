@@ -12,11 +12,10 @@ const {
   errorScreen
 } = require('../ui/index.js');
 const { load } = require('cheerio');
-const patchedScreen = require('../ui/patchedScreen.js');
 
 const actualExec = util.promisify(exec);
 
-let layout;
+let ui;
 let widgetsArray = [];
 const jarNames = {
   cli: './revanced/',
@@ -69,7 +68,7 @@ async function overWriteJarNames (link) {
 }
 
 async function preflight (listOnly, gLayout) {
-  layout = gLayout;
+  ui = gLayout;
   if (!fs.existsSync('./revanced')) {
     fs.mkdirSync('./revanced');
   }
@@ -130,7 +129,7 @@ async function getDownloadLink (json) {
     if (!releasesPage.ok) {
       return errorScreen(
         'You got ratelimited from GitHub\n...Completely? What did you even do?',
-        layout
+        ui
       );
     }
     const releasePage = await releasesPage.text();
@@ -172,18 +171,7 @@ async function downloadFile (assets) {
 
 async function checkForJavaADB () {
   deleteWidgets(widgetsArray);
-  const label = new QLabel();
-  label.setObjectName('h');
-  label.setText('Checking system requirements...');
-  const progressBar = new QProgressBar();
-  progressBar.setObjectName('progressBar');
-  progressBar.setMinimum(0);
-  progressBar.setMaximum(0);
-  progressBar.setValue(0);
-  progressBar.setFixedSize(250, 25);
-  layout.addWidget(label);
-  layout.addWidget(progressBar);
-  widgetsArray = [label, progressBar];
+  ui.labels.main.setText('Checking system requirements...');
   try {
     const javaCheck = await actualExec('java -version');
     const javaVerLog = javaCheck.stderr || javaCheck.stdout;
@@ -193,14 +181,14 @@ async function checkForJavaADB () {
     if (javaVer.split('.')[0] < 17) {
       return errorScreen(
         'You have an outdated version of JDK.\nPlease get it from here: https://www.azul.com/downloads/?version=java-17-lts&package=jdk',
-        layout
+        ui
       );
     }
 
     if (!javaVerLog.includes('Zulu')) {
       return errorScreen(
         'You have Java, but not Zulu JDK. You need to install it because of signing problems.\nPlease get it from here: https://www.azul.com/downloads/?version=java-17-lts&package=jdk',
-        layout
+        ui
       );
     }
     await actualExec('adb');
@@ -208,7 +196,7 @@ async function checkForJavaADB () {
     if (e.stderr.includes('java')) {
       return errorScreen(
         "You don't have JDK installed.\nPlease get it from here: https://www.azul.com/downloads/?version=java-17-lts&package=jdk",
-        layout
+        ui
       );
     }
     if (e.stderr.includes('adb')) {
@@ -228,7 +216,7 @@ async function getYTVersion () {
     deleteWidgets(widgetsArray);
     return errorScreen(
       "YouTube is not installed on your device\nIt's needed for rooted ReVanced.",
-      layout
+      ui
     );
   }
   return dumpSysOut
@@ -239,9 +227,13 @@ async function getYTVersion () {
 
 async function dloadFromURL (url, outputPath) {
   deleteWidgets(widgetsArray);
+
+  ui.labels.main.setText('Downloading files');
   const label = new QLabel();
-  label.setObjectName('h');
   label.setText(`Downloading file: ${outputPath.split('/').pop()}`);
+  label.setStyleSheet(
+    'font-size: 20px; font-weight: light; padding: 1; font: 20px "Calibri"; color: white;'
+  );
   const progressBar = new QProgressBar();
   progressBar.setObjectName('progressBar');
   progressBar.setMinimum(0);
@@ -249,8 +241,8 @@ async function dloadFromURL (url, outputPath) {
   progressBar.setValue(0);
   progressBar.setFixedSize(250, 25);
   progressBar.setTextVisible(false);
-  layout.addWidget(label);
-  layout.addWidget(progressBar);
+  ui.panels.innerPanel.addWidget(label);
+  ui.panels.innerPanel.addWidget(progressBar);
   widgetsArray = [label, progressBar];
   const request = await fetchURL(url, {
     headers: {
@@ -278,7 +270,7 @@ async function dloadFromURL (url, outputPath) {
   });
 }
 
-async function excludePatches (layout) {
+async function excludePatches (ui) {
   const getPatches = await actualExec(
     `java -jar ${jarNames.cli} -a ${jarNames.integrations} -b ${jarNames.patchesJar} -l`
   );
@@ -306,7 +298,7 @@ async function excludePatches (layout) {
 
     index++;
   }
-  patchesScreen(patchesChoice, layout, vars, widgetsArray);
+  patchesScreen(patchesChoice, ui, vars, widgetsArray);
 }
 
 async function getYTVersions (ytVersion) {
@@ -330,7 +322,7 @@ async function getYTVersions (ytVersion) {
       if (versionName.includes('beta')) continue;
       versionList.push(versionName);
     }
-    ytVerSelector(versionList, layout, versionChoosen, widgetsArray);
+    ytVerSelector(versionList, ui, versionChoosen, widgetsArray);
   }
 }
 
@@ -368,25 +360,15 @@ async function downloadYTApk (apkVersion) {
 
 async function buildReVanced () {
   deleteWidgets(widgetsArray);
-  patchingScreen(layout, widgetsArray);
-  const { stdout, stderr } = await actualExec(
+  const buildProcess = await exec(
     `java -jar ${jarNames.cli} -b ${jarNames.patchesJar} --experimental -a ./revanced/youtube.apk ${jarNames.deviceId} -o ./revanced/revanced.apk -m ${jarNames.integrations} ${vars.patches}`,
     { maxBuffer: 5120 * 1024 }
   );
 
-  if (
-    stdout.includes('INSTALL_FAILED_UPDATE_INCOMPATIBLE') ||
-    stderr.includes('INSTALL_FAILED_UPDATE_INCOMPATIBLE')
-  ) {
-    await actualExec('adb uninstall app.revanced.android.youtube');
-    await actualExec('adb install revanced/revanced.apk');
-  }
+  patchingScreen(ui, widgetsArray, buildProcess);
 
   if (vars.adbExists && !vars.isRooted && vars.foundDevice) {
     await actualExec(`adb install ${jarNames.microG}`);
-    patchedScreen(layout, stdout || stderr, true, widgetsArray);
-  } else {
-    patchedScreen(layout, stdout || stderr, false, widgetsArray);
   }
 }
 

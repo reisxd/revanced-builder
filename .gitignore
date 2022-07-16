@@ -5,3 +5,4 @@ dist/
 revanced/
 package-lock.json
 ignore/
+revanced-cache/

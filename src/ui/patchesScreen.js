@@ -1,22 +1,19 @@
 const {
-  QLabel,
   QListWidget,
   QListWidgetItem,
   QPushButton
 } = require('@nodegui/nodegui');
 const { deleteWidgets } = require('../utils/index.js');
 
-function patchesScreen (selectedPatches, layout, variables, widgetsArray) {
-  const selectPatchesLabel = new QLabel();
-  selectPatchesLabel.setText('Select the patches you want to exclude:');
-  selectPatchesLabel.setObjectName('h');
+function patchesScreen (selectedPatches, ui, variables, widgetsArray) {
+  ui.labels.main.setText('Select the patches you want to exclude:');
+  ui.labels.main.setObjectName('text');
   const listWidget = new QListWidget();
   listWidget.setSelectionMode(2);
   listWidget.setFixedSize(735, 300);
-  listWidget.setStyleSheet('margin-right: 240; margin-bottom: 50;');
   const continueButton = new QPushButton();
   continueButton.setText('Continue');
-  widgetsArray = [selectPatchesLabel, listWidget, continueButton];
+  widgetsArray = [listWidget, continueButton];
   continueButton.addEventListener('clicked', async () => {
     const { errorScreen } = require('./index.js');
     const { getYTVersions, getYTVersion } = require('../utils/builder.js');
@@ -28,7 +25,7 @@ function patchesScreen (selectedPatches, layout, variables, widgetsArray) {
           deleteWidgets(widgetsArray);
           return errorScreen(
             "You don't have ADB installed.\nPlease get it from here: https://developer.android.com/studio/releases/platform-tools\n",
-            layout
+            ui
           );
         }
         if (variables.foundDevice) {
@@ -39,14 +36,14 @@ function patchesScreen (selectedPatches, layout, variables, widgetsArray) {
           deleteWidgets(widgetsArray);
           return errorScreen(
             "Couldn't find the device. Please plug in the device.",
-            layout
+            ui
           );
         }
       }
       const patchName = patch.replace(/\|.+(.*)$/, '');
       variables.patches += ` -e ${patchName}`;
     }
-    deleteWidgets([selectPatchesLabel, listWidget, continueButton]);
+    deleteWidgets([listWidget, continueButton]);
     getYTVersions(ytVersion);
   });
   for (const patch of selectedPatches) {
@@ -54,9 +51,8 @@ function patchesScreen (selectedPatches, layout, variables, widgetsArray) {
     patchName.setText(patch);
     listWidget.addItem(patchName);
   }
-  layout.addWidget(selectPatchesLabel);
-  layout.addWidget(listWidget);
-  layout.addWidget(continueButton);
+  ui.panels.innerPanel.addWidget(listWidget);
+  ui.buttonPanel.addWidget(continueButton);
 }
 
 module.exports = patchesScreen;

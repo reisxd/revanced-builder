@@ -1,29 +1,30 @@
-const { QLabel } = require('@nodegui/nodegui');
+const { QLabel, QTextEdit } = require('@nodegui/nodegui');
 
-function showError (error, layout) {
-  const errorLabel = new QLabel();
-  errorLabel.setText('Error');
-  errorLabel.setStyleSheet('color: red; font-size: 50px;');
-  errorLabel.setObjectName('h');
-  const errorLogLabel = new QLabel();
-  errorLogLabel.setText(error?.stack || error);
-  errorLogLabel.setStyleSheet('font-size: 12px;');
-  errorLabel.setObjectName('h');
+function showError (error, ui) {
+  ui.labels.main.setText('Error');
+  ui.labels.main.setStyleSheet(
+    'font-size: 20px; font-weight: light; font: 20px "Calibri"; color: red;'
+  );
+  const errorLogBox = new QTextEdit();
+  errorLogBox.setText(error?.stack || error);
+  errorLogBox.setReadOnly(true);
   const issueLabel = new QLabel();
   issueLabel.setTextFormat(1);
-  issueLabel.setObjectName('h');
+  issueLabel.setObjectName('text');
   issueLabel.setOpenExternalLinks(true);
+  issueLabel.setStyleSheet(
+    'font-size: 20px; font-weight: light; font: 20px "Calibri";'
+  );
   issueLabel.setText(
     '<a href="https://github.com/reisxd/revanced-builder/issues">Please make an issue.</a>'
   );
   /* const copyToClipBButton = new QPushButton();
   copyToClipBButton.setText('Copy to clipboard');
   copyToClipBButton.setStyleSheet('border-radius: 12px; background-color: #333333; color: #ffffff'); */
-  layout.addWidget(errorLabel);
-  layout.addWidget(errorLogLabel);
+  ui.panels.innerPanel.addWidget(errorLogBox);
   if (error.stack) {
-    layout.addWidget(issueLabel);
-    // layout.addWidget(copyToClipBButton);
+    ui.panels.innerPanel.addWidget(issueLabel);
+    // ui.addWidget(copyToClipBButton);
   }
 }
 
