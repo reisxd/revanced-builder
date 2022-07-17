@@ -1,4 +1,4 @@
-function deleteWidgets (widgetsArray, layout) {
+function deleteWidgets (widgetsArray) {
   for (const widget of widgetsArray) {
     widget.setParent(null);
   }

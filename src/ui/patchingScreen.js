@@ -6,11 +6,15 @@ const actualExec = util.promisify(exec);
 function patchingScreen (ui, widgetsArray, buildProcess) {
   ui.labels.main.setText('Building ReVanced...');
   const logText = new QTextEdit();
-  logText.setFixedSize(735, 250);
+  logText.setFixedSize(675, 313);
+  logText.setStyleSheet('margin-right: 26px; margin-bottom: 23px;')
   logText.setReadOnly(true);
   widgetsArray = [logText];
   buildProcess.stdout.on('data', async (data) => {
     logText.setText(logText.toPlainText() + data.toString());
+    if (data.toString().includes('Finished')) {
+      ui.labels.main.setText('ReVanced has been built.');
+    }
     if (data.toString().includes('INSTALL_FAILED_UPDATE_INCOMPATIBLE')) {
       await actualExec('adb uninstall app.revanced.android.youtube');
       await actualExec('adb install revanced/revanced.apk');

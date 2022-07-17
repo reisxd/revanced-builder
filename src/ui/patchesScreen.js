@@ -3,6 +3,7 @@ const {
   QListWidgetItem,
   QPushButton
 } = require('@nodegui/nodegui');
+const fs = require('fs');
 const { deleteWidgets } = require('../utils/index.js');
 
 function patchesScreen (selectedPatches, ui, variables, widgetsArray) {
@@ -12,10 +13,12 @@ function patchesScreen (selectedPatches, ui, variables, widgetsArray) {
   listWidget.setSelectionMode(2);
   listWidget.setFixedSize(735, 300);
   const continueButton = new QPushButton();
+  continueButton.setStyleSheet(`margin-bottom: 23px;`);
   continueButton.setText('Continue');
   widgetsArray = [listWidget, continueButton];
+  listWidget.setObjectName('items');
   continueButton.addEventListener('clicked', async () => {
-    const { errorScreen } = require('./index.js');
+    const { errorScreen, useOldApkScreen } = require('./index.js');
     const { getYTVersions, getYTVersion } = require('../utils/builder.js');
     let ytVersion;
     for (const listItem of listWidget.selectedItems()) {
@@ -44,12 +47,19 @@ function patchesScreen (selectedPatches, ui, variables, widgetsArray) {
       variables.patches += ` -e ${patchName}`;
     }
     deleteWidgets([listWidget, continueButton]);
-    getYTVersions(ytVersion);
+    if (variables.isRooted) {
+      getYTVersions(ytVersion);
+    } else if (fs.existsSync('./revanced/youtube.apk')) {
+      useOldApkScreen(ui);
+    } else {
+      getYTVersions();
+    }
+    
   });
   for (const patch of selectedPatches) {
-    const patchName = new QListWidgetItem();
-    patchName.setText(patch);
-    listWidget.addItem(patchName);
+    const patchItem = new QListWidgetItem();
+    patchItem.setText(patch);
+    listWidget.addItem(patchItem);
   }
   ui.panels.innerPanel.addWidget(listWidget);
   ui.buttonPanel.addWidget(continueButton);

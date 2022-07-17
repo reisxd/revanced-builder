@@ -231,9 +231,7 @@ async function dloadFromURL (url, outputPath) {
   ui.labels.main.setText('Downloading files');
   const label = new QLabel();
   label.setText(`Downloading file: ${outputPath.split('/').pop()}`);
-  label.setStyleSheet(
-    'font-size: 20px; font-weight: light; padding: 1; font: 20px "Calibri"; color: white;'
-  );
+  
   const progressBar = new QProgressBar();
   progressBar.setObjectName('progressBar');
   progressBar.setMinimum(0);
@@ -377,5 +375,6 @@ module.exports = {
   excludePatches,
   getYTVersions,
   downloadYTApk,
-  getYTVersion
+  getYTVersion,
+  buildReVanced
 };

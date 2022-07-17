@@ -14,15 +14,18 @@ function initializeUI (layout) {
   buttons.setLayout(buttonsPanel);
   const mainLabel = new QLabel();
   mainLabel.setStyleSheet(
-    'font-size: 20px; font-weight: light; padding: 1; font: 20px "Calibri"; color: white;'
+    'font-size: 20px; font-family: "Segoe UI", serif; font-weight: 500; color: white; margin: 0;'
   );
+  const space = new QLabel();
+  space.setObjectName('space');
   const lowerLabel = new QLabel();
   panelTwo.setLayout(panelTwoLayout);
-  layout.addWidget(mainLabel);
-  layout.addWidget(lowerLabel);
+  panelLayout.addWidget(mainLabel);
+ // panelLayout.addWidget(lowerLabel);
   panelLayout.addWidget(panelTwo);
-  panelLayout.addWidget(buttons);
   layout.addWidget(panelOne);
+  buttonsPanel.addWidget(space);
+  panelLayout.addWidget(buttons);
   return {
     layout,
     panels: {
@@ -33,7 +36,8 @@ function initializeUI (layout) {
     labels: {
       main: mainLabel,
       lower: lowerLabel
-    }
+    },
+    space
   };
 }
 
