@@ -27,7 +27,7 @@ function patchesScreen (selectedPatches, ui, variables, widgetsArray) {
         if (!variables.adbExists) {
           deleteWidgets(widgetsArray);
           return errorScreen(
-            "You don't have ADB installed.\nPlease install it it from \"https://developer.android.com/studio/releases/platform-tools\"\n If you prefer the 15 second installer, it is avalible at https://forum.xda-developers.com/t/official-tool-windows-adb-fastboot-and-drivers-15-seconds-adb-installer-v1-4-3.2588979/",
+            "You don't have ADB installed.\nPlease install it it from the <a href=\"Offical android website\">https://developer.android.com/studio/releases/platform-tools</a> Or the 15 second installer at the <a href=\"https://forum.xda-developers.com/t/official-tool-windows-adb-fastboot-and-drivers-15-seconds-adb-installer-v1-4-3.2588979\">XDA Forums</a>",
             ui
           );
         }
