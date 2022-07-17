@@ -6,7 +6,7 @@ on:
       - v*.*.*
 
 jobs:
-  build:
+  build-linux:
     runs-on: ubuntu-latest
     steps:
       - name: Install dependencies
@@ -14,22 +14,99 @@ jobs:
           sudo apt update -y
           sudo apt upgrade -y
           sudo apt install -y nodejs
-          sudo curl -Lo /usr/bin/ldid https://github.com/ProcursusTeam/ldid/releases/download/v2.1.5-procursus2/ldid_linux_x86_64
-          sudo chmod a+rwx /usr/bin/ldid
+          sudo apt install -y binutils
+          sudo apt install -y zip
       - name: Clone repo
         uses: actions/checkout@v3
       - name: Set env
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
       - name: Install npm dependencies
         run: |
-          npm install --production
-      - name: Install pkg
-        run: sudo npm install -g pkg
+          npm install
+      - name: Initialize nodegui-packer
+        run: |
+          npx nodegui-packer --init revanced-builder
+      - name: Build revanced-builder (webpack)
+        run: |
+          npm run build
       - name: Build
-        run: pkg -t linux-x64,macos-x64,win-x64 --out-path dist --public .
+        run: |
+          npx nodegui-packer --pack dist/
+      - name: Zip release
+        run: |
+          cd deploy/linux/build/revanced-builder
+          rm ./Application-x86_64.AppImage
+          cd ..
+          zip revanced-builder-linux-x86_64.zip revanced-builder
       - name: Upload to Releases
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            dist/*
+            deploy/linux/build/revanced-builder-linux-x86_64.zip
+          tag_name: ${{ env.RELEASE_VERSION }}
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Install NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Clone repo
+        uses: actions/checkout@v3
+      - name: Set env
+        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+      - name: Install npm dependencies
+        run: |
+          npm install
+      - name: Initialize nodegui-packer
+        run: |
+          npx nodegui-packer --init revanced-builder
+      - name: Build revanced-builder (webpack)
+        run: |
+          npm run build
+      - name: Build
+        run: |
+          npx nodegui-packer --pack dist/
+      - name: Zip release
+        run: |
+          cd deploy/win32/build
+          tar -cf revanced-builder-windows.zip revanced-builder
+      - name: Upload to Releases
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            deploy/win32/build/revanced-builder-windows.zip
+          tag_name: ${{ env.RELEASE_VERSION }}
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - name: Install NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Clone repo
+        uses: actions/checkout@v3
+      - name: Set env
+        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+      - name: Install npm dependencies
+        run: |
+          npm install
+      - name: Initialize nodegui-packer
+        run: |
+          npx nodegui-packer --init revanced-builder
+      - name: Build revanced-builder (webpack)
+        run: |
+          npm run build
+      - name: Build
+        run: |
+          npx nodegui-packer --pack dist/
+      - name: Zip release
+        run: |
+          cd deploy/darwin/build
+          tar -cf revanced-builder-macos.zip revanced-builder
+      - name: Upload to Releases
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            deploy/darwin/build/revanced-builder-macos.zip
           tag_name: ${{ env.RELEASE_VERSION }}
