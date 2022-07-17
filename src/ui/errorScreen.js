@@ -6,7 +6,7 @@ function showError (error, ui) {
     'font-size: 20px; font-weight: light; font: 20px "Calibri"; color: red;'
   );
   const errorLogBox = new QTextEdit();
-  errorLogBox.setText(error?.stack || error);
+  error.stack ? errorLogBox.setText(error.stack) : errorLogBox.setHtml(error);
   errorLogBox.setReadOnly(true);
   const issueLabel = new QLabel();
   issueLabel.setTextFormat(1);
