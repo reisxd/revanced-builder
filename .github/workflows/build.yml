@@ -25,19 +25,19 @@ jobs:
           npm install
       - name: Initialize nodegui-packer
         run: |
-        npx nodegui-packer --init revanced-builder
+          npx nodegui-packer --init revanced-builder
       - name: Build revanced-builder (webpack)
         run: |
-        npm run build
+          npm run build
       - name: Build
         run: |
-        npx nodegui-packer --pack dist/
+          npx nodegui-packer --pack dist/
       - name: Zip release
         run: |
-        cd deploy/linux/build/revanced-builder
-        rm ./Application-x86_64.AppImage
-        cd ..
-        zip revanced-builder-linux-x86_64.zip revanced-builder
+          cd deploy/linux/build/revanced-builder
+          rm ./Application-x86_64.AppImage
+          cd ..
+          zip revanced-builder-linux-x86_64.zip revanced-builder
       - name: Upload to Releases
         uses: softprops/action-gh-release@v1
         with:
@@ -60,17 +60,17 @@ jobs:
           npm install
       - name: Initialize nodegui-packer
         run: |
-        npx nodegui-packer --init revanced-builder
+          npx nodegui-packer --init revanced-builder
       - name: Build revanced-builder (webpack)
         run: |
-        npm run build
+          npm run build
       - name: Build
         run: |
-        npx nodegui-packer --pack dist/
+          npx nodegui-packer --pack dist/
       - name: Zip release
         run: |
-        cd deploy/win32/build
-        tar -cf revanced-builder-windows.zip revanced-builder
+          cd deploy/win32/build
+          tar -cf revanced-builder-windows.zip revanced-builder
       - name: Upload to Releases
         uses: softprops/action-gh-release@v1
         with:
