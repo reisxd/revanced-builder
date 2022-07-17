@@ -104,7 +104,7 @@ jobs:
       - name: Zip release
         run: |
           cd deploy/darwin/build
-          dir
+          is
       - name: Upload to Releases
         uses: softprops/action-gh-release@v1
         with:
