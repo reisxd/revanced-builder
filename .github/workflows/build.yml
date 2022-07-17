@@ -16,6 +16,7 @@ jobs:
           sudo apt install -y nodejs
           sudo apt install -y binutils
           sudo apt install -y zip
+          sudo apt install -y qt5-default
       - name: Clone repo
         uses: actions/checkout@v3
       - name: Set env
@@ -103,10 +104,10 @@ jobs:
       - name: Zip release
         run: |
           cd deploy/darwin/build
-          tar -cf revanced-builder-macos.zip revanced-builder
+          dir
       - name: Upload to Releases
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            deploy/darwin/build/revanced-builder-macos.zip
+            deploy/darwin/build/revanced-builder.dmg
           tag_name: ${{ env.RELEASE_VERSION }}
