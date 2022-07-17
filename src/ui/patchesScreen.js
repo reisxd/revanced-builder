@@ -13,7 +13,7 @@ function patchesScreen (selectedPatches, ui, variables, widgetsArray) {
   listWidget.setSelectionMode(2);
   listWidget.setFixedSize(735, 300);
   const continueButton = new QPushButton();
-  continueButton.setStyleSheet(`margin-bottom: 23px;`);
+  continueButton.setStyleSheet('margin-bottom: 23px;');
   continueButton.setText('Continue');
   widgetsArray = [listWidget, continueButton];
   listWidget.setObjectName('items');
@@ -54,7 +54,6 @@ function patchesScreen (selectedPatches, ui, variables, widgetsArray) {
     } else {
       getYTVersions();
     }
-    
   });
   for (const patch of selectedPatches) {
     const patchItem = new QListWidgetItem();

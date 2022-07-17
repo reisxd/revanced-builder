@@ -231,7 +231,9 @@ async function dloadFromURL (url, outputPath) {
   ui.labels.main.setText('Downloading files');
   const label = new QLabel();
   label.setText(`Downloading file: ${outputPath.split('/').pop()}`);
-  
+  label.setStyleSheet(
+    'font-size: 20px; font-family: "Segoe UI", serif; font-weight: 500; color: white; margin: 0;'
+  );
   const progressBar = new QProgressBar();
   progressBar.setObjectName('progressBar');
   progressBar.setMinimum(0);

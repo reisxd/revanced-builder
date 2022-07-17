@@ -7,7 +7,7 @@ function patchingScreen (ui, widgetsArray, buildProcess) {
   ui.labels.main.setText('Building ReVanced...');
   const logText = new QTextEdit();
   logText.setFixedSize(675, 313);
-  logText.setStyleSheet('margin-right: 26px; margin-bottom: 23px;')
+  logText.setStyleSheet('margin-right: 26px; margin-bottom: 23px;');
   logText.setReadOnly(true);
   widgetsArray = [logText];
   buildProcess.stdout.on('data', async (data) => {

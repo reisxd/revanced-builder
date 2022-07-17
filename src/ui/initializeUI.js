@@ -21,7 +21,7 @@ function initializeUI (layout) {
   const lowerLabel = new QLabel();
   panelTwo.setLayout(panelTwoLayout);
   panelLayout.addWidget(mainLabel);
- // panelLayout.addWidget(lowerLabel);
+  // panelLayout.addWidget(lowerLabel);
   panelLayout.addWidget(panelTwo);
   layout.addWidget(panelOne);
   buttonsPanel.addWidget(space);

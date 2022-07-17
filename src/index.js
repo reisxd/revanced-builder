@@ -128,6 +128,7 @@ win.setStyleSheet(
   #buttons {
     display: flex;
     flex-direction: row;
+    align-items: center;
   }
 
   #space {
@@ -217,8 +218,10 @@ QPushButton {
     background-color: rgb(255, 255, 255, 18);
     border: 1px solid rgb(255, 255, 255, 13);
     border-radius: 7px;
-    min-height: 38px;
-    max-height: 38px;
+    min-height: 19px;
+    max-height: 19px;
+    margin-top: 5px;
+    padding: 4px;
 }
 QPushButton:hover {
     background-color: rgb(255, 255, 255, 25);
