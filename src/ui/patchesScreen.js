@@ -27,7 +27,7 @@ function patchesScreen (selectedPatches, ui, variables, widgetsArray) {
         if (!variables.adbExists) {
           deleteWidgets(widgetsArray);
           return errorScreen(
-            "You don't have ADB installed.\nPlease get it from here: https://developer.android.com/studio/releases/platform-tools\n",
+            "You don't have ADB installed.\nPlease install it it from the <a href=\"Offical android website\">https://developer.android.com/studio/releases/platform-tools</a> Or the 15 second installer at the <a href=\"https://forum.xda-developers.com/t/official-tool-windows-adb-fastboot-and-drivers-15-seconds-adb-installer-v1-4-3.2588979\">XDA Forums</a>",
             ui
           );
         }
@@ -38,7 +38,7 @@ function patchesScreen (selectedPatches, ui, variables, widgetsArray) {
         } else {
           deleteWidgets(widgetsArray);
           return errorScreen(
-            "Couldn't find the device. Please plug in the device.",
+            "Could not find the device, Please try the following:\n * Install / Load the USB drivers for the device\n * Enable developer mode on the device\n * Enable USB debugging on the device's developer tools\n * Try rebooting your device, or try rebooting your computer\n",
             ui
           );
         }
