@@ -18,7 +18,6 @@
     "@nodegui/packer": "^1.4.1",
     "@types/node": "^16.4.13",
     "clean-webpack-plugin": "^3.0.0",
-    "copy-webpack-plugin": "^11.0.0",
     "eslint": "^8.19.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",

@@ -1,6 +1,5 @@
 const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   mode: process.NODE_ENV || 'development',
@@ -35,10 +34,5 @@ module.exports = {
   resolve: {
     extensions: ['.tsx', '.ts', '.js', '.jsx']
   },
-  plugins: [
-    new CleanWebpackPlugin(),
-    new CopyPlugin({
-      patterns: [path.resolve(__dirname, 'src', 'main.qss')]
-    })
-  ]
+  plugins: [new CleanWebpackPlugin()]
 };
