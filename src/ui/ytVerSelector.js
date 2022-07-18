@@ -11,6 +11,7 @@ function ytVerSelector (versionsList, ui, version, widgetsArray) {
   listWidget.setFixedSize(735, 300);
   const continueButton = new QPushButton();
   continueButton.setText('Continue');
+  continueButton.setStyleSheet('margin-bottom: 15px;');
   continueButton.addEventListener('clicked', async () => {
     const { downloadYTApk } = require('../utils/builder.js');
     version = listWidget.selectedItems()[0].text();

@@ -15,7 +15,7 @@ function useOldApkScreen (ui) {
   useAPK.setText('Use downloaded APK');
   const downloadAPK = new QPushButton();
   downloadAPK.setStyleSheet('margin-bottom: 15px; margin-left: 10px;');
-  ui.space.setStyleSheet('margin-left: 170px;');
+  ui.space.setStyleSheet('margin-left: 150px;');
   downloadAPK.setText('Use another APK');
   useAPK.addEventListener('clicked', async () => {
     const { buildReVanced } = require('../utils/builder.js');

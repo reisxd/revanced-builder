@@ -780,16 +780,14 @@ QScrollBar:horizontal {
 }
 QScrollBar:horizontal:hover {
     border: 5px solid rgb(255, 255, 255, 0);
+    height: 16px;
 }
 QScrollBar::handle:horizontal {
     background-color: rgb(255, 255, 255, 130);
-    border-radius: 2px;
-    min-width: 25px;
+    height: 16px;
 }
 QScrollBar::sub-line:horizontal {
     image: url(:/ScrollHorizontal/img dark/ScrollLeft.png);
-    subcontrol-position: left;
-    subcontrol-origin: margin;
 }
 QScrollBar::sub-line:horizontal:hover {
     image: url(:/ScrollHorizontal/img dark/ScrollLeftHover.png);
@@ -799,8 +797,6 @@ QScrollBar::sub-line:horizontal:pressed {
 }
 QScrollBar::add-line:horizontal {
     image: url(:/ScrollHorizontal/img dark/ScrollRight.png);
-    subcontrol-position: right;
-    subcontrol-origin: margin;
 }
 QScrollBar::add-line:horizontal:hover {
     image: url(:/ScrollHorizontal/img dark/ScrollRightHover.png);
@@ -1093,7 +1089,7 @@ QListView::item {
     height: 35px;
 }
 QListView::item:selected {
-    background-color: rgb(255, 255, 255, 13);
+    background-color: #5fb2f2;
     color: white;
     border-radius: 5px;
     padding-left: 0px;
