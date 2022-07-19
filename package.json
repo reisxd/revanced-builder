@@ -9,7 +9,7 @@
     "debug": "webpack && qode --inspect ./dist/index.js"
   },
   "dependencies": {
-    "@nodegui/nodegui": "^0.55.0",
+    "@nodegui/nodegui": "^0.56.0",
     "cheerio": "^1.0.0-rc.12",
     "node-fetch": "2.6",
     "node-fetch-progress": "^1.0.2"

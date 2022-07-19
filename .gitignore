@@ -6,3 +6,4 @@ revanced/
 package-lock.json
 ignore/
 revanced-cache/
+excludedPatchesList.json

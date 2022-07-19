@@ -17,6 +17,7 @@ function patchesScreen (selectedPatches, ui, variables, widgetsArray) {
   continueButton.setText('Continue');
   widgetsArray = [listWidget, continueButton];
   listWidget.setObjectName('items');
+  const excludedPatchList = [];
   continueButton.addEventListener('clicked', async () => {
     const { errorScreen, useOldApkScreen } = require('./index.js');
     const { getYTVersions, getYTVersion } = require('../utils/builder.js');
@@ -27,7 +28,7 @@ function patchesScreen (selectedPatches, ui, variables, widgetsArray) {
         if (!variables.adbExists) {
           deleteWidgets(widgetsArray);
           return errorScreen(
-            "You don't have ADB installed.\nPlease install it it from the <a href=\"Offical android website\">https://developer.android.com/studio/releases/platform-tools</a> Or the 15 second installer at the <a href=\"https://forum.xda-developers.com/t/official-tool-windows-adb-fastboot-and-drivers-15-seconds-adb-installer-v1-4-3.2588979\">XDA Forums</a>",
+            'You don\'t have ADB installed.\nPlease install it it from the <a href="Offical android website">https://developer.android.com/studio/releases/platform-tools</a> Or the 15 second installer at the <a href="https://forum.xda-developers.com/t/official-tool-windows-adb-fastboot-and-drivers-15-seconds-adb-installer-v1-4-3.2588979">XDA Forums</a>',
             ui
           );
         }
@@ -45,20 +46,41 @@ function patchesScreen (selectedPatches, ui, variables, widgetsArray) {
       }
       const patchName = patch.replace(/\|.+(.*)$/, '');
       variables.patches += ` -e ${patchName}`;
+      excludedPatchList.push(patchName);
     }
+
+    if (excludedPatchList) {
+      fs.writeFileSync(
+        './excludedPatchesList.json',
+        JSON.stringify(excludedPatchList)
+      );
+    }
+
     deleteWidgets([listWidget, continueButton]);
     if (variables.isRooted) {
       getYTVersions(ytVersion);
     } else if (fs.existsSync('./revanced/youtube.apk')) {
-      useOldApkScreen(ui);
+      useOldApkScreen(ui, variables);
     } else {
       getYTVersions();
     }
   });
   for (const patch of selectedPatches) {
+    let excludedPatches = [];
+    const patchName = patch.replace(/\|.+(.*)$/, '');
+    if (fs.existsSync('./excludedPatchesList.json')) {
+      excludedPatches = fs.readFileSync('./excludedPatchesList.json');
+      excludedPatches = JSON.parse(excludedPatches);
+    }
     const patchItem = new QListWidgetItem();
     patchItem.setText(patch);
     listWidget.addItem(patchItem);
+    if (excludedPatches.includes(patchName)) {
+      // This is broken.
+      // For some reason, these two functions don't select the item(s).
+      patchItem.setSelected(true);
+      listWidget.setCurrentItem(patchItem);
+    }
   }
   ui.panels.innerPanel.addWidget(listWidget);
   ui.buttonPanel.addWidget(continueButton);

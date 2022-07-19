@@ -3,18 +3,33 @@ const { exec } = require('child_process');
 const util = require('util');
 const actualExec = util.promisify(exec);
 
-function patchingScreen (ui, widgetsArray, buildProcess) {
+function patchingScreen (ui, widgetsArray, buildProcess, vars) {
   ui.labels.main.setText('Building ReVanced...');
   const logText = new QTextEdit();
   logText.setFixedSize(675, 313);
   logText.setStyleSheet('margin-right: 26px; margin-bottom: 23px;');
   logText.setReadOnly(true);
+
+  if (!vars.adbExists || !vars.deviceId) {
+    logText.setText(
+      'When building ReVanced finishes, please check the revanced folder!\n'
+    );
+  }
+
   widgetsArray = [logText];
   buildProcess.stdout.on('data', async (data) => {
     logText.setText(logText.toPlainText() + data.toString());
     if (data.toString().includes('Finished')) {
       ui.labels.main.setText('ReVanced has been built.');
     }
+
+    if (data.toString().includes('AndroidRuntime')) {
+      ui.labels.main.setText(
+        'ReVanced has (probably) been built. Please check your phone!'
+      );
+      setTimeout(() => buildProcess.kill(), 10000);
+    }
+
     if (data.toString().includes('INSTALL_FAILED_UPDATE_INCOMPATIBLE')) {
       await actualExec('adb uninstall app.revanced.android.youtube');
       await actualExec('adb install revanced/revanced.apk');
@@ -25,6 +40,14 @@ function patchingScreen (ui, widgetsArray, buildProcess) {
     if (data.toString().includes('Finished')) {
       ui.labels.main.setText('ReVanced has been built.');
     }
+
+    if (data.toString().includes('AndroidRuntime')) {
+      ui.labels.main.setText(
+        'ReVanced has (probably) been built. Please check your phone!'
+      );
+      setTimeout(() => buildProcess.kill(), 10000);
+    }
+
     if (data.toString().includes('INSTALL_FAILED_UPDATE_INCOMPATIBLE')) {
       ui.labels.main.setText('ReVanced has been built.');
       await actualExec('adb uninstall app.revanced.android.youtube');

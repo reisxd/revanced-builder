@@ -289,7 +289,7 @@ async function excludePatches (ui) {
 
   for (const patchName of patchesArray) {
     let patch = patchName.replace(firstWord, '').replace(/\s/g, '');
-    patch += `| ${patchDescsArray[index]
+    patch += ` | ${patchDescsArray[index]
       .replace('\t', '')
       .replace(require('os').EOL, '')}`;
     if (patch.includes('microg-support')) patch += '(Root required)';
@@ -365,7 +365,7 @@ async function buildReVanced () {
     { maxBuffer: 5120 * 1024 }
   );
 
-  patchingScreen(ui, widgetsArray, buildProcess);
+  patchingScreen(ui, widgetsArray, buildProcess, vars);
 
   if (vars.adbExists && !vars.isRooted && vars.foundDevice) {
     await actualExec(`adb install ${jarNames.microG}`);
