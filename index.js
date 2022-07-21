@@ -15,7 +15,7 @@ const actualExec = util.promisify(exec);
 let adbExists = true;
 let foundDevice = false;
 const jarNames = {
-  cli: './revanced/',
+  cli: '',
   patchesJar: './revanced/',
   integrations: './revanced/',
   deviceId: '',
@@ -49,7 +49,7 @@ async function exitProcess () {
 async function overWriteJarNames (link) {
   const fileName = link.split('/').pop();
   // i have to use ifs for this sorry
-  if (fileName.includes('revanced-cli')) jarNames.cli += fileName;
+  if (fileName.includes('revanced-cli')) jarNames.cli = `./revanced/${fileName}`;
   if (fileName.includes('revanced-patches') && fileName.endsWith('.jar')) {
     jarNames.patchesJar += fileName;
   }
