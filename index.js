@@ -637,8 +637,8 @@ async function androidBuild () {
       } else if (os.platform() === 'android') {
         console.log('Copying ReVanced and MicroG to phones storage...');
 
-        await actualExec('cp revanced.apk /storage/emulated/0/revanced.apk');
-        await actualExec('cp microg.apk /storage/emulated/0/microg.apk');
+        await actualExec('cp revanced/revanced.apk /storage/emulated/0/revanced.apk');
+        await actualExec('cp revanced/microg.apk /storage/emulated/0/microg.apk');
 
         console.log(
           'You now can install ReVanced and MicroG! Check /storage/emulated/0/'
