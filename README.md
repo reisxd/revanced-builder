@@ -4,7 +4,7 @@ This project will allow you to download the YouTube APK and build ReVanced easil
 
 With version 2.0.0, now ReVanced Builder is no longer a CLI application, but a GUI app! It's now much more easier to use it!
 
-Searching for the Android version? See [this.](https://github.com/reisxd/revanced-builder/wiki/How-to-use-revanced-builder-on-Android)
+Looking for the Android version? See [this.](https://github.com/reisxd/revanced-builder/wiki/How-to-use-revanced-builder-on-Android)
 
 ## Required
 
