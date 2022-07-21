@@ -224,15 +224,16 @@ async function downloadFile (assets) {
     ) {
       const downloadLink = await getDownloadLink({
         owner: 'reisxd',
-        repo: 'revanced-cli'
+        repo: 'revanced-cli-termux'
       });
-      overWriteJarNames(downloadLink.assets[0].browser_download_url);
+      overWriteJarNames(downloadLink[0].browser_download_url);
       await dloadFromURL(
-        downloadLink.assets[0].browser_download_url,
-        `./revanced/${downloadLink.assets[0].browser_download_url
+        downloadLink[0].browser_download_url,
+        `./revanced/${downloadLink[0].browser_download_url
           .split('/')
           .pop()}`
       );
+      continue;
     }
     if (dir.includes(asset.browser_download_url.split('/').pop())) {
       if (
