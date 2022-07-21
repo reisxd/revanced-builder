@@ -61,6 +61,7 @@ $ node . --patch --manual-apk
 ## Docker
 
 If you want to build revanced using docker with this node implementation, you can use the included Dockerfile.
+
 ```bash
 $ docker build -t revanced-builder .
 $ docker run --rm -v $(pwd):/app -it revanced-builder

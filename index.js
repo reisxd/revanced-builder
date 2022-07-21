@@ -7,6 +7,7 @@ const { exec } = require('child_process');
 const { load } = require('cheerio');
 const opteric = require('./opteric.js');
 const inquirer = require('inquirer');
+const os = require('os');
 
 const argParser = opteric(process.argv.join(' '));
 const actualExec = util.promisify(exec);
@@ -217,6 +218,22 @@ async function downloadFile (assets) {
   for (const asset of assets) {
     const dir = fs.readdirSync('./revanced/');
     overWriteJarNames(asset.browser_download_url);
+    if (
+      asset.browser_download_url.includes('revanced-cli') &&
+      os.platform() === 'android'
+    ) {
+      const downloadLink = await getDownloadLink({
+        owner: 'reisxd',
+        repo: 'revanced-cli'
+      });
+      overWriteJarNames(downloadLink.assets[0].browser_download_url);
+      await dloadFromURL(
+        downloadLink.assets[0].browser_download_url,
+        `./revanced/${downloadLink.assets[0].browser_download_url
+          .split('/')
+          .pop()}`
+      );
+    }
     if (dir.includes(asset.browser_download_url.split('/').pop())) {
       if (
         asset.browser_download_url.split('/').pop() !==
@@ -244,7 +261,7 @@ async function downloadFiles (repos) {
 async function getADBDeviceID () {
   let deviceId;
   const { stdout } = await actualExec('adb devices');
-  const adbDeviceIdRegex = new RegExp(`${require('os').EOL}(.*?)\t`);
+  const adbDeviceIdRegex = new RegExp(`${os.EOL}(.*?)\t`);
   const match = stdout.match(adbDeviceIdRegex);
   if (match === null) {
     console.log('No device found! Fallback to only build.');
@@ -271,13 +288,15 @@ async function checkForJavaADB () {
       return await exitProcess();
     }
 
-    if (!javaVerLog.includes('Zulu')) {
-      console.log(
-        'You have Java, but not Zulu JDK. You need to install it because of signing problems.\nPlease get it from here: https://www.azul.com/downloads/?version=java-17-lts&package=jdk'
-      );
+    /* if (!javaVerLog.includes('Zulu')) {
+       console.log(
+         'You have Java, but not Zulu JDK. You need to install it because of signing problems.\nPlease get it from here: https://www.azul.com/downloads/?version=java-17-lts&package=jdk'
+       );
 
-      return await exitProcess();
-    }
+       return await exitProcess();
+
+     }
+     */
     await actualExec('adb');
   } catch (e) {
     if (e.stderr.includes('java')) {
@@ -308,7 +327,7 @@ async function getYTVersion () {
   }
   return dumpSysOut
     .match(/versionName=([^=]+)/)[1]
-    .replace(`${require('os').EOL}    `, '')
+    .replace(`${os.EOL}    `, '')
     .match(/[\d]+(\.\d+)+/g)[0];
 }
 
@@ -346,10 +365,63 @@ async function preflight (listOnly) {
   await downloadFiles(filesToDownload);
 
   if (!listOnly) {
-    await checkForJavaADB();
-    if (adbExists) {
-      await getADBDeviceID();
+    if (os.platform() === 'android') {
+      await androidBuild();
+    } else {
+      await checkForJavaADB();
+      if (adbExists) {
+        await getADBDeviceID();
+      }
     }
+  }
+}
+
+async function androidBuild () {
+  console.log(
+    'revanced-builder has detected that you are using Android (Termux)!\nrevanced-builder will now install OpenJDK 17.'
+  );
+  try {
+    const checkJava = await actualExec('java -v');
+    if (checkJava.stderr) {
+      console.log('JDK is already installed.');
+    }
+  } catch (e) {
+    console.log("Couldn't find JDK, installing...");
+    await actualExec('apt install openjdk-17');
+  }
+
+  try {
+    const checkAapt2 = await actualExec('aapt2');
+    if (checkAapt2.stderr) {
+      console.log('aapt2 is already installed.');
+    }
+  } catch (e) {
+    console.log("Couldn't find aapt2, installing...");
+    await dloadFromURL(
+      'https://github.com/revanced/aapt2/suites/6969950209/artifacts/272320187',
+      'aapt2.zip'
+    );
+    console.log(`The architecture is ${os.arch()}`);
+    await actualExec('unzip aapt2.zip');
+    switch (os.arch()) {
+      case 'arm64': {
+        await actualExec(
+          'cp aapt2/arm64-v8a/aapt2 /data/data/com.termux/files/usr/bin/aapt2'
+        );
+        await actualExec('chmod +x /data/data/com.termux/files/usr/bin/aapt2');
+        break;
+      }
+
+      case 'arm': {
+        await actualExec(
+          'cp aapt2/armeabi-v7a/aapt2 /data/data/com.termux/files/usr/bin/aapt2'
+        );
+        await actualExec('chmod +x /data/data/com.termux/files/usr/bin/aapt2');
+        break;
+      }
+    }
+
+    console.log('aapt2 has been installed.');
   }
 }
 
@@ -466,7 +538,7 @@ async function preflight (listOnly) {
 
       const patchesArray = patchesText.match(patchRegex);
 
-      const patchDescRegex = new RegExp(`\\t(.*) ${require('os').EOL}`, 'g');
+      const patchDescRegex = new RegExp(`\\t(.*) ${os.EOL}`, 'g');
       const patchDescsArray = patchesText.match(patchDescRegex);
 
       const patchesChoice = [];
@@ -476,7 +548,7 @@ async function preflight (listOnly) {
         let patch = patchName.replace(firstWord, '').replace(/\s/g, '');
         patch += `| ${patchDescsArray[index]
           .replace('\t', '')
-          .replace(require('os').EOL, '')}`;
+          .replace(os.EOL, '')}`;
         if (patch.includes('microg-support')) patch += '(Root required)';
         if (patch.includes('hide-cast-button')) patch += '(Root required)';
         patchesChoice.push({
@@ -545,7 +617,7 @@ async function preflight (listOnly) {
 
       console.log('Building ReVanced, please be patient!');
       const { stdout, stderr } = await actualExec(
-        `java -jar ${jarNames.cli} -b ${jarNames.patchesJar} --experimental -a ./revanced/youtube.apk ${jarNames.deviceId} -o ./revanced/revanced.apk -m ${jarNames.integrations} ${patches}`,
+        `java -jar ${jarNames.cli} -b ${jarNames.patchesJar} -t ./revanced-cache --experimental -a ./revanced/youtube.apk ${jarNames.deviceId} -o ./revanced/revanced.apk -m ${jarNames.integrations} ${patches}`,
         { maxBuffer: 5120 * 1024 }
       );
       console.log(stdout || stderr);
