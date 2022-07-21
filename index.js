@@ -49,7 +49,7 @@ async function exitProcess () {
 async function overWriteJarNames (link) {
   const fileName = link.split('/').pop();
   // i have to use ifs for this sorry
-  if (fileName.includes('revanced-cli')) jarNames.cli = `./revanced/${fileName}`;
+  if (fileName.includes('revanced-cli')) { jarNames.cli = `./revanced/${fileName}`; }
   if (fileName.includes('revanced-patches') && fileName.endsWith('.jar')) {
     jarNames.patchesJar += fileName;
   }
@@ -376,37 +376,41 @@ async function androidBuild () {
   }
 
   try {
-   await actualExec('aapt2');
+    await actualExec('aapt2');
   } catch (e) {
     if (e.stderr) {
-     return console.log('aapt2 is already installed.');
+      return console.log('aapt2 is already installed.');
     } else {
       console.log("Couldn't find aapt2, installing...");
-    await dloadFromURL(
-      'https://github.com/reisxd/revanced-cli-termux/raw/main/aapt2.zip',
-      'aapt2.zip'
-    );
-    console.log(`The architecture is ${os.arch()}`);
-    await actualExec('unzip aapt2.zip');
-    switch (os.arch()) {
-      case 'arm64': {
-        await actualExec(
-          'cp aapt2/arm64-v8a/aapt2 /data/data/com.termux/files/usr/bin/aapt2'
-        );
-        await actualExec('chmod +x /data/data/com.termux/files/usr/bin/aapt2');
-        break;
+      await dloadFromURL(
+        'https://github.com/reisxd/revanced-cli-termux/raw/main/aapt2.zip',
+        'aapt2.zip'
+      );
+      console.log(`The architecture is ${os.arch()}`);
+      await actualExec('unzip aapt2.zip');
+      switch (os.arch()) {
+        case 'arm64': {
+          await actualExec(
+            'cp aapt2/arm64-v8a/aapt2 /data/data/com.termux/files/usr/bin/aapt2'
+          );
+          await actualExec(
+            'chmod +x /data/data/com.termux/files/usr/bin/aapt2'
+          );
+          break;
+        }
+
+        case 'arm': {
+          await actualExec(
+            'cp aapt2/armeabi-v7a/aapt2 /data/data/com.termux/files/usr/bin/aapt2'
+          );
+          await actualExec(
+            'chmod +x /data/data/com.termux/files/usr/bin/aapt2'
+          );
+          break;
+        }
       }
 
-      case 'arm': {
-        await actualExec(
-          'cp aapt2/armeabi-v7a/aapt2 /data/data/com.termux/files/usr/bin/aapt2'
-        );
-        await actualExec('chmod +x /data/data/com.termux/files/usr/bin/aapt2');
-        break;
-      }
-    }
-
-    console.log('aapt2 has been installed.');
+      console.log('aapt2 has been installed.');
     }
   }
 }
@@ -603,7 +607,13 @@ async function androidBuild () {
 
       console.log('Building ReVanced, please be patient!');
       const { stdout, stderr } = await actualExec(
-        `java -jar ${jarNames.cli} -b ${jarNames.patchesJar} ${os.platform() === 'android' ? '--custom-aapt2-binary /data/data/com.termux/files/usr/bin/aapt2': ''} -t ./revanced-cache --experimental -a ./revanced/youtube.apk ${jarNames.deviceId} -o ./revanced/revanced.apk -m ${jarNames.integrations} ${patches}`,
+        `java -jar ${jarNames.cli} -b ${jarNames.patchesJar} ${
+          os.platform() === 'android'
+            ? '--custom-aapt2-binary /data/data/com.termux/files/usr/bin/aapt2'
+            : ''
+        } -t ./revanced-cache --experimental -a ./revanced/youtube.apk ${
+          jarNames.deviceId
+        } -o ./revanced/revanced.apk -m ${jarNames.integrations} ${patches}`,
         { maxBuffer: 5120 * 1024 }
       );
       console.log(stdout || stderr);
@@ -624,16 +634,17 @@ async function androidBuild () {
 
         await actualExec(`adb install ${jarNames.microG}`);
         await exitProcess();
-      } else if(os.platform() === 'android') {
+      } else if (os.platform() === 'android') {
         console.log('Copying ReVanced and MicroG to phones storage...');
 
         await actualExec('cp revanced.apk /storage/emulated/0/revanced.apk');
         await actualExec('cp microg.apk /storage/emulated/0/microg.apk');
 
-        console.log('You now can install ReVanced and MicroG! Check /storage/emulated/0/');
+        console.log(
+          'You now can install ReVanced and MicroG! Check /storage/emulated/0/'
+        );
 
         await exitProcess();
-
       } else {
         console.log(
           'You now can install ReVanced and MicroG by transferring revanced/revanced.apk and revanced/microg.apk!'
