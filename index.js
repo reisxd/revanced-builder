@@ -49,7 +49,9 @@ async function exitProcess () {
 async function overWriteJarNames (link) {
   const fileName = link.split('/').pop();
   // i have to use ifs for this sorry
-  if (fileName.includes('revanced-cli')) { jarNames.cli = `./revanced/${fileName}`; }
+  if (fileName.includes('revanced-cli')) {
+    jarNames.cli = `./revanced/${fileName}`;
+  }
   if (fileName.includes('revanced-patches') && fileName.endsWith('.jar')) {
     jarNames.patchesJar += fileName;
   }
@@ -367,8 +369,8 @@ async function androidBuild () {
   try {
     await actualExec('java -v');
   } catch (e) {
-      if (!e.stderr.includes('not found')) {
-        console.log('JDK is already installed.');
+    if (!e.stderr.includes('not found')) {
+      console.log('JDK is already installed.');
     } else {
       console.log("Couldn't find JDK, installing...");
       await actualExec('apt install openjdk-17');
@@ -378,8 +380,8 @@ async function androidBuild () {
   try {
     await actualExec('aapt2');
   } catch (e) {
-      if (!e.stderr.includes('not found')) {
-       console.log('aapt2 is already installed.');
+    if (!e.stderr.includes('not found')) {
+      console.log('aapt2 is already installed.');
     } else {
       console.log("Couldn't find aapt2, installing...");
       await dloadFromURL(
@@ -637,8 +639,12 @@ async function androidBuild () {
       } else if (os.platform() === 'android') {
         console.log('Copying ReVanced and MicroG to phones storage...');
 
-        await actualExec('cp revanced/revanced.apk /storage/emulated/0/revanced.apk');
-        await actualExec('cp revanced/microg.apk /storage/emulated/0/microg.apk');
+        await actualExec(
+          'cp revanced/revanced.apk /storage/emulated/0/revanced.apk'
+        );
+        await actualExec(
+          'cp revanced/microg.apk /storage/emulated/0/microg.apk'
+        );
 
         console.log(
           'You now can install ReVanced and MicroG! Check /storage/emulated/0/'
