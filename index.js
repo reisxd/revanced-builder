@@ -367,8 +367,10 @@ async function androidBuild () {
   try {
     await actualExec('java -v');
   } catch (e) {
-    if (!e.stderr.includes('The program') || !e.stderr.includes('not found')) {
-      console.log('JDK is already installed.');
+    if (!e.stderr.includes('The program')) { 
+      if (!e.stderr.includes('not found')) {
+        console.log('JDK is already installed.');
+      }
     } else {
       console.log("Couldn't find JDK, installing...");
       await actualExec('apt install openjdk-17');
@@ -378,8 +380,11 @@ async function androidBuild () {
   try {
     await actualExec('aapt2');
   } catch (e) {
-    if (!e.stderr.includes('The program') || !e.stderr.includes('not found')) {
-      return console.log('aapt2 is already installed.');
+    if (!e.stderr.includes('The program')) {
+      if (!e.stderr.includes('not found')) {
+       console.log('aapt2 is already installed.');
+      }
+      console.log('aapt2 is already installed.');
     } else {
       console.log("Couldn't find aapt2, installing...");
       await dloadFromURL(
