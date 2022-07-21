@@ -218,23 +218,6 @@ async function downloadFile (assets) {
   for (const asset of assets) {
     const dir = fs.readdirSync('./revanced/');
     overWriteJarNames(asset.browser_download_url);
-    if (
-      asset.browser_download_url.includes('revanced-cli') &&
-      os.platform() === 'android'
-    ) {
-      const downloadLink = await getDownloadLink({
-        owner: 'reisxd',
-        repo: 'revanced-cli-termux'
-      });
-      overWriteJarNames(downloadLink[0].browser_download_url);
-      await dloadFromURL(
-        downloadLink[0].browser_download_url,
-        `./revanced/${downloadLink[0].browser_download_url
-          .split('/')
-          .pop()}`
-      );
-      continue;
-    }
     if (dir.includes(asset.browser_download_url.split('/').pop())) {
       if (
         asset.browser_download_url.split('/').pop() !==
@@ -379,16 +362,17 @@ async function preflight (listOnly) {
 
 async function androidBuild () {
   console.log(
-    'revanced-builder has detected that you are using Android (Termux)!\nrevanced-builder will now install OpenJDK 17.'
+    'revanced-builder has detected that you are using Android (Termux)!'
   );
   try {
-    const checkJava = await actualExec('java -v');
-    if (checkJava.stderr) {
-      console.log('JDK is already installed.');
-    }
+    await actualExec('java -v');
   } catch (e) {
-    console.log("Couldn't find JDK, installing...");
-    await actualExec('apt install openjdk-17');
+    if (e.stderr) {
+      console.log('JDK is already installed.');
+    } else {
+      console.log("Couldn't find JDK, installing...");
+      await actualExec('apt install openjdk-17');
+    }
   }
 
   try {
@@ -619,7 +603,7 @@ async function androidBuild () {
 
       console.log('Building ReVanced, please be patient!');
       const { stdout, stderr } = await actualExec(
-        `java -jar ${jarNames.cli} -b ${jarNames.patchesJar} -t ./revanced-cache --experimental -a ./revanced/youtube.apk ${jarNames.deviceId} -o ./revanced/revanced.apk -m ${jarNames.integrations} ${patches}`,
+        `java -jar ${jarNames.cli} -b ${jarNames.patchesJar} ${os.platform() === 'android' ? '--custom-aapt2-binary /data/data/com.termux/files/usr/bin/aapt2': ''} -t ./revanced-cache --experimental -a ./revanced/youtube.apk ${jarNames.deviceId} -o ./revanced/revanced.apk -m ${jarNames.integrations} ${patches}`,
         { maxBuffer: 5120 * 1024 }
       );
       console.log(stdout || stderr);
@@ -640,10 +624,21 @@ async function androidBuild () {
 
         await actualExec(`adb install ${jarNames.microG}`);
         await exitProcess();
+      } else if(os.platform() === 'android') {
+        console.log('Copying ReVanced and MicroG to phones storage...');
+
+        await actualExec('cp revanced.apk /storage/emulated/0/revanced.apk');
+        await actualExec('cp microg.apk /storage/emulated/0/microg.apk');
+
+        console.log('You now can install ReVanced and MicroG! Check /storage/emulated/0/');
+
+        await exitProcess();
+
       } else {
         console.log(
-          'You now can install ReVanced and MicroG by transferring revanced/revanced.apk and revaned/microg.apk!'
+          'You now can install ReVanced and MicroG by transferring revanced/revanced.apk and revanced/microg.apk!'
         );
+
         await exitProcess();
       }
 
