@@ -301,7 +301,7 @@ async function excludePatches (ui) {
   patchesScreen(patchesChoice, ui, vars, widgetsArray);
 }
 
-async function getYTVersions (ytVersion) {
+async function getYTVersions (ytVersion, isYTM) {
   if (ytVersion) return downloadYTApk(ytVersion);
   const versionsList = await getPage(
     'https://www.apkmirror.com/apk/google-inc/youtube'
@@ -317,7 +317,7 @@ async function getYTVersions (ytVersion) {
       'h5[class="appRowTitle wrapText marginZero block-on-mobile"]'
     ).get()) {
       if (indx === 10) continue;
-      const versionName = version.attribs.title.replace('YouTube ', '');
+      const versionName = version.attribs.title.replace('YouTube ', '').replace('Music ', '');
       indx++;
       if (versionName.includes('beta')) continue;
       versionList.push(versionName);

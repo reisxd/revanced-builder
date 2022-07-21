@@ -4,6 +4,8 @@ This project will allow you to download the YouTube APK and build ReVanced easil
 
 With version 2.0.0, now ReVanced Builder is no longer a CLI application, but a GUI app! It's now much more easier to use it!
 
+Searching for the Android version? See [this.](https://github.com/reisxd/revanced-builder/wiki/How-to-use-revanced-builder-on-Android)
+
 ## Required
 
 You'll need at least [Zulu JDK 17](https://www.azul.com/downloads/?version=java-17-lts&package=jdk) and [ADB](https://developer.android.com/studio/command-line/adb) (optional, required only for rooted phones).

@@ -76,8 +76,6 @@ function patchesScreen (selectedPatches, ui, variables, widgetsArray) {
     patchItem.setText(patch);
     listWidget.addItem(patchItem);
     if (excludedPatches.includes(patchName)) {
-      // This is broken.
-      // For some reason, these two functions don't select the item(s).
       patchItem.setSelected(true);
       listWidget.setCurrentItem(patchItem);
     }
