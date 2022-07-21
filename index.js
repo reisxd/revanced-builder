@@ -367,10 +367,8 @@ async function androidBuild () {
   try {
     await actualExec('java -v');
   } catch (e) {
-    if (!e.stderr.includes('The program')) { 
       if (!e.stderr.includes('not found')) {
         console.log('JDK is already installed.');
-      }
     } else {
       console.log("Couldn't find JDK, installing...");
       await actualExec('apt install openjdk-17');
@@ -380,11 +378,8 @@ async function androidBuild () {
   try {
     await actualExec('aapt2');
   } catch (e) {
-    if (!e.stderr.includes('The program')) {
       if (!e.stderr.includes('not found')) {
        console.log('aapt2 is already installed.');
-      }
-      console.log('aapt2 is already installed.');
     } else {
       console.log("Couldn't find aapt2, installing...");
       await dloadFromURL(
@@ -396,7 +391,7 @@ async function androidBuild () {
       switch (os.arch()) {
         case 'arm64': {
           await actualExec(
-            'cp aapt2/arm64-v8a/aapt2 /data/data/com.termux/files/usr/bin/aapt2'
+            'cp arm64-v8a/aapt2 /data/data/com.termux/files/usr/bin/aapt2'
           );
           await actualExec(
             'chmod +x /data/data/com.termux/files/usr/bin/aapt2'
@@ -406,7 +401,7 @@ async function androidBuild () {
 
         case 'arm': {
           await actualExec(
-            'cp aapt2/armeabi-v7a/aapt2 /data/data/com.termux/files/usr/bin/aapt2'
+            'cp armeabi-v7a/aapt2 /data/data/com.termux/files/usr/bin/aapt2'
           );
           await actualExec(
             'chmod +x /data/data/com.termux/files/usr/bin/aapt2'
