@@ -392,14 +392,14 @@ async function androidBuild () {
   }
 
   try {
-    const checkAapt2 = await actualExec('aapt2');
-    if (checkAapt2.stderr) {
-      console.log('aapt2 is already installed.');
-    }
+   await actualExec('aapt2');
   } catch (e) {
-    console.log("Couldn't find aapt2, installing...");
+    if (e.stderr) {
+     return console.log('aapt2 is already installed.');
+    } else {
+      console.log("Couldn't find aapt2, installing...");
     await dloadFromURL(
-      'https://github.com/revanced/aapt2/suites/6969950209/artifacts/272320187',
+      'https://github.com/reisxd/revanced-cli-termux/raw/main/aapt2.zip',
       'aapt2.zip'
     );
     console.log(`The architecture is ${os.arch()}`);
@@ -423,6 +423,7 @@ async function androidBuild () {
     }
 
     console.log('aapt2 has been installed.');
+    }
   }
 }
 
