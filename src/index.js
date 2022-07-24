@@ -27,7 +27,6 @@ process.on('unhandledRejection', async (reason) => {
 (async () => {
   await preflight(false, ui);
   await selectApp(ui);
-  // await excludePatches(ui);
 })();
 win.setCentralWidget(centralWidget);
 win.setStyleSheet(

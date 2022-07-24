@@ -349,6 +349,7 @@ async function getAppVersions (version, app) {
     indx++;
     if (versionName.includes('beta')) continue;
     else if (app === 'android' && !versionName.includes('release')) continue;
+    if (versionName.includes('(Wear OS)')) continue;
     versionList.push(versionName);
   }
   appVerSelector(versionList, ui, versionChoosen, widgetsArray, app);

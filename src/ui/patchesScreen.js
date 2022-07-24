@@ -6,7 +6,7 @@ const {
 const fs = require('fs');
 const { deleteWidgets } = require('../utils/index.js');
 
-function patchesScreen (selectedPatches, ui, variables, widgetsArray, pkg) {
+function patchesScreen(selectedPatches, ui, variables, widgetsArray, pkg) {
   ui.labels.main.setText('Select the patches you want to exclude:');
   ui.labels.main.setObjectName('text');
   const listWidget = new QListWidget();
@@ -17,11 +17,19 @@ function patchesScreen (selectedPatches, ui, variables, widgetsArray, pkg) {
   continueButton.setText('Continue');
   widgetsArray = [listWidget, continueButton];
   listWidget.setObjectName('items');
-  const excludedPatchList = [];
+  let excludedPatchList = [];
+  let patchesList = fs.readFileSync('./excludedPatchesList.json').toString();
+  patchesList = JSON.parse(patchesList);
+  excludedPatchList = patchesList;
   continueButton.addEventListener('clicked', async () => {
     const { errorScreen, useOldApkScreen } = require('./index.js');
     const { getAppVersions, getAppVersion } = require('../utils/builder.js');
     let appVersion;
+    let packageObject = {
+      pkg,
+      excludedPatches: []
+    };
+
     for (const listItem of listWidget.selectedItems()) {
       const patch = listItem.text();
       if (patch.includes('microg-support')) {
@@ -46,15 +54,26 @@ function patchesScreen (selectedPatches, ui, variables, widgetsArray, pkg) {
       }
       const patchName = patch.replace(/\|.+(.*)$/, '');
       variables.patches += ` -e ${patchName}`;
-      excludedPatchList.push(patchName);
+      packageObject.excludedPatches.push(patchName);
+    }
+    let foundObj = false
+    for (const packageObj of excludedPatchList) {
+      if (typeof packageObj === 'string') continue;
+      if (packageObj.pkg === pkg) {
+        packageObj.excludedPatches = packageObject.excludedPatches;
+        foundObj = true;
+      }
     }
 
-    if (excludedPatchList) {
-      fs.writeFileSync(
-        './excludedPatchesList.json',
-        JSON.stringify(excludedPatchList)
-      );
+    if (!foundObj) {
+      excludedPatchList.push(packageObject);
     }
+
+    fs.writeFileSync(
+      './excludedPatchesList.json',
+      JSON.stringify(excludedPatchList)
+    );
+
 
     deleteWidgets([listWidget, continueButton]);
     if (variables.isRooted) {
@@ -75,9 +94,13 @@ function patchesScreen (selectedPatches, ui, variables, widgetsArray, pkg) {
     const patchItem = new QListWidgetItem();
     patchItem.setText(patch);
     listWidget.addItem(patchItem);
-    if (excludedPatches.includes(patchName)) {
-      patchItem.setSelected(true);
-      listWidget.setCurrentItem(patchItem);
+    for (const package of excludedPatches) {
+      if (package.pkg === pkg) {
+        if (package.excludedPatches.includes(patchName)) {
+          patchItem.setSelected(true);
+          listWidget.setCurrentItem(patchItem);
+        }
+      }
     }
   }
   ui.panels.innerPanel.addWidget(listWidget);
