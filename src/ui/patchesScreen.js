@@ -6,7 +6,7 @@ const {
 const fs = require('fs');
 const { deleteWidgets } = require('../utils/index.js');
 
-function patchesScreen (selectedPatches, ui, variables, widgetsArray) {
+function patchesScreen (selectedPatches, ui, variables, widgetsArray, pkg) {
   ui.labels.main.setText('Select the patches you want to exclude:');
   ui.labels.main.setObjectName('text');
   const listWidget = new QListWidget();
@@ -20,8 +20,8 @@ function patchesScreen (selectedPatches, ui, variables, widgetsArray) {
   const excludedPatchList = [];
   continueButton.addEventListener('clicked', async () => {
     const { errorScreen, useOldApkScreen } = require('./index.js');
-    const { getYTVersions, getYTVersion } = require('../utils/builder.js');
-    let ytVersion;
+    const { getAppVersions, getAppVersion } = require('../utils/builder.js');
+    let appVersion;
     for (const listItem of listWidget.selectedItems()) {
       const patch = listItem.text();
       if (patch.includes('microg-support')) {
@@ -33,7 +33,7 @@ function patchesScreen (selectedPatches, ui, variables, widgetsArray) {
           );
         }
         if (variables.foundDevice) {
-          ytVersion = await getYTVersion();
+          appVersion = await getAppVersion(pkg);
           variables.patches += ' --mount';
           variables.isRooted = true;
         } else {
@@ -58,11 +58,11 @@ function patchesScreen (selectedPatches, ui, variables, widgetsArray) {
 
     deleteWidgets([listWidget, continueButton]);
     if (variables.isRooted) {
-      getYTVersions(ytVersion);
-    } else if (fs.existsSync('./revanced/youtube.apk')) {
-      useOldApkScreen(ui, variables);
+      getAppVersions(appVersion, pkg);
+    } else if (fs.existsSync(`./revanced/${pkg}.apk`)) {
+      useOldApkScreen(ui, pkg);
     } else {
-      getYTVersions();
+      getAppVersions(null, pkg);
     }
   });
   for (const patch of selectedPatches) {

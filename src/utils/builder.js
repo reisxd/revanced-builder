@@ -7,7 +7,7 @@ const fs = require('fs');
 const Progress = require('node-fetch-progress');
 const {
   patchesScreen,
-  ytVerSelector,
+  appVerSelector,
   patchingScreen,
   errorScreen
 } = require('../ui/index.js');
@@ -22,7 +22,8 @@ const jarNames = {
   patchesJar: './revanced/',
   integrations: './revanced/',
   deviceId: '',
-  microG: './revanced/'
+  microG: './revanced/',
+  downloadedAPK: ''
 };
 
 const vars = {
@@ -207,15 +208,15 @@ async function checkForJavaADB () {
   }
 }
 
-async function getYTVersion () {
+async function getAppVersion (pkgName) {
   const { stdout, stderr } = await actualExec(
-    'adb shell dumpsys package com.google.android.youtube'
+    `adb shell dumpsys package ${pkgName}`
   );
   const dumpSysOut = stdout || stderr;
   if (!dumpSysOut.match(/versionName=([^=]+)/)) {
     deleteWidgets(widgetsArray);
     return errorScreen(
-      "YouTube is not installed on your device\nIt's needed for rooted ReVanced.",
+      "The app you selected is not installed on your device\nIt's needed for rooted ReVanced.",
       ui
     );
   }
@@ -270,76 +271,131 @@ async function dloadFromURL (url, outputPath) {
   });
 }
 
-async function excludePatches (ui) {
+async function excludePatches (ui, pkg) {
+  jarNames.downloadedAPK = pkg;
   const getPatches = await actualExec(
-    `java -jar ${jarNames.cli} -a ${jarNames.integrations} -b ${jarNames.patchesJar} -l`
+    `java -jar ${jarNames.cli} -a ${jarNames.integrations} -b ${jarNames.patchesJar} -l --with-packages`
   );
 
   const patchesText = getPatches.stderr || getPatches.stdout;
   const firstWord = patchesText.slice(0, patchesText.indexOf(' '));
-  const patchRegex = new RegExp(`${firstWord}\\s([^\\t]+)`, 'g');
+  const patchRegex = new RegExp('\\t\\s([^\\t]+)', 'g');
 
   const patchesArray = patchesText.match(patchRegex);
+
+  const pkgRegex = new RegExp(`${firstWord}\\s([^\\t]+)`, 'g');
+  const pkgNameArray = patchesText.match(pkgRegex);
 
   const patchDescRegex = new RegExp(`\\t(.*) ${require('os').EOL}`, 'g');
   const patchDescsArray = patchesText.match(patchDescRegex);
 
   const patchesChoice = [];
-  let index = 0;
+  let index = -1;
 
   for (const patchName of patchesArray) {
     let patch = patchName.replace(firstWord, '').replace(/\s/g, '');
-    patch += ` | ${patchDescsArray[index]
-      .replace('\t', '')
-      .replace(require('os').EOL, '')}`;
-    if (patch.includes('microg-support')) patch += '(Root required)';
-    if (patch.includes('hide-cast-button')) patch += '(Root required)';
-    patchesChoice.push(patch);
-
     index++;
+    if (pkgNameArray[index].replace(firstWord, '').replace(/\s/g, '') !== pkg) { continue; }
+    patch += ` | ${
+      patchDescsArray[index]
+        .replace('\t', '')
+        .match(new RegExp(`\\t(.*) ${require('os').EOL}`))[1]
+    }`;
+    if (patch.includes('microg-support')) patch += '(Root required to exclude)';
+    if (patch.includes('hide-cast-button')) { patch += '(Root required to exclude)'; }
+    patchesChoice.push(patch);
   }
-  patchesScreen(patchesChoice, ui, vars, widgetsArray);
+  patchesScreen(patchesChoice, ui, vars, widgetsArray, pkg);
 }
 
-async function getYTVersions (ytVersion, isYTM) {
-  if (ytVersion) return downloadYTApk(ytVersion);
-  const versionsList = await getPage(
-    'https://www.apkmirror.com/apk/google-inc/youtube'
-  );
+async function getAppVersions (version, app) {
+  if (app && version != null) return downloadAPK(version, app);
+  let versionsList;
+
+  switch (app) {
+    case 'youtube': {
+      versionsList = await getPage(
+        'https://www.apkmirror.com/apk/google-inc/youtube'
+      );
+      break;
+    }
+    case 'music': {
+      versionsList = await getPage(
+        'https://www.apkmirror.com/apk/google-inc/youtube-music'
+      );
+      break;
+    }
+    case 'android': {
+      versionsList = await getPage(
+        'https://www.apkmirror.com/apk/twitter/twitter'
+      );
+      break;
+    }
+  }
 
   const versionList = [];
   let indx = 0;
   let versionChoosen;
   const $ = load(versionsList);
 
-  if (!ytVersion) {
-    for (const version of $(
-      'h5[class="appRowTitle wrapText marginZero block-on-mobile"]'
-    ).get()) {
-      if (indx === 10) continue;
-      const versionName = version.attribs.title.replace('YouTube ', '').replace('Music ', '');
-      indx++;
-      if (versionName.includes('beta')) continue;
-      versionList.push(versionName);
-    }
-    ytVerSelector(versionList, ui, versionChoosen, widgetsArray);
+  for (const version of $(
+    'h5[class="appRowTitle wrapText marginZero block-on-mobile"]'
+  ).get()) {
+    if (indx === 10) continue;
+    const versionName = version.attribs.title
+      .replace('YouTube ', '')
+      .replace('Music ', '')
+      .replace('Twitter ', '');
+    indx++;
+    if (versionName.includes('beta')) continue;
+    else if (app === 'android' && !versionName.includes('release')) continue;
+    versionList.push(versionName);
   }
+  appVerSelector(versionList, ui, versionChoosen, widgetsArray, app);
 }
 
-async function downloadYTApk (apkVersion) {
-  const versionDownload = await fetchURL(
-    `https://www.apkmirror.com/apk/google-inc/youtube/youtube-${apkVersion}-release/`
-  );
+async function downloadAPK (apkVersion, app) {
+  let versionDownload;
+  const appVersion = apkVersion.toLowerCase().replace(/\./g, '-');
+  switch (app) {
+    case 'youtube': {
+      versionDownload = await fetchURL(
+        `https://www.apkmirror.com/apk/google-inc/youtube/youtube-${appVersion}-release/`
+      );
+      break;
+    }
+
+    case 'music': {
+      versionDownload = await fetchURL(
+        `https://www.apkmirror.com/apk/google-inc/youtube-music/youtube-music-${appVersion}-release/`
+      );
+      break;
+    }
+
+    case 'android': {
+      versionDownload = await fetchURL(
+        `https://www.apkmirror.com/apk/twitter-inc/twitter/twitter-${appVersion}-release/`
+      );
+      break;
+    }
+  }
+
   const versionDownloadList = await versionDownload.text();
 
   const vDLL = load(versionDownloadList);
-  const dlLink = vDLL('span[class="apkm-badge"]')
-    .first()
-    .parent()
-    .children('a[class="accent_color"]')
-    .first()
-    .attr('href');
-
+  let dlLink;
+  if (app === 'music') {
+    // I just wanna say, fuck you google (or APKMirror).
+    dlLink = vDLL('div:contains("armeabi-v7a")').first().parent().children()[0]
+      .children[0].children[0].attribs.href;
+  } else {
+    dlLink = vDLL('span[class="apkm-badge"]')
+      .first()
+      .parent()
+      .children('a[class="accent_color"]')
+      .first()
+      .attr('href');
+  }
   const downloadLink = await fetchURL(`https://www.apkmirror.com${dlLink}`);
   const downloadLinkPage = await downloadLink.text();
 
@@ -350,10 +406,10 @@ async function downloadYTApk (apkVersion) {
   const downloadPage = await getPage(`https://www.apkmirror.com${pageLink}`);
   const apkPage = load(downloadPage);
   const apkLink = apkPage('a[rel="nofollow"]').first().attr('href');
-
+  jarNames.downloadedAPK = app;
   await dloadFromURL(
     `https://www.apkmirror.com${apkLink}`,
-    './revanced/youtube.apk'
+    `./revanced/${app}.apk`
   );
   return await buildReVanced();
 }
@@ -361,7 +417,7 @@ async function downloadYTApk (apkVersion) {
 async function buildReVanced () {
   deleteWidgets(widgetsArray);
   const buildProcess = await exec(
-    `java -jar ${jarNames.cli} -b ${jarNames.patchesJar} --experimental -a ./revanced/youtube.apk ${jarNames.deviceId} -o ./revanced/revanced.apk -m ${jarNames.integrations} ${vars.patches}`,
+    `java -jar ${jarNames.cli} -b ${jarNames.patchesJar} --experimental -a ./revanced/${jarNames.downloadedAPK}.apk ${jarNames.deviceId} -o ./revanced/revanced.apk -m ${jarNames.integrations} ${vars.patches}`,
     { maxBuffer: 5120 * 1024 }
   );
 
@@ -375,8 +431,8 @@ async function buildReVanced () {
 module.exports = {
   preflight,
   excludePatches,
-  getYTVersions,
-  downloadYTApk,
-  getYTVersion,
+  getAppVersions,
+  downloadAPK,
+  getAppVersion,
   buildReVanced
 };

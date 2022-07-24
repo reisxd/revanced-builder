@@ -5,18 +5,18 @@ const {
 } = require('@nodegui/nodegui');
 const { deleteWidgets } = require('../utils/index.js');
 
-function ytVerSelector (versionsList, ui, version, widgetsArray) {
-  ui.labels.main.setText('Select the YouTube version you want to download:');
+function appVerSelector (versionsList, ui, version, widgetsArray, app) {
+  ui.labels.main.setText('Select the app version you want to download:');
   const listWidget = new QListWidget();
   listWidget.setFixedSize(735, 300);
   const continueButton = new QPushButton();
   continueButton.setText('Continue');
   continueButton.setStyleSheet('margin-bottom: 15px;');
   continueButton.addEventListener('clicked', async () => {
-    const { downloadYTApk } = require('../utils/builder.js');
+    const { downloadAPK } = require('../utils/builder.js');
     version = listWidget.selectedItems()[0].text();
     deleteWidgets([listWidget, continueButton]);
-    await downloadYTApk(version);
+    await downloadAPK(version, app);
   });
   for (const version of versionsList) {
     const versionName = new QListWidgetItem();
@@ -28,4 +28,4 @@ function ytVerSelector (versionsList, ui, version, widgetsArray) {
   widgetsArray = [listWidget, continueButton];
 }
 
-module.exports = ytVerSelector;
+module.exports = appVerSelector;

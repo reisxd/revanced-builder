@@ -4,8 +4,8 @@ const {
   FlexLayout,
   WindowType
 } = require('@nodegui/nodegui');
-const { preflight, excludePatches } = require('./utils/builder.js');
-const { errorScreen, initializeUI } = require('./ui/index.js');
+const { preflight } = require('./utils/builder.js');
+const { errorScreen, initializeUI, selectApp } = require('./ui/index.js');
 
 const win = new QMainWindow();
 win.setWindowTitle('ReVanced Builder');
@@ -26,7 +26,8 @@ process.on('unhandledRejection', async (reason) => {
 
 (async () => {
   await preflight(false, ui);
-  await excludePatches(ui);
+  await selectApp(ui);
+  // await excludePatches(ui);
 })();
 win.setCentralWidget(centralWidget);
 win.setStyleSheet(

@@ -2,7 +2,8 @@ module.exports = {
   patchesScreen: require('./patchesScreen.js'),
   patchingScreen: require('./patchingScreen.js'),
   errorScreen: require('./errorScreen.js'),
-  ytVerSelector: require('./ytVerSelector.js'),
+  appVerSelector: require('./appVerSelector.js'),
   initializeUI: require('./initializeUI.js'),
-  useOldApkScreen: require('./useOldApkScreen.js')
+  useOldApkScreen: require('./useOldApkScreen.js'),
+  selectApp: require('./selectApp.js')
 };

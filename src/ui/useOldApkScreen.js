@@ -1,14 +1,14 @@
 const { QLabel, QPushButton } = require('@nodegui/nodegui');
 const { deleteWidgets } = require('../utils/index.js');
 
-function useOldApkScreen (ui) {
+function useOldApkScreen (ui, pkg) {
   ui.labels.main.setText('Use already downloaded APK?');
   const label = new QLabel();
   label.setStyleSheet(
     'font-size: 20px; font-family: "Segoe UI", serif; font-weight: 500; color: white; margin: 0;'
   );
   label.setText(
-    'The YouTube APK already exists in the revanced folder.\nDo you want to use it?'
+    'The APK already exists in the revanced folder.\nDo you want to use it?'
   );
   const useAPK = new QPushButton();
   useAPK.setStyleSheet('margin-bottom: 15px;');
@@ -23,10 +23,10 @@ function useOldApkScreen (ui) {
     await buildReVanced();
   });
   downloadAPK.addEventListener('clicked', () => {
-    const { getYTVersions } = require('../utils/builder.js');
+    const { getAppVersions } = require('../utils/builder.js');
     deleteWidgets([label, useAPK, downloadAPK]);
     ui.space.setStyleSheet('margin-left: 275px;');
-    getYTVersions();
+    getAppVersions(null, pkg);
   });
   ui.buttonPanel.addWidget(useAPK);
   ui.buttonPanel.addWidget(downloadAPK);
