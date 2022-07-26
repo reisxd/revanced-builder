@@ -377,44 +377,28 @@ async function androidBuild () {
     }
   }
 
-  try {
-    await actualExec('aapt2');
-  } catch (e) {
-    if (!e.stderr.includes('not found')) {
-      console.log('aapt2 is already installed.');
-    } else {
-      console.log("Couldn't find aapt2, installing...");
-      await dloadFromURL(
-        'https://github.com/reisxd/revanced-cli-termux/raw/main/aapt2.zip',
-        'aapt2.zip'
-      );
-      console.log(`The architecture is ${os.arch()}`);
-      await actualExec('unzip aapt2.zip');
-      switch (os.arch()) {
-        case 'arm64': {
-          await actualExec(
-            'cp arm64-v8a/aapt2 /data/data/com.termux/files/usr/bin/aapt2'
-          );
-          await actualExec(
-            'chmod +x /data/data/com.termux/files/usr/bin/aapt2'
-          );
-          break;
-        }
+  console.log('Installing aapt2');
+  await dloadFromURL(
+    'https://github.com/reisxd/revanced-cli-termux/raw/main/aapt2.zip',
+    'aapt2.zip'
+  );
+  console.log(`The architecture is ${os.arch()}`);
+  await actualExec('unzip aapt2.zip');
+  switch (os.arch()) {
+    case 'arm64': {
+      await actualExec('cp arm64-v8a/aapt2 revanced/aapt2');
+      await actualExec('chmod +x revanced/aapt2');
+      break;
+    }
 
-        case 'arm': {
-          await actualExec(
-            'cp armeabi-v7a/aapt2 /data/data/com.termux/files/usr/bin/aapt2'
-          );
-          await actualExec(
-            'chmod +x /data/data/com.termux/files/usr/bin/aapt2'
-          );
-          break;
-        }
-      }
-
-      console.log('aapt2 has been installed.');
+    case 'arm': {
+      await actualExec('cp armeabi-v7a/aapt2 revanced/aapt2');
+      await actualExec('chmod +x revanced/aapt2');
+      break;
     }
   }
+
+  console.log('aapt2 has been installed.');
 }
 
 (async () => {
@@ -611,7 +595,7 @@ async function androidBuild () {
       const { stdout, stderr } = await actualExec(
         `java -jar ${jarNames.cli} -b ${jarNames.patchesJar} ${
           os.platform() === 'android'
-            ? '--custom-aapt2-binary /data/data/com.termux/files/usr/bin/aapt2'
+            ? '--custom-aapt2-binary revanced/aapt2'
             : ''
         } -t ./revanced-cache --experimental -a ./revanced/youtube.apk ${
           jarNames.deviceId
