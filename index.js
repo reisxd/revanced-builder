@@ -376,29 +376,33 @@ async function androidBuild () {
       await actualExec('apt install openjdk-17');
     }
   }
+  process.stdout.write('Checking for aapt2... ');
+  if (fs.existsSync('revanced/aapt2')) {
+    console.log('aapt2 is already installed.');
+  } else {
+    console.log('Installing aapt2');
+    await dloadFromURL(
+      'https://github.com/reisxd/revanced-cli-termux/raw/main/aapt2.zip',
+      'aapt2.zip'
+    );
+    console.log(`The architecture is ${os.arch()}`);
+    await actualExec('unzip aapt2.zip');
+    switch (os.arch()) {
+      case 'arm64': {
+        await actualExec('cp arm64-v8a/aapt2 revanced/aapt2');
+        await actualExec('chmod +x revanced/aapt2');
+        break;
+      }
 
-  console.log('Installing aapt2');
-  await dloadFromURL(
-    'https://github.com/reisxd/revanced-cli-termux/raw/main/aapt2.zip',
-    'aapt2.zip'
-  );
-  console.log(`The architecture is ${os.arch()}`);
-  await actualExec('unzip aapt2.zip');
-  switch (os.arch()) {
-    case 'arm64': {
-      await actualExec('cp arm64-v8a/aapt2 revanced/aapt2');
-      await actualExec('chmod +x revanced/aapt2');
-      break;
+      case 'arm': {
+        await actualExec('cp armeabi-v7a/aapt2 revanced/aapt2');
+        await actualExec('chmod +x revanced/aapt2');
+        break;
+      }
     }
 
-    case 'arm': {
-      await actualExec('cp armeabi-v7a/aapt2 revanced/aapt2');
-      await actualExec('chmod +x revanced/aapt2');
-      break;
-    }
+    console.log('aapt2 has been installed.');
   }
-
-  console.log('aapt2 has been installed.');
 }
 
 (async () => {
