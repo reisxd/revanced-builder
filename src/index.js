@@ -1,3 +1,6 @@
+// This line is here because of one single issue...
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
+
 const {
   QMainWindow,
   QWidget,

@@ -9,7 +9,6 @@ function showError (error, ui) {
   const errorLogBox = new QTextEdit();
   error.stack ? errorLogBox.setText(error.stack) : errorLogBox.setHtml(error);
   errorLogBox.setReadOnly(true);
-  console.log(error.stack ? error.stack : error);
   const issueLabel = new QLabel();
   issueLabel.setTextFormat(1);
   issueLabel.setObjectName('text');

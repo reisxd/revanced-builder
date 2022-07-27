@@ -6,7 +6,7 @@ const {
 const fs = require('fs');
 const { deleteWidgets } = require('../utils/index.js');
 
-function patchesScreen(selectedPatches, ui, variables, widgetsArray, pkg) {
+function patchesScreen (selectedPatches, ui, variables, widgetsArray, pkg) {
   ui.labels.main.setText('Select the patches you want to exclude:');
   ui.labels.main.setObjectName('text');
   const listWidget = new QListWidget();
@@ -25,7 +25,7 @@ function patchesScreen(selectedPatches, ui, variables, widgetsArray, pkg) {
     const { errorScreen, useOldApkScreen } = require('./index.js');
     const { getAppVersions, getAppVersion } = require('../utils/builder.js');
     let appVersion;
-    let packageObject = {
+    const packageObject = {
       pkg,
       excludedPatches: []
     };
@@ -46,17 +46,19 @@ function patchesScreen(selectedPatches, ui, variables, widgetsArray, pkg) {
               appVersion = await getAppVersion('com.google.android.youtube');
               break;
             }
-        
+
             case 'music': {
-              appVersion = await getAppVersion('com.google.android.apps.youtube.music');
+              appVersion = await getAppVersion(
+                'com.google.android.apps.youtube.music'
+              );
               break;
             }
-        
+
             case 'android': {
               appVersion = await getAppVersion('com.twitter.android');
               break;
             }
-        
+
             case 'frontpage': {
               appVersion = await getAppVersion('com.reddit.frontpage');
               break;
@@ -76,7 +78,7 @@ function patchesScreen(selectedPatches, ui, variables, widgetsArray, pkg) {
       variables.patches += ` -e ${patchName}`;
       packageObject.excludedPatches.push(patchName);
     }
-    let foundObj = false
+    let foundObj = false;
     for (const packageObj of excludedPatchList) {
       if (typeof packageObj === 'string') continue;
       if (packageObj.pkg === pkg) {
@@ -93,7 +95,6 @@ function patchesScreen(selectedPatches, ui, variables, widgetsArray, pkg) {
       './excludedPatchesList.json',
       JSON.stringify(excludedPatchList)
     );
-
 
     deleteWidgets([listWidget, continueButton]);
     if (appVersion === null) return;
@@ -115,9 +116,9 @@ function patchesScreen(selectedPatches, ui, variables, widgetsArray, pkg) {
     const patchItem = new QListWidgetItem();
     patchItem.setText(patch);
     listWidget.addItem(patchItem);
-    for (const package of excludedPatches) {
-      if (package.pkg === pkg) {
-        if (package.excludedPatches.includes(patchName)) {
+    for (const pack of excludedPatches) {
+      if (pack.pkg === pkg) {
+        if (pack.excludedPatches.includes(patchName)) {
           patchItem.setSelected(true);
           listWidget.setCurrentItem(patchItem);
         }

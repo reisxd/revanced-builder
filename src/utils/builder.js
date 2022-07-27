@@ -23,7 +23,7 @@ const jarNames = {
   patchesJar: './revanced/',
   integrations: './revanced/',
   deviceId: '',
-  microG: './revanced/',
+  microG: './revanced/'
 };
 
 const vars = {
@@ -70,7 +70,6 @@ async function overWriteJarNames (link) {
 }
 
 async function preflight (listOnly, gLayout) {
-  console.log(global.widgetsArray);
   ui = gLayout;
   if (!fs.existsSync('./revanced')) {
     fs.mkdirSync('./revanced');
@@ -280,7 +279,7 @@ async function excludePatches (ui, pkg) {
   const getPatches = await actualExec(
     `java -jar ${jarNames.cli} -a ${jarNames.integrations} -b ${jarNames.patchesJar} -l --with-packages`,
     { maxBuffer: 5120 * 1024 }
-    );
+  );
 
   const patchesText = getPatches.stderr || getPatches.stdout;
   const firstWord = patchesText.slice(0, patchesText.indexOf(' '));
@@ -323,14 +322,18 @@ async function excludePatches (ui, pkg) {
   for (const patchName of patchesArray) {
     let patch = patchName.replace(firstWord, '').replace(/\s/g, '');
     index++;
-    if (pkgNameArray[index].replace(firstWord, '').replace(/\s/g, '') !== pkg) { continue; }
+    if (pkgNameArray[index].replace(firstWord, '').replace(/\s/g, '') !== pkg) {
+      continue;
+    }
     patch += ` | ${
       patchDescsArray[index]
         .replace('\t', '')
         .match(new RegExp(`\\t(.*) ${require('os').EOL}`))[1]
     }`;
     if (patch.includes('microg-support')) patch += '(Root required to exclude)';
-    if (patch.includes('hide-cast-button')) { patch += '(Root required to exclude)'; }
+    if (patch.includes('hide-cast-button')) {
+      patch += '(Root required to exclude)';
+    }
     patchesChoice.push(patch);
   }
   patchesScreen(patchesChoice, ui, vars, widgetsArray, pkg);
@@ -360,7 +363,9 @@ async function getAppVersions (version, app) {
       break;
     }
     case 'frontpage': {
-      versionsList = await getPage('https://www.apkmirror.com/apk/redditinc/reddit');
+      versionsList = await getPage(
+        'https://www.apkmirror.com/apk/redditinc/reddit'
+      );
       break;
     }
   }
@@ -415,7 +420,9 @@ async function downloadAPK (apkVersion, app) {
     }
 
     case 'frontpage': {
-      versionDownload = await fetchURL(`https://www.apkmirror.com/apk/redditinc/reddit/reddit-${appVersion}-release/`);
+      versionDownload = await fetchURL(
+        `https://www.apkmirror.com/apk/redditinc/reddit/reddit-${appVersion}-release/`
+      );
       break;
     }
   }
@@ -423,20 +430,13 @@ async function downloadAPK (apkVersion, app) {
   const versionDownloadList = await versionDownload.text();
 
   const vDLL = load(versionDownloadList);
-  let dlLink;
- /* if (app === 'music') {
-    // I just wanna say, fuck you google (or APKMirror).
-    dlLink = vDLL('div:contains("armeabi-v7a")').first().parent().children('div[class="table-cell rowheight addseparator expand pad dowrap"]').first().children('a[class="accent_color"]').attribs;
-      console.log(dlLink);
-  } else {*/
-    dlLink = vDLL('span[class="apkm-badge"]')
-      .first()
-      .parent()
-      .children('a[class="accent_color"]')
-      .first()
-      .attr('href');
-      console.log(dlLink);
- // }
+  const dlLink = vDLL('span[class="apkm-badge"]')
+    .first()
+    .parent()
+    .children('a[class="accent_color"]')
+    .first()
+    .attr('href');
+
   const downloadLink = await fetchURL(`https://www.apkmirror.com${dlLink}`);
   const downloadLinkPage = await downloadLink.text();
 
@@ -458,7 +458,13 @@ async function downloadAPK (apkVersion, app) {
 async function buildReVanced () {
   deleteWidgets(widgetsArray);
   const buildProcess = await exec(
-    `java -jar ${jarNames.cli} -b ${jarNames.patchesJar} --experimental -a ./revanced/${vars.downloadedAPK}.apk ${jarNames.deviceId} -o ./revanced/revanced.apk ${vars.downloadedAPK === 'frontpage' ? '-r' : ''} -m ${jarNames.integrations} ${vars.patches}`,
+    `java -jar ${jarNames.cli} -b ${
+      jarNames.patchesJar
+    } --experimental -a ./revanced/${vars.downloadedAPK}.apk ${
+      jarNames.deviceId
+    } -o ./revanced/revanced.apk ${
+      vars.downloadedAPK === 'frontpage' ? '-r' : ''
+    } -m ${jarNames.integrations} ${vars.patches}`,
     { maxBuffer: 5120 * 1024 }
   );
 
