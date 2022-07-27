@@ -17,20 +17,21 @@ const actualExec = util.promisify(exec);
 
 let ui;
 let widgetsArray = [];
+global.widgetsArray = widgetsArray;
 const jarNames = {
   cli: './revanced/',
   patchesJar: './revanced/',
   integrations: './revanced/',
   deviceId: '',
   microG: './revanced/',
-  downloadedAPK: ''
 };
 
 const vars = {
   patches: '',
   isRooted: false,
   adbExists: true,
-  foundDevice: false
+  foundDevice: false,
+  downloadedAPK: ''
 };
 
 async function getADBDeviceID () {
@@ -69,6 +70,7 @@ async function overWriteJarNames (link) {
 }
 
 async function preflight (listOnly, gLayout) {
+  console.log(global.widgetsArray);
   ui = gLayout;
   if (!fs.existsSync('./revanced')) {
     fs.mkdirSync('./revanced');
@@ -210,15 +212,17 @@ async function checkForJavaADB () {
 
 async function getAppVersion (pkgName) {
   const { stdout, stderr } = await actualExec(
-    `adb shell dumpsys package ${pkgName}`
+    `adb shell dumpsys package ${pkgName}`,
+    { maxBuffer: 10240 * 1024 }
   );
   const dumpSysOut = stdout || stderr;
   if (!dumpSysOut.match(/versionName=([^=]+)/)) {
     deleteWidgets(widgetsArray);
-    return errorScreen(
+    errorScreen(
       "The app you selected is not installed on your device\nIt's needed for rooted ReVanced.",
       ui
     );
+    return null;
   }
   return dumpSysOut
     .match(/versionName=([^=]+)/)[1]
@@ -272,10 +276,11 @@ async function dloadFromURL (url, outputPath) {
 }
 
 async function excludePatches (ui, pkg) {
-  jarNames.downloadedAPK = pkg;
+  vars.downloadedAPK = pkg;
   const getPatches = await actualExec(
-    `java -jar ${jarNames.cli} -a ${jarNames.integrations} -b ${jarNames.patchesJar} -l --with-packages`
-  );
+    `java -jar ${jarNames.cli} -a ${jarNames.integrations} -b ${jarNames.patchesJar} -l --with-packages`,
+    { maxBuffer: 5120 * 1024 }
+    );
 
   const patchesText = getPatches.stderr || getPatches.stdout;
   const firstWord = patchesText.slice(0, patchesText.indexOf(' '));
@@ -285,7 +290,30 @@ async function excludePatches (ui, pkg) {
 
   const pkgRegex = new RegExp(`${firstWord}\\s([^\\t]+)`, 'g');
   const pkgNameArray = patchesText.match(pkgRegex);
-
+  if (pkgNameArray.includes('com.twitter.android')) {
+    switch (pkg) {
+      case 'android': {
+        pkg = 'com.twitter.android';
+        vars.downloadedAPK = pkg;
+        break;
+      }
+      case 'youtube': {
+        pkg = 'com.google.android.youtube';
+        vars.downloadedAPK = pkg;
+        break;
+      }
+      case 'frontpage': {
+        pkg = 'com.reddit.frontpage';
+        vars.downloadedAPK = pkg;
+        break;
+      }
+      case 'music': {
+        pkg = 'com.google.android.apps.youtube.music';
+        vars.downloadedAPK = pkg;
+        break;
+      }
+    }
+  }
   const patchDescRegex = new RegExp(`\\t(.*) ${require('os').EOL}`, 'g');
   const patchDescsArray = patchesText.match(patchDescRegex);
 
@@ -331,6 +359,10 @@ async function getAppVersions (version, app) {
       );
       break;
     }
+    case 'frontpage': {
+      versionsList = await getPage('https://www.apkmirror.com/apk/redditinc/reddit');
+      break;
+    }
   }
 
   const versionList = [];
@@ -345,7 +377,9 @@ async function getAppVersions (version, app) {
     const versionName = version.attribs.title
       .replace('YouTube ', '')
       .replace('Music ', '')
-      .replace('Twitter ', '');
+      .replace('Twitter ', '')
+      .replace('Reddit ', '');
+
     indx++;
     if (versionName.includes('beta')) continue;
     else if (app === 'android' && !versionName.includes('release')) continue;
@@ -379,24 +413,30 @@ async function downloadAPK (apkVersion, app) {
       );
       break;
     }
+
+    case 'frontpage': {
+      versionDownload = await fetchURL(`https://www.apkmirror.com/apk/redditinc/reddit/reddit-${appVersion}-release/`);
+      break;
+    }
   }
 
   const versionDownloadList = await versionDownload.text();
 
   const vDLL = load(versionDownloadList);
   let dlLink;
-  if (app === 'music') {
+ /* if (app === 'music') {
     // I just wanna say, fuck you google (or APKMirror).
-    dlLink = vDLL('div:contains("armeabi-v7a")').first().parent().children()[0]
-      .children[0].children[0].attribs.href;
-  } else {
+    dlLink = vDLL('div:contains("armeabi-v7a")').first().parent().children('div[class="table-cell rowheight addseparator expand pad dowrap"]').first().children('a[class="accent_color"]').attribs;
+      console.log(dlLink);
+  } else {*/
     dlLink = vDLL('span[class="apkm-badge"]')
       .first()
       .parent()
       .children('a[class="accent_color"]')
       .first()
       .attr('href');
-  }
+      console.log(dlLink);
+ // }
   const downloadLink = await fetchURL(`https://www.apkmirror.com${dlLink}`);
   const downloadLinkPage = await downloadLink.text();
 
@@ -407,7 +447,7 @@ async function downloadAPK (apkVersion, app) {
   const downloadPage = await getPage(`https://www.apkmirror.com${pageLink}`);
   const apkPage = load(downloadPage);
   const apkLink = apkPage('a[rel="nofollow"]').first().attr('href');
-  jarNames.downloadedAPK = app;
+  vars.downloadedAPK = app;
   await dloadFromURL(
     `https://www.apkmirror.com${apkLink}`,
     `./revanced/${app}.apk`
@@ -418,7 +458,7 @@ async function downloadAPK (apkVersion, app) {
 async function buildReVanced () {
   deleteWidgets(widgetsArray);
   const buildProcess = await exec(
-    `java -jar ${jarNames.cli} -b ${jarNames.patchesJar} --experimental -a ./revanced/${jarNames.downloadedAPK}.apk ${jarNames.deviceId} -o ./revanced/revanced.apk -m ${jarNames.integrations} ${vars.patches}`,
+    `java -jar ${jarNames.cli} -b ${jarNames.patchesJar} --experimental -a ./revanced/${vars.downloadedAPK}.apk ${jarNames.deviceId} -o ./revanced/revanced.apk ${vars.downloadedAPK === 'frontpage' ? '-r' : ''} -m ${jarNames.integrations} ${vars.patches}`,
     { maxBuffer: 5120 * 1024 }
   );
 

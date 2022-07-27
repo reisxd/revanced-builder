@@ -1,4 +1,5 @@
 const { QLabel, QTextEdit } = require('@nodegui/nodegui');
+const { deleteWidgets } = require('../utils');
 
 function showError (error, ui) {
   ui.labels.main.setText('Error');
@@ -8,6 +9,7 @@ function showError (error, ui) {
   const errorLogBox = new QTextEdit();
   error.stack ? errorLogBox.setText(error.stack) : errorLogBox.setHtml(error);
   errorLogBox.setReadOnly(true);
+  console.log(error.stack ? error.stack : error);
   const issueLabel = new QLabel();
   issueLabel.setTextFormat(1);
   issueLabel.setObjectName('text');
@@ -21,6 +23,7 @@ function showError (error, ui) {
   /* const copyToClipBButton = new QPushButton();
   copyToClipBButton.setText('Copy to clipboard');
   copyToClipBButton.setStyleSheet('border-radius: 12px; background-color: #333333; color: #ffffff'); */
+  deleteWidgets(global.widgetsArray);
   ui.panels.innerPanel.addWidget(errorLogBox);
   if (error.stack) {
     ui.panels.innerPanel.addWidget(issueLabel);

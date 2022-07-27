@@ -41,7 +41,27 @@ function patchesScreen(selectedPatches, ui, variables, widgetsArray, pkg) {
           );
         }
         if (variables.foundDevice) {
-          appVersion = await getAppVersion(pkg);
+          switch (pkg) {
+            case 'youtube': {
+              appVersion = await getAppVersion('com.google.android.youtube');
+              break;
+            }
+        
+            case 'music': {
+              appVersion = await getAppVersion('com.google.android.apps.youtube.music');
+              break;
+            }
+        
+            case 'android': {
+              appVersion = await getAppVersion('com.twitter.android');
+              break;
+            }
+        
+            case 'frontpage': {
+              appVersion = await getAppVersion('com.reddit.frontpage');
+              break;
+            }
+          }
           variables.patches += ' --mount';
           variables.isRooted = true;
         } else {
@@ -76,6 +96,7 @@ function patchesScreen(selectedPatches, ui, variables, widgetsArray, pkg) {
 
 
     deleteWidgets([listWidget, continueButton]);
+    if (appVersion === null) return;
     if (variables.isRooted) {
       getAppVersions(appVersion, pkg);
     } else if (fs.existsSync(`./revanced/${pkg}.apk`)) {

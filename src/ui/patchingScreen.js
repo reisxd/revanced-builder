@@ -12,11 +12,10 @@ function patchingScreen (ui, widgetsArray, buildProcess, vars) {
 
   if (!vars.adbExists || !vars.deviceId) {
     logText.setText(
-      'When building ReVanced finishes, please check the revanced folder!\n'
+      'When building ReVanced finishes, please copy these two files and install them:\nrevanced/revanced.apk\nrevanced/microg.apk (if you are building YT/YTM)\n'
     );
   }
   let pkgName;
-
   switch (vars.downloadedAPK) {
     case 'youtube': {
       if (!vars.isRooted) {
@@ -32,8 +31,14 @@ function patchingScreen (ui, widgetsArray, buildProcess, vars) {
       } else break;
     }
 
-    default: {
-      pkgName = vars.downloadedAPK;
+    case 'android': {
+      pkgName = 'com.twitter.android';
+      break;
+    }
+
+    case 'frontpage': {
+      pkgName = 'com.reddit.frontpage';
+      break;
     }
   }
 

@@ -3,7 +3,7 @@ const { QPushButton, QListWidget } = require('@nodegui/nodegui');
 async function selectApp (ui) {
   ui.labels.main.setText('Select the app you want to patch:');
   const appList = new QListWidget();
-  appList.addItems(['YouTube', 'YouTube Music', 'Twitter']);
+  appList.addItems(['YouTube', 'YouTube Music', 'Twitter', 'Reddit']);
   const continueButton = new QPushButton();
   continueButton.setStyleSheet('margin-bottom: 23px;');
   continueButton.setText('Continue');
@@ -26,6 +26,11 @@ async function selectApp (ui) {
 
       case 'Twitter': {
         excludePatches(ui, 'android');
+        break;
+      }
+
+      case 'Reddit': {
+        excludePatches(ui, 'frontpage');
         break;
       }
     }
