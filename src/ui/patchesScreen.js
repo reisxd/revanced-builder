@@ -18,8 +18,13 @@ function patchesScreen (selectedPatches, ui, variables, widgetsArray, pkg) {
   widgetsArray = [listWidget, continueButton];
   listWidget.setObjectName('items');
   let excludedPatchList = [];
-  let patchesList = fs.readFileSync('./excludedPatchesList.json').toString();
-  patchesList = JSON.parse(patchesList);
+  let patchesList;
+  if (fs.existsSync('./excludedPatchesList.json')) {
+    patchesList = fs.readFileSync('./excludedPatchesList.json').toString();
+    patchesList = JSON.parse(patchesList);
+  } else {
+    patchesList = [];
+  }
   excludedPatchList = patchesList;
   continueButton.addEventListener('clicked', async () => {
     const { errorScreen, useOldApkScreen } = require('./index.js');
@@ -112,6 +117,8 @@ function patchesScreen (selectedPatches, ui, variables, widgetsArray, pkg) {
     if (fs.existsSync('./excludedPatchesList.json')) {
       excludedPatches = fs.readFileSync('./excludedPatchesList.json');
       excludedPatches = JSON.parse(excludedPatches);
+    } else {
+      fs.writeFileSync('./excludedPatchesList.json', '[]');
     }
     const patchItem = new QListWidgetItem();
     patchItem.setText(patch);
