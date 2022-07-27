@@ -187,7 +187,7 @@ async function checkForJavaADB () {
       );
     }
 
-    if (!javaVerLog.includes('Zulu')) {
+    if (!javaVerLog.includes('openjdk')) {
       return errorScreen(
         'You have Java, but not Zulu JDK. You need to install it because of signing problems.\nPlease get it from here: https://www.azul.com/downloads/?version=java-17-lts&package=jdk',
         ui
