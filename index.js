@@ -597,7 +597,7 @@ async function androidBuild () {
         }
       }
       const getPatches = await actualExec(
-        `java -jar ${jarNames.cli} -a ${jarNames.integrations} -b ${jarNames.patchesJar} -l`
+        `java -jar ${jarNames.cli} -a ${jarNames.integrations} -b ${jarNames.patchesJar} -l --with-packages`
       );
       let patchesText = getPatches.stderr || getPatches.stdout;
       patchesText = patchesText.replace('\tdi', '\t di');
