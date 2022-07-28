@@ -281,7 +281,8 @@ async function excludePatches (ui, pkg) {
     { maxBuffer: 5120 * 1024 }
   );
 
-  const patchesText = getPatches.stderr || getPatches.stdout;
+  let patchesText = getPatches.stderr || getPatches.stdout;
+  patchesText = patchesText.replace('\tdi', '\t di');
   const firstWord = patchesText.slice(0, patchesText.indexOf(' '));
   const patchRegex = new RegExp('\\t\\s([^\\t]+)', 'g');
 
