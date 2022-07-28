@@ -657,7 +657,6 @@ async function androidBuild () {
           name: patch
         });
 
-        index++;
       }
 
       const patchesChoosed = await inquirer.prompt([
