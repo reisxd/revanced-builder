@@ -147,10 +147,35 @@ async function dloadFromURL (url, outputPath) {
   });
 }
 
-async function downloadYTApk (ytVersion) {
-  const versionsList = await getPage(
-    'https://www.apkmirror.com/apk/google-inc/youtube'
-  );
+async function downloadAppApk (ytVersion, app) {
+  let versionsList;
+
+  switch (app) {
+    case 'youtube': {
+      versionsList = await getPage(
+        'https://www.apkmirror.com/apk/google-inc/youtube'
+      );
+      break;
+    }
+    case 'music': {
+      versionsList = await getPage(
+        'https://www.apkmirror.com/apk/google-inc/youtube-music'
+      );
+      break;
+    }
+    case 'android': {
+      versionsList = await getPage(
+        'https://www.apkmirror.com/apk/twitter/twitter'
+      );
+      break;
+    }
+    case 'frontpage': {
+      versionsList = await getPage(
+        'https://www.apkmirror.com/apk/redditinc/reddit'
+      );
+      break;
+    }
+  }
 
   const versionList = [];
   let indx = 0;
@@ -162,9 +187,16 @@ async function downloadYTApk (ytVersion) {
       'h5[class="appRowTitle wrapText marginZero block-on-mobile"]'
     ).get()) {
       if (indx === 10) continue;
-      const versionName = version.attribs.title.replace('YouTube ', '');
+      const versionName = version.attribs.title
+        .replace('YouTube ', '')
+        .replace('Music ', '')
+        .replace('Twitter ', '')
+        .replace('Reddit ', '');
+
       indx++;
       if (versionName.includes('beta')) continue;
+      else if (app === 'android' && !versionName.includes('release')) continue;
+      if (versionName.includes('(Wear OS)')) continue;
       versionList.push({
         name: versionName
       });
@@ -174,7 +206,7 @@ async function downloadYTApk (ytVersion) {
       {
         type: 'list',
         name: 'version',
-        message: 'Select a YT version to download.',
+        message: 'Select the version to download.',
         choices: versionList
       }
     ]);
@@ -184,9 +216,37 @@ async function downloadYTApk (ytVersion) {
   if (ytVersion) apkVersion = ytVersion.replace(/\./g, '-');
   if (versionChoosen) apkVersion = versionChoosen.version.replace(/\./g, '-');
 
-  const versionDownload = await fetchURL(
-    `https://www.apkmirror.com/apk/google-inc/youtube/youtube-${apkVersion}-release/`
-  );
+  let versionDownload;
+
+  switch (app) {
+    case 'youtube': {
+      versionDownload = await fetchURL(
+        `https://www.apkmirror.com/apk/google-inc/youtube/youtube-${apkVersion}-release/`
+      );
+      break;
+    }
+
+    case 'music': {
+      versionDownload = await fetchURL(
+        `https://www.apkmirror.com/apk/google-inc/youtube-music/youtube-music-${apkVersion}-release/`
+      );
+      break;
+    }
+
+    case 'android': {
+      versionDownload = await fetchURL(
+        `https://www.apkmirror.com/apk/twitter-inc/twitter/twitter-${apkVersion}-release/`
+      );
+      break;
+    }
+
+    case 'frontpage': {
+      versionDownload = await fetchURL(
+        `https://www.apkmirror.com/apk/redditinc/reddit/reddit-${apkVersion}-release/`
+      );
+      break;
+    }
+  }
   const versionDownloadList = await versionDownload.text();
 
   const vDLL = load(versionDownloadList);
@@ -208,10 +268,10 @@ async function downloadYTApk (ytVersion) {
   const apkPage = load(downloadPage);
   const apkLink = apkPage('a[rel="nofollow"]').first().attr('href');
 
-  console.log("Downloading the YouTube APK, this'll take some time!");
+  console.log("Downloading the APK, this'll take some time!");
   await dloadFromURL(
     `https://www.apkmirror.com${apkLink}`,
-    './revanced/youtube.apk'
+    `./revanced/${app}.apk`
   );
   return console.log('Download complete!');
 }
@@ -463,7 +523,7 @@ async function androidBuild () {
       }
 
       if (!argParser.flags.includes('manual-apk')) {
-        await downloadYTApk(ytVersion);
+        await downloadAppApk(ytVersion);
       }
 
       console.log('Building ReVanced, please be patient!');
@@ -505,32 +565,94 @@ async function androidBuild () {
       let useManualAPK;
       let ytVersion;
       let isRooted;
+      let pkg;
 
       await preflight(false);
 
+      const selectedPkg = await inquirer.prompt([
+        {
+          type: 'list',
+          name: 'appToSelect',
+          message: 'Select what app you want to patch:',
+          choices: ['YouTube', 'YouTube Music', 'Twitter', 'Reddit']
+        }
+      ]);
+
+      switch (selectedPkg.appToSelect) {
+        case 'YouTube': {
+          pkg = 'youtube';
+          break;
+        }
+        case 'YouTube Music': {
+          pkg = 'music';
+          break;
+        }
+        case 'Twitter': {
+          pkg = 'android';
+          break;
+        }
+        case 'Reddit': {
+          pkg = 'frontpage';
+          break;
+        }
+      }
       const getPatches = await actualExec(
         `java -jar ${jarNames.cli} -a ${jarNames.integrations} -b ${jarNames.patchesJar} -l`
       );
-
-      const patchesText = getPatches.stderr || getPatches.stdout;
+      let patchesText = getPatches.stderr || getPatches.stdout;
+      patchesText = patchesText.replace('\tdi', '\t di');
       const firstWord = patchesText.slice(0, patchesText.indexOf(' '));
-      const patchRegex = new RegExp(`${firstWord}\\s([^\\t]+)`, 'g');
+      const patchRegex = new RegExp('\\t\\s([^\\t]+)', 'g');
 
       const patchesArray = patchesText.match(patchRegex);
 
-      const patchDescRegex = new RegExp(`\\t(.*) ${os.EOL}`, 'g');
+      const pkgRegex = new RegExp(`${firstWord}\\s([^\\t]+)`, 'g');
+      const pkgNameArray = patchesText.match(pkgRegex);
+      if (pkgNameArray.includes('com.twitter.android')) {
+        switch (pkg) {
+          case 'android': {
+            pkg = 'com.twitter.android';
+            break;
+          }
+          case 'youtube': {
+            pkg = 'com.google.android.youtube';
+            break;
+          }
+          case 'frontpage': {
+            pkg = 'com.reddit.frontpage';
+            break;
+          }
+          case 'music': {
+            pkg = 'com.google.android.apps.youtube.music';
+            break;
+          }
+        }
+      }
+      const patchDescRegex = new RegExp(`\\t(.*) ${require('os').EOL}`, 'g');
       const patchDescsArray = patchesText.match(patchDescRegex);
 
       const patchesChoice = [];
-      let index = 0;
+      let index = -1;
 
       for (const patchName of patchesArray) {
         let patch = patchName.replace(firstWord, '').replace(/\s/g, '');
-        patch += `| ${patchDescsArray[index]
-          .replace('\t', '')
-          .replace(os.EOL, '')}`;
-        if (patch.includes('microg-support')) patch += '(Root required)';
-        if (patch.includes('hide-cast-button')) patch += '(Root required)';
+        index++;
+        if (
+          pkgNameArray[index].replace(firstWord, '').replace(/\s/g, '') !== pkg
+        ) {
+          continue;
+        }
+        patch += ` | ${
+          patchDescsArray[index]
+            .replace('\t', '')
+            .match(new RegExp(`\\t(.*) ${require('os').EOL}`))[1]
+        }`;
+        if (patch.includes('microg-support')) {
+          patch += '(Root required to exclude)';
+        }
+        if (patch.includes('hide-cast-button')) {
+          patch += '(Root required to exclude)';
+        }
         patchesChoice.push({
           name: patch
         });
@@ -568,6 +690,8 @@ async function androidBuild () {
             ytVersion = await getYTVersion();
             patches += ' --mount';
             isRooted = true;
+          } else if (os.platform() === 'android') {
+            throw new Error("Rooted builds on Android isn't supported yet.");
           } else {
             throw new Error(
               "Couldn't find the device. Please plug in the device."
@@ -578,13 +702,13 @@ async function androidBuild () {
         patches += ` -e ${patchName}`;
       }
 
-      if (fs.existsSync('./revanced/youtube.apk') && !isRooted) {
+      if (fs.existsSync(`./revanced/${pkg}.apk`) && !isRooted) {
         const useManualAPKAnswer = await inquirer.prompt([
           {
             type: 'confirm',
             name: 'useManualAPK',
             message:
-              'The YouTube APK already exists in the revanced folder. Do you want to use it?',
+              'The APK already exists in the revanced folder. Do you want to use it?',
             default: false
           }
         ]);
@@ -592,7 +716,7 @@ async function androidBuild () {
       }
 
       if (!useManualAPK) {
-        await downloadYTApk(ytVersion);
+        await downloadAppApk(ytVersion, pkg);
       }
 
       console.log('Building ReVanced, please be patient!');
@@ -601,9 +725,11 @@ async function androidBuild () {
           os.platform() === 'android'
             ? '--custom-aapt2-binary revanced/aapt2'
             : ''
-        } -t ./revanced-cache --experimental -a ./revanced/youtube.apk ${
+        } -t ./revanced-cache --experimental -a ./revanced/${pkg}.apk ${
           jarNames.deviceId
-        } -o ./revanced/revanced.apk -m ${jarNames.integrations} ${patches}`,
+        } -o ./revanced/revanced.apk ${
+          pkg.endsWith('frontpage') ? '-r' : ''
+        } -m ${jarNames.integrations} ${patches}`,
         { maxBuffer: 5120 * 1024 }
       );
       console.log(stdout || stderr);
