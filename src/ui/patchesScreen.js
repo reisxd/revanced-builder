@@ -6,7 +6,7 @@ const {
 const fs = require('fs');
 const { deleteWidgets } = require('../utils/index.js');
 
-function patchesScreen (selectedPatches, ui, variables, widgetsArray, pkg) {
+function patchesScreen (selectedPatches, ui, variables, widgetsArray, pkg, patchesArray, pkgNameArray, firstWord) {
   ui.labels.main.setText('Select the patches you want to exclude:');
   ui.labels.main.setObjectName('text');
   const listWidget = new QListWidget();
@@ -79,10 +79,21 @@ function patchesScreen (selectedPatches, ui, variables, widgetsArray, pkg) {
           );
         }
       }
-      const patchName = patch.replace(/\|.+(.*)$/, '');
+      const patchName = patch.replace(/\|.+(.*)$/, '').replace(/\s/g, '');
       variables.patches += ` -e ${patchName}`;
       packageObject.excludedPatches.push(patchName);
     }
+    let i = -1;
+    for (const patchnt of patchesArray) {
+      const patchName = patchnt.replace(firstWord, '').replace(/\s/g, '')
+      i++;
+      if (packageObject.excludedPatches.includes(patchName)) {
+        packageObject.excludedPatches.push(patchName);
+        continue;
+      }
+      if (pkgNameArray[i].replace(firstWord, '').replace(/\s/g, '') !== pkg) continue;
+      else variables.patches += ` -i ${patchName}`;
+     }
     let foundObj = false;
     for (const packageObj of excludedPatchList) {
       if (typeof packageObj === 'string') continue;
@@ -113,7 +124,7 @@ function patchesScreen (selectedPatches, ui, variables, widgetsArray, pkg) {
   });
   for (const patch of selectedPatches) {
     let excludedPatches = [];
-    const patchName = patch.replace(/\|.+(.*)$/, '');
+    const patchName = patch.replace(/\|.+(.*)$/, '').replace(/\s/g, '');
     if (fs.existsSync('./excludedPatchesList.json')) {
       excludedPatches = fs.readFileSync('./excludedPatchesList.json');
       excludedPatches = JSON.parse(excludedPatches);

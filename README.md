@@ -14,4 +14,4 @@ If you plan to use it from source, you'll also require [NodeJS >=16](https://nod
 
 ## How to use
 
-Download the latest [executable](https://github.com/reisxd/revanced-builder/releases/latest) and if you are on Windows, unzip it and run it!
+Download the latest [executable](https://github.com/reisxd/revanced-builder/releases/latest), unzip it and run it!

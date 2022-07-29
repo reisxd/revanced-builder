@@ -337,7 +337,7 @@ async function excludePatches (ui, pkg) {
     }
     patchesChoice.push(patch);
   }
-  patchesScreen(patchesChoice, ui, vars, widgetsArray, pkg);
+  patchesScreen(patchesChoice, ui, vars, widgetsArray, pkg, patchesArray, pkgNameArray, firstWord);
 }
 
 async function getAppVersions (version, app) {
