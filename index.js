@@ -656,7 +656,6 @@ async function androidBuild () {
         patchesChoice.push({
           name: patch
         });
-
       }
 
       const patchesChoosed = await inquirer.prompt([
@@ -673,7 +672,7 @@ async function androidBuild () {
           'You excluded every single patch... I guess you want to use YouTube?'
         );
       }
-
+      const patchesArrayList = [];
       for (const patch of patchesChoosed.patches) {
         if (patch.includes('microg-support')) {
           if (!adbExists) {
@@ -697,8 +696,19 @@ async function androidBuild () {
             );
           }
         }
-        const patchName = patch.replace(/\|.+(.*)$/, '');
+        const patchName = patch.replace(/\|.+(.*)$/, '').replace(/\s/g, '');
+        patchesArrayList.push(patchName);
         patches += ` -e ${patchName}`;
+      }
+
+      let i = -1;
+      for (const patchnt of patchesArray) {
+        const patchName = patchnt.replace(firstWord, '').replace(/\s/g, '');
+        i++;
+        if (patchesArrayList.includes(patchName)) {
+          continue;
+        }
+        if (pkgNameArray[i].replace(firstWord, '').replace(/\s/g, '') !== pkg) { continue; } else patches += ` -i ${patchName}`;
       }
 
       if (fs.existsSync(`./revanced/${pkg}.apk`) && !isRooted) {
