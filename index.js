@@ -481,7 +481,7 @@ async function mountReVanced(pkg) {
   await actualExec(`su -c "cp revanced/revanced.apk /data/local/tmp/revanced.delete/${pkg}.apk`);
   await actualExec('su -c "mkdir -p /data/adb/revanced/"');
   await actualExec(`su -c "base_path=\"/data/adb/revanced/${pkg}.apk\" && mv /data/local/tmp/revanced.delete/${pkg}.apk $base_path && chmod 644 $base_path && chown system:system $base_path && chcon u:object_r:apk_data_file:s0  $base_path"`);
-  await actualExec(`su -c "echo ' #!/system/bin/sh\nwhile [ "$(getprop sys.boot_completed | tr -d '\r')" != "1" ]; do sleep 1; done\nbase_path="/data/adb/revanced/${pkg}.apk"\nstock_path=$( pm path ${pkg} | grep base | sed 's/package://g' )\nchcon u:object_r:apk_data_file:s0  $base_path\nmount -o bind $base_path $stock_path' > /data/adb/service.d/mount_revanced_${pkg}.sh`);
+  await actualExec(`su -c "echo $'#!/system/bin/sh\nwhile [ "$(getprop sys.boot_completed | tr -d '\r')" != "1" ]; do sleep 1; done\nbase_path="/data/adb/revanced/${pkg}.apk"\nstock_path=$( pm path ${pkg} | grep base | sed 's/package://g' )\nchcon u:object_r:apk_data_file:s0  $base_path\nmount -o bind $base_path $stock_path' > /data/adb/service.d/mount_revanced_${pkg}.sh`);
   await actualExec(`su -c "chmod +x /data/adb/service.d/mount_revanced_${pkg}.sh"`);
   await actualExec(`su -c "stock_path=$( pm path ${pkg} | grep base | sed 's/package://g' ) && umount -l $stock_path"`);
   await actualExec(`su -c "/data/adb/service.d/mount_revanced_${pkg}.sh"`);
