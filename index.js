@@ -17,9 +17,9 @@ const wsServer = new WebSocketServer({ server });
 
 app.use(Express.static('public'));
 
-server.listen(80, () => {
+server.listen(8080, () => {
   console.log(
-    'The webserver is now running!\nOpen up http://localhost in your browser.'
+    'The webserver is now running!\nOpen up http://localhost:8080 in your browser.'
   );
 });
 
