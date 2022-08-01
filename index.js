@@ -813,6 +813,9 @@ async function mountReVanced(pkg) {
         await actualExec(
           'rm -r revanced-cache'
         );
+        await actualExec(
+          'rm -r compiled'
+        );
         console.log(
           'You now can install ReVanced and MicroG! Check /storage/emulated/0/'
         );
