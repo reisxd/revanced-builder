@@ -811,8 +811,15 @@ async function mountReVanced(pkg) {
 
         await exitProcess();
       } else {
+        fs.mkdirSync('./compiled');
+        await actualExec(
+          'cp revanced/revanced.apk compiled/revanced.apk'
+        );
+        await actualExec(
+          'cp revanced/microg.apk compiled/microg.apk'
+        );
         console.log(
-          'You now can install ReVanced and MicroG by transferring revanced/revanced.apk and revanced/microg.apk!'
+          'You now can install ReVanced and MicroG by transferring compiled/revanced.apk and compiled/microg.apk!'
         );
 
         await exitProcess();
