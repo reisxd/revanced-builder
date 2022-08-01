@@ -8,3 +8,4 @@ revanced-builder-nodejs-win.exe
 excludedPatchesList.json
 dist/
 revanced-cache/
+index-old.js

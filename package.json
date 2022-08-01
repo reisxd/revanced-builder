@@ -4,6 +4,7 @@
   "description": "",
   "bin": "index.js",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -12,10 +13,10 @@
   "license": "ISC",
   "dependencies": {
     "cheerio": "^1.0.0-rc.12",
-    "cli-progress": "^3.11.2",
-    "inquirer": "^8.2.2",
-    "node-fetch": "2.6",
-    "node-fetch-progress": "^1.0.2"
+    "express": "^4.18.1",
+    "node-fetch": "^3.2.10",
+    "node-fetch-progress": "^1.0.2",
+    "ws": "^8.8.1"
   },
   "devDependencies": {
     "@types/inquirer": "^8.2.1",
