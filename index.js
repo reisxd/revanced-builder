@@ -10,11 +10,13 @@ import {
   SelectAppVersion,
   PatchApp
 } from './wsEvents/index.js';
+import morgan from 'morgan';
 
 const app = Express();
 const server = http.createServer(app);
 const wsServer = new WebSocketServer({ server });
 
+app.use(morgan('dev'));
 app.use(Express.static('public'));
 
 server.listen(8080, () => {
