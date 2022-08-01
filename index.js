@@ -622,7 +622,7 @@ async function mountReVanced(pkg) {
       const getPatches = await actualExec(
         `java -jar ${jarNames.cli} -a ${jarNames.integrations} -b ${jarNames.patchesJar} -l --with-packages`
       );
-      let patchesText = getPatches.stderr || getPatches.stdout;
+      let patchesText = getPatches.stdout;
       patchesText = patchesText.replace('\tdi', '\t di');
       const firstWord = patchesText.slice(0, patchesText.indexOf(' '));
       const patchRegex = new RegExp('\\t\\s([^\\t]+)', 'g');
