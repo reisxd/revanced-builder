@@ -1,5 +1,6 @@
 import { promisify } from 'util';
 import { exec } from 'child_process';
+import os from 'os';
 const actualExec = promisify(exec);
 
 export default async function (message, ws) {
@@ -16,7 +17,7 @@ export default async function (message, ws) {
 
   const pkgRegex = new RegExp(`${firstWord}\\s([^\\t]+)`, 'g');
   const pkgNameArray = patchesText.match(pkgRegex);
-  const patchDescRegex = new RegExp(`\\t(.*) ${require('os').EOL}`, 'g');
+  const patchDescRegex = new RegExp(`\\t(.*) ${os.EOL}`, 'g');
   const patchDescsArray = patchesText.match(patchDescRegex);
 
   let index = -1;
@@ -44,7 +45,7 @@ export default async function (message, ws) {
       name: patch,
       description: patchDescsArray[index]
         .replace('\t', '')
-        .match(new RegExp(`\\t(.*) ${require('os').EOL}`))[1],
+        .match(new RegExp(`\\t(.*) ${os.EOL}`))[1],
       isRooted
     });
   }

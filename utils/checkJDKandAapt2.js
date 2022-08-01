@@ -26,7 +26,6 @@ export default async function (ws) {
       'aapt2.zip',
       ws
     );
-    console.log(`The architecture is ${os.arch()}`);
     await actualExec('unzip aapt2.zip');
     switch (os.arch()) {
       case 'arm64': {

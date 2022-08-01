@@ -1,6 +1,7 @@
 import fs from 'fs';
 import { downloadFiles } from '../utils/FileDownlader.js';
 import checkJDKandAapt2 from '../utils/checkJDKandAapt2.js';
+import os from 'os';
 
 global.jarNames = {
   cli: '',
@@ -39,7 +40,10 @@ async function UpdateFiles (message, ws) {
   ];
 
   await downloadFiles(filesToDownload, ws);
-  await checkJDKandAapt2(ws);
+  if (os.platform() === 'android') {
+    await checkJDKandAapt2(ws);
+  }
+
   return ws.send(
     JSON.stringify({
       event: 'finished'
