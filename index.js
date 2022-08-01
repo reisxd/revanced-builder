@@ -384,6 +384,9 @@ async function preflight (listOnly) {
   if (fs.existsSync('./revanced-cache')) {
     fs.rmSync('./revanced-cache', { recursive: true, force: true });
   }
+  if (!fs.existsSync('./compiled')) {
+    fs.mkdirSync('./compiled');
+  }
   console.log('Downloading required files...');
 
   const filesToDownload = [
@@ -804,15 +807,32 @@ async function mountReVanced(pkg) {
         await actualExec(
           'cp revanced/microg.apk /storage/emulated/0/microg.apk'
         );
-
+        await actualExec(
+          'rm -r revanced'
+        );
+        await actualExec(
+          'rm -r revanced-cache'
+        );
         console.log(
           'You now can install ReVanced and MicroG! Check /storage/emulated/0/'
         );
-
+        
         await exitProcess();
       } else {
+        await actualExec(
+          'mv revanced/revanced.apk compiled/revanced.apk'
+        );
+        await actualExec(
+          'mv revanced/microg.apk compiled/microg.apk'
+        );
+        await actualExec(
+          'rm -r revanced'
+        );
+        await actualExec(
+          'rm -r revanced-cache'
+        );
         console.log(
-          'You now can install ReVanced and MicroG by transferring revanced/revanced.apk and revanced/microg.apk!'
+          'You now can install ReVanced and MicroG by transferring compiled/revanced.apk and compiled/microg.apk!'
         );
 
         await exitProcess();
