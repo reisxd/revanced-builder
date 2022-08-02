@@ -94,11 +94,8 @@ async function dloadFromURL (url, outputPath, websocket) {
   );
 
   const progress = new Progress(request, { throttle: 50 });
-  let downloadPercentage = 0;
   return new Promise((resolve, reject) => {
     progress.on('progress', (p) => {
-      if (!Math.floor(p.progress * 100) === downloadPercentage) {
-        downloadPercentage = Math.floor(p.progress * 100);
         ws.send(
           JSON.stringify({
             event: 'downloadingFile',
@@ -106,7 +103,6 @@ async function dloadFromURL (url, outputPath, websocket) {
             percentage: Math.floor(p.progress * 100)
           })
         );
-      }
     });
     downloadStream.once('finish', () => {
       resolve();

@@ -1,0 +1,56 @@
+input[type="checkbox"] {
+	display:none;
+}
+
+input[type="checkbox"].select:checked + label {
+  background: var(--accentColor);
+}
+
+input[type="checkbox"].dropdown:checked + label div.dropdown-content {
+  display: block !important;
+}
+
+input[type="checkbox"].dropdown + label div.dropdown-content {
+	margin-top: 3px;
+  display: none;
+}
+
+input[type="checkbox"].dropdown:checked + label i {
+	transform: rotate(180deg);
+}
+
+input[type="checkbox"].dropdown + label i {
+	transition: 150ms;
+	margin-right: 2px;
+}
+
+input[type="checkbox"].select + label {
+	width:100%;
+	font-family: 'Roboto', sans-serif;
+	font-weight: 400;
+	font-size: 14px;
+	color: var(--textColor);
+	border-radius: var(--border-radius);
+	padding:9px;
+	background-color: var(--interactableColor);
+}
+
+ul {
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+li {
+	display: flex;
+	margin-bottom: 10px;
+}
+
+@media only screen and (min-width:790px) {
+	header {
+		display:flex;
+		align-items: center;
+		flex-direction: row;
+	}
+}

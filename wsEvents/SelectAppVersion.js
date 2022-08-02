@@ -58,9 +58,13 @@ export default async function (message, ws) {
   const apkPage = load(downloadPage);
   const apkLink = apkPage('a[rel="nofollow"]').first().attr('href');
 
-  return await dloadFromURL(
+  await dloadFromURL(
     `https://www.apkmirror.com${apkLink}`,
     `./revanced/${global.jarNames.selectedApp}.apk`,
     ws
   );
+
+  return ws.send(JSON.stringify({
+    event: 'finished'
+  }));
 }

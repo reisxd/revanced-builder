@@ -1,0 +1,37 @@
+/* Styles for all unordered lists */
+
+ul {
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+/* Styles for all list items */
+
+li {
+	display: flex;
+	margin-bottom: 10px;
+}
+/* Hides multiple choice inputs */
+
+input[type="radio"] {
+	display:none;
+}
+
+/* Makes selected list items look selected */
+
+input[type="radio"]:checked + label {
+  background: var(--accentColor);
+}
+
+input[type="radio"] + label {
+	width:100%;
+	font-family: 'Roboto', sans-serif;
+	font-weight: 400;
+	font-size: 14px;
+	color: var(--textColor);
+	border-radius: var(--border-radius);
+	padding:7px;
+	background-color: var(--interactableColor);
+}
