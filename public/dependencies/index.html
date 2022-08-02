@@ -5,10 +5,10 @@
     <meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
     <title>Downloading dependencies</title>
-    <link href="https://site-assets.fontawesome.com/releases/v6.1.2/css/all.css" rel="stylesheet" type="text/css" />
+    <link href="../fontawesome.css" rel="stylesheet" type="text/css" />
     <link href="../core.css" rel="stylesheet" type="text/css" />
     <link href="dependencies.css" rel="stylesheet" type="text/css" />
-    <script src="/index.js"></script>
+    <script src="../index.js"></script>
 </head>
 
 <body>
@@ -28,10 +28,10 @@
         <footer>
             <i class="social-icon fa-brands fa-xl fa-github" onclick="openGitHub();"></i>
             <div style="margin-left: 10px;"></div>
-            <i class="social-icon fa-xl fa fa-question-circle" onclick="openAbout();"></i>
+            <i class="social-icon fa-xl fa-solid fa-question-circle" onclick="openAbout();"></i>
             <span class="right"></span>
-            <button onclick="location.href='/'">Back</button>
-            <button class="highlighted" onclick="goToPatches();">Continue</button>
+            <button onclick="location.href='../index.html'">Back</button>
+            <button id="continue" class="highlighted disabled" onclick="goToPatches();">Continue</button>
         </footer>
     </div>
 </body>

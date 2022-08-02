@@ -3,7 +3,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300&display=swap');
 
-/* Color Varibles, you may edit them */
+/* Color Varibles */
 
 :root {
 	--textColor:         #ffffff;
@@ -23,7 +23,7 @@
  * Makes elements box size include the border,
  * this prevents elements that have borders
  * from overlapping with eachother
-*/
+ */
 
 * {
 	box-sizing: border-box;
@@ -53,9 +53,9 @@ h1,h2,h3,h4,h5,h6 {
 
 body, html
 {
-  width: 100%;
-  height: 100%;
-  margin: 0;
+	width: 100%;
+	height: 100%;
+	margin: 0;
 }
 
 /* Styles for container */
@@ -68,13 +68,13 @@ div#container {
 
 div#container > main
 {
- 	display: flex;
+	display: flex;
 	flex-direction: column;
 	min-width: 0;
 	min-height: 0;
-  height: 100%;
+	height: 100%;
 	padding:20px;
-  background-color: var(--primaryColor);
+	background-color: var(--primaryColor);
 }
 
 /* Main content */
@@ -158,7 +158,7 @@ button:active, li:active, i.social-icon:active {
 
 i.social-icon {
 	width: 40px;
-    height: 40px;
+	height: 40px;
 	border-radius: 25px;
 	line-height: 1em;
 	color:var(--icon-foreground);
@@ -167,10 +167,10 @@ i.social-icon {
 
 i.social-icon::before {
 	width: 40px;
-    height: 40px;
+	height: 40px;
 	position: relative;
-	left:8.5px;
-	top:8.4px;
+	left:8px;
+	top:8px;
 	border-radius: 25px;
 	color:var(--icon-foreground);
 	background-color:var(--icon-background);
