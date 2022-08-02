@@ -117,6 +117,7 @@ ws.onmessage = (msg) => {
         case 'finished': {
             hasFinished = true;
             document.getElementsByClassName('log')[0].innerHTML += '<strong>[builder]</strong> Finished downloading files<br>';
+            break;
         }
 
         case 'appVersions': {
@@ -126,11 +127,13 @@ ws.onmessage = (msg) => {
             <input type="radio" name="version" id="app-1" value="${version.version}"/>
             <label for="app-1">${version.version}</label></li>`;
             }
+            break;
         }
 
         case 'patchLog': {
             document.getElementsByClassName('log')[0].innerHTML += `<strong>[builder]</strong> ${message.log}<br>`
             document.getElementsByClassName('log')[0].scrollBy(0, 20);
+            break;
         }
     }
 }
