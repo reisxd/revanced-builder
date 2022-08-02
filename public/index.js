@@ -31,7 +31,7 @@ function toggle(bool) {
 
 function goToPatches() {
     if (hasFinished) {
-        location.href = 'patches/index.html';
+        location.href = '../patches/index.html';
     }
 }
 
