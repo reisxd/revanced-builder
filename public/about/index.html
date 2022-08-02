@@ -5,59 +5,75 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
 	<title>About</title>
-	<link href="https://site-assets.fontawesome.com/releases/v6.1.2/css/all.css" rel="stylesheet" type="text/css" />
+	<link href="../fontawesome.css" rel="stylesheet" type="text/css" />
 	<link href="../core.css" rel="stylesheet" type="text/css" />
-	<link href="/patches/patches.css" rel="stylesheet" type="text/css" />
-    <script src="/index.js"></script>
+	<link href="about.css" rel="stylesheet" type="text/css" />
+    <script src="../index.js"></script>
 </head>
 
 <body>
 	<div id="container">
 		<main>
 			<header>
-				<h1>Made by:</h1>
+				<h1>Credits:</h1>
 			</header>
 			<div id="content--wrapper">
 				<div id="content">
 					<ul>
-                        <li>
-                            <input class="select" id="about-1" type="checkbox">
-							<label for="about-1">
-								<input class="dropdown" id="dropdown-1" type="checkbox">
-								<label for="dropdown-1">
-									<i class="fa-solid fa-lg fa-caret-down"></i>
-									<span><strong>afn</strong></span>
-									<div class="dropdown-content">
-										<span>Made the UI design</span>
-									</div>
-								</label>
-							</label>
+						<li>
+							<h4>Original UI Design</h4>
+							<div class="members">
+								<span class="member">
+									<span class="member-image sn"></span>
+									<span class="member-name">sn</span>
+								</span>
+								<span class="member">
+									<span class="member-image afn"></span>
+									<span class="member-name">afn</span>
+								</span>
+								<span class="member">
+									<span class="member-image"></span>
+									<span class="member-name"><a href="https://www.figma.com/file/p9tO8LyUuPaovZ5tz40TzH/ReVanced-Desktop">Original UI</a></span>
+								</span>
+							</div>
 						</li>
-                        <li>
-							<input class="select" id="about-2" type="checkbox">
-							<label for="about-2">
-								<input class="dropdown" id="dropdown-2" type="checkbox">
-								<label for="dropdown-2">
-									<i class="fa-solid fa-lg fa-caret-down"></i>
-									<span><strong>reis</strong></span>
-									<div class="dropdown-content">
-										<span>(Thats me!) Made the backend and added functionality to frontend</span>
-									</div>
-								</label>
-							</label>
+						<li>
+							<h4>HTML UI Design</h4>
+							<div class="members">
+								<span class="member">
+									<span class="member-image elijah629"></span>
+									<span class="member-name"><a href="https://www.google.com/search?q=elijah629+-pinterest+-samcro+-rootsweb+-aaa-mis.txt+-out_sample1.txt+-site%3Abooks.google.com">Elijah629</a></span>
+								</span>
+							</div>
 						</li>
-                        <li>
-							<input class="select" id="about-3" type="checkbox">
-							<label for="about-3">
-								<input class="dropdown" id="dropdown-3" type="checkbox">
-								<label for="dropdown-3">
-									<i class="fa-solid fa-lg fa-caret-down"></i>
-									<span><strong>Elijah629</strong></span>
-									<div class="dropdown-content">
-										<span>Made the frontend</span>
-									</div>
-								</label>
-							</label>
+						<li>
+							<h4><a href="https://github.com/reisxd/revanced-builder">ReVanced Builder</a></h4>
+							<div class="members">
+								<span class="member">
+									<span class="member-image reisxd"></span>
+									<span class="member-name"><a href="https://github.com/reisxd">reis</a></span>
+								</span>
+								<span class="member">
+									<span class="member-image shrihandev"></span>
+									<span class="member-name"><a href="https://github.com/shrihanDev">shrihanDev</a></span>
+								</span>
+								<span class="member">
+									<span class="member-image sebiai"></span>
+									<span class="member-name"><a href="https://github.com/SebiAi">SebiAi</a></span>
+								</span>
+								<span class="member">
+									<span class="member-image aunali321"></span>
+									<span class="member-name"><a href="https://github.com/Aunali321">Aunali321</a></span>
+								</span>
+								<span class="member">
+									<span class="member-image katrovsky"></span>
+									<span class="member-name"><a href="https://github.com/Katrovsky">Кирилл Катровский</a></span>
+								</span>
+								<span class="member">
+									<span class="member-image javacafe01"></span>
+									<span class="member-name"><a href="https://github.com/JavaCafe01">Gokul Swaminathan</a></span>
+								</span>
+							</div>
 						</li>
 					</ul>
 				</div>
@@ -65,11 +81,8 @@
 		</main>
 		<footer>
 			<i class="social-icon fa-brands fa-xl fa-github" onclick="openGitHub();"></i>
-            <div style="margin-left: 10px;"></div>
-            <i class="social-icon fa-xl fa fa-question-circle" onclick="openAbout();"></i>
 			<span class="right"></span>
 			<button onclick="history.back()">Back</button>
-			<button class="highlighted" onclick="location.href='/'">Continue</button>
 		</footer>
 	</div>
 </body>

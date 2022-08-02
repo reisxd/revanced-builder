@@ -1,4 +1,4 @@
-/* Styles for all unordered lists */
+/* Make unordered lists actually look good */
 
 ul {
 	width: 100%;
@@ -7,12 +7,13 @@ ul {
 	list-style: none;
 }
 
-/* Styles for all list items */
+/* Styles for the devices */
 
 li {
 	display: flex;
-	margin-bottom: 10px;
+	margin-bottom: 15px;
 }
+
 /* Hides multiple choice inputs */
 
 input[type="radio"] {
@@ -25,13 +26,15 @@ input[type="radio"]:checked + label {
   background: var(--accentColor);
 }
 
+/* Labels */
+
 input[type="radio"] + label {
 	width:100%;
 	font-family: 'Roboto', sans-serif;
-	font-weight: 400;
 	font-size: 14px;
 	color: var(--textColor);
 	border-radius: var(--border-radius);
 	padding:7px;
 	background-color: var(--interactableColor);
+	font-weight: bold;
 }

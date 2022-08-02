@@ -2,8 +2,8 @@ const ws = new WebSocket('ws://localhost:8080');
 
 let currentFile;
 let alreadyAddedLog = false;
-let hasFinished = false
 let isDownloading = false;
+let hasFinished = false;
 
 function sendCommand(args) {
     ws.send(JSON.stringify(args));
@@ -12,7 +12,7 @@ function sendCommand(args) {
 function setApp() {
     if (!document.querySelector('input[name="app"]:checked')) return alert('You didn\'t select an app to patch!');
     sendCommand({ event: 'selectApp', selectedApp: document.querySelector('input[name="app"]:checked').value });
-    location.href = '/dependencies';
+    location.href = 'dependencies/index.html';
 }
 
 function loadPatches() {
@@ -30,8 +30,9 @@ function toggle(bool) {
 }
 
 function goToPatches() {
-    if (!hasFinished) return alert('Downloading process hasn\'t finished yet.');
-    else location.href = '/patches'
+    if (hasFinished) {
+        location.href = 'patches/index.html';
+    }
 }
 
 function setPatches() {
@@ -52,7 +53,7 @@ function setAppVersion() {
     isDownloading = true;
     } else {
         if (!hasFinished) return alert('Downloading process hasn\'t finished yet.');
-        location.href = '/patch';
+        location.href = '../patch/index.html';
     }
 }
 
@@ -65,7 +66,7 @@ function buildReVanced() {
 }
 
 function openAbout() {
-    window.open('http://localhost:8080/about', "_blank");
+    window.open('about/index.html', "_blank");
 }
 
 function openGitHub() {
@@ -102,20 +103,21 @@ ws.onmessage = (msg) => {
             if (!currentFile) currentFile = message.name;
             if (currentFile === message.name) {
                 if (!alreadyAddedLog) {
-                    document.getElementsByClassName('log')[0].innerHTML += `<strong>[builder]</strong> Downloading ${message.name}...<br>`;
+                    document.getElementsByClassName('log')[0].innerHTML += `<strong>[builder]</strong> Downloading ${message.name}...<br/>`;
                     alreadyAddedLog = true;
                 }
-                document.getElementsByTagName('progress')[0].value = '0.' + ('0' + message.percentage).slice(-2);
+                document.getElementsByTagName('progress')[0].value = "" + (message.percentage / 100);
             } else {
                 currentFile = message.name;
-                document.getElementsByClassName('log')[0].innerHTML += `<strong>[builder]</strong> Downloading ${message.name}...<br>`;
-                document.getElementsByTagName('progress')[0].value = '0.' + ('0' + message.percentage).slice(-2);
+                document.getElementsByClassName('log')[0].innerHTML += `<strong>[builder]</strong> Downloading ${message.name}...<br/>`;
+                document.getElementsByTagName('progress')[0].value = "" + (message.percentage / 100);
             }
             break;
         }
 
         case 'finished': {
             hasFinished = true;
+            document.getElementById("continue").classList.remove("disabled");
             document.getElementsByClassName('log')[0].innerHTML += '<strong>[builder]</strong> Finished downloading files<br>';
             break;
         }
