@@ -106,11 +106,11 @@ ws.onmessage = (msg) => {
                     document.getElementsByClassName('log')[0].innerHTML += `<strong>[builder]</strong> Downloading ${message.name}...<br/>`;
                     alreadyAddedLog = true;
                 }
-                document.getElementsByTagName('progress')[0].value = "" + (Number(message.percentage) / 100);
+                document.getElementsByTagName('progress')[0].value = "" + (message.percentage / 100);
             } else {
                 currentFile = message.name;
                 document.getElementsByClassName('log')[0].innerHTML += `<strong>[builder]</strong> Downloading ${message.name}...<br/>`;
-                document.getElementsByTagName('progress')[0].value = "" + (Number(message.percentage) / 100);
+                document.getElementsByTagName('progress')[0].value = "" + (message.percentage / 100);
             }
             break;
         }
