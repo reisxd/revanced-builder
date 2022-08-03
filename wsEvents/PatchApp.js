@@ -4,7 +4,7 @@ import os from 'os';
 import mountReVanced from '../utils/mountReVanced.js';
 const actualExec = promisify(exec);
 
-async function mount(pkg, ws) {
+async function mount(ws) {
   let pkg;
   switch (global.jarNames.selectedApp) {
     case 'youtube': {
@@ -65,7 +65,7 @@ export default async function (message, ws) {
           })
         );
       } else {
-        await mount(pkg, ws);
+        await mount(ws);
       }
     }
   });
@@ -94,7 +94,7 @@ export default async function (message, ws) {
           })
         );
       } else {
-        await mount(pkg, ws);
+        await mount(ws);
       }
     }
   });
