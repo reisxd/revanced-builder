@@ -4,15 +4,17 @@ import os from 'os';
 import mountReVanced from '../utils/mountReVanced.js';
 const actualExec = promisify(exec);
 
-async function mount(ws) {
+async function mount (ws) {
   let pkg;
   switch (global.jarNames.selectedApp) {
     case 'youtube': {
       pkg = 'com.google.android.youtube';
+      break;
     }
 
     case 'music': {
       pkg = 'com.google.android.apps.youtube.music';
+      break;
     }
   }
 
