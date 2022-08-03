@@ -6,7 +6,7 @@ const actualExec = promisify(exec);
 
 export default async function (pkg, ws) {
   // Copy ReVanced APK to temp.
-  await actualExec( 
+  await actualExec(
     `su -c 'cp "revanced/revanced.apk" "/data/local/tmp/revanced.delete"'`
   );
   // Create folder
@@ -43,12 +43,12 @@ export default async function (pkg, ws) {
   // Run Mount script
   await actualExec(`su -c '"/data/adb/service.d/mount_revanced_${pkg}.sh"'`);
   // Kill mounted process
-  await actualExec(`su -c 'monkey -p ${pkg} 1 && kill $(pidof -s ${pkg})'`);
+  //await actualExec(`su -c 'monkey -p ${pkg} 1 && kill $(pidof -s ${pkg})'`);
 
   ws.send(
     JSON.stringify({
       event: 'patchLog',
-      log: 'ReVanced should be now mounted! '
+      log: 'ReVanced should be now mounted! Please restart the device and check if the app has been mounted.'
     })
   );
 }
