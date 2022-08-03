@@ -5,6 +5,7 @@ import SelectPatches from './SelectPatches.js';
 import UpdateFiles from './UpdateFiles.js';
 import GetPatches from './GetPatches.js';
 import GetAppVersion from './GetAppVersion.js';
+import CheckFileAlreadyExists from './CheckFileAlreadyExists.js';
 
 export {
   PatchApp,
@@ -13,5 +14,6 @@ export {
   SelectPatches,
   UpdateFiles,
   GetPatches,
-  GetAppVersion
+  GetAppVersion,
+  CheckFileAlreadyExists
 };

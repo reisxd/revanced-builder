@@ -1,39 +1,51 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-    <meta charset="utf-8">
-	<meta name="viewport" content="width=device-width">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
     <title>Version Selector</title>
     <link href="../fontawesome.css" rel="stylesheet" type="text/css" />
     <link href="../core.css" rel="stylesheet" type="text/css" />
     <link href="../apps.css" rel="stylesheet" type="text/css" />
-    <link href="../dependencies/dependencies.css" rel="stylesheet" type="text/css"/>
+    <link
+      href="../dependencies/dependencies.css"
+      rel="stylesheet"
+      type="text/css"
+    />
     <script src="../index.js"></script>
-</head>
+  </head>
 
-<body>
+  <body>
     <div id="container">
-        <main>
-            <header>
-                <h1>Select the version you want to download</h1>
-            </header>
-            <div id="content--wrapper">
-                <div id="content">
-                    <ul id="versions">
-                    </ul>
-                </div>
-            </div>
-        </main>
-        <footer>
-            <i class="social-icon fa-brands fa-xl fa-github" onclick="openGitHub();"></i>
-            <div style="margin-left: 10px;"></div>
-            <i class="social-icon fa-xl fa-solid fa-question-circle" onclick="openAbout();"></i>
-            <span class="right"></span>
-            <button onclick="history.back()">Back</button>
-            <button class="highlighted" onclick="setAppVersion()">Continue</button>
-        </footer>
+      <main>
+        <header>
+          <h1>Select the version you want to download</h1>
+        </header>
+        <div id="content--wrapper">
+          <div id="content">
+            <ul id="versions"></ul>
+          </div>
+        </div>
+      </main>
+      <footer>
+        <i
+          class="social-icon fa-brands fa-xl fa-github"
+          onclick="openGitHub();"
+        ></i>
+        <div style="margin-left: 10px"></div>
+        <i
+          class="social-icon fa-xl fa-solid fa-question-circle"
+          onclick="openAbout();"
+        ></i>
+        <span class="right"></span>
+        <button id="back" onclick="history.back()">Back</button>
+        <button class="highlighted" id="continue" onclick="setAppVersion()">
+          Continue
+        </button>
+      </footer>
     </div>
-</body>
-<script>setTimeout(() => getAppVersions(), 1000);</script>
+  </body>
+  <script>
+    setTimeout(() => getAlreadyExists(), 1000);
+  </script>
 </html>

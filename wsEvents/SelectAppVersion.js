@@ -64,7 +64,9 @@ export default async function (message, ws) {
     ws
   );
 
-  return ws.send(JSON.stringify({
-    event: 'finished'
-  }));
+  return ws.send(
+    JSON.stringify({
+      event: 'finished'
+    })
+  );
 }

@@ -6,17 +6,17 @@
 /* Color Varibles */
 
 :root {
-	--textColor:         #ffffff;
-	--accentColor:       #ff4151;
-	--primaryColor:      #0F111A;
-	--secondaryColor:    #00010A;
-	--contrastColor:     #1b1e29;
-	--interactableColor: #2a2d3a;
-	--buttonColor:       #3d404f;
-	--scrollbarColor:    #3d404f;
-	--icon-foreground:   #686b76;
-	--icon-background:   #1b1e29; /* --contrastColor */
-	--border-radius:       10px;
+  --textColor: #ffffff;
+  --accentColor: #ff4151;
+  --primaryColor: #0f111a;
+  --secondaryColor: #00010a;
+  --contrastColor: #1b1e29;
+  --interactableColor: #2a2d3a;
+  --buttonColor: #3d404f;
+  --scrollbarColor: #3d404f;
+  --icon-foreground: #686b76;
+  --icon-background: #1b1e29; /* --contrastColor */
+  --border-radius: 10px;
 }
 
 /*
@@ -26,72 +26,76 @@
  */
 
 * {
-	box-sizing: border-box;
-	/* !! Dont use if you have editable textboxes anywhere !! */
-	/* Disables selection */
-	user-select: none;
+  box-sizing: border-box;
+  /* !! Dont use if you have editable textboxes anywhere !! */
+  /* Disables selection */
+  user-select: none;
 }
 
 /* Fonts for all spans */
 
 span {
-	color:var(--textColor);
-	font-family: 'Roboto', sans-serif;
-	font-weight: 400;
+  color: var(--textColor);
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
 }
 
 /* Fonts and styles for headers */
 
-h1,h2,h3,h4,h5,h6 {
-	color:var(--textColor);
-	font-family: 'Roboto', sans-serif;
-	font-weight: 700;
-	margin: 0;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--textColor);
+  font-family: 'Roboto', sans-serif;
+  font-weight: 700;
+  margin: 0;
 }
 
 /* Make BODY and HTML elements inherit :root properies */
 
-body, html
-{
-	width: 100%;
-	height: 100%;
-	margin: 0;
+body,
+html {
+  width: 100%;
+  height: 100%;
+  margin: 0;
 }
 
 /* Styles for container */
 
 div#container {
-	display: flex;
-	flex-direction: column;
-	height: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
-div#container > main
-{
-	display: flex;
-	flex-direction: column;
-	min-width: 0;
-	min-height: 0;
-	height: 100%;
-	padding:20px;
-	background-color: var(--primaryColor);
+div#container > main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  padding: 20px;
+  background-color: var(--primaryColor);
 }
 
 /* Main content */
 
 div#content {
-	height:100%;
+  height: 100%;
 }
 
 /* Wrapper for the content */
 
 div#content--wrapper {
-	border-radius: var(--border-radius);
-	height: 100%;
-	padding: 8px;
-	margin-top:5px;
-	background-color: var(--contrastColor);
-	overflow-x: auto;
+  border-radius: var(--border-radius);
+  height: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  background-color: var(--contrastColor);
+  overflow-x: auto;
 }
 
 /* Content Wrapper Scrollbar */
@@ -101,81 +105,90 @@ div#content--wrapper {
 }
 /* div#content--wrapper */
 ::-webkit-scrollbar-thumb {
-	border-radius: 10px;
+  border-radius: 10px;
   border: 6px solid transparent;
-	background-clip: padding-box;
+  background-clip: padding-box;
   background-color: var(--scrollbarColor);
 }
 
 /* Style for all buttons */
 
 button {
-	border: 0;
-	border-radius: 5px;
-	margin:10px;
-	color: var(--textColor);
-	font-family: 'Roboto', sans-serif;
-	font-weight: 400;
-	padding: 10px 20px;
-	background-color: var(--buttonColor);
+  border: 0;
+  border-radius: 5px;
+  margin: 10px;
+  color: var(--textColor);
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  padding: 10px 20px;
+  background-color: var(--buttonColor);
 }
 
-
 .highlighted {
-	background-color: var(--accentColor);
+  background-color: var(--accentColor);
 }
 
 /* Styles for alignment */
 
-span.right {margin-left: auto}
-span.left {margin-left: auto}
+span.right {
+  margin-left: auto;
+}
+span.left {
+  margin-left: auto;
+}
 
 /* Footer for buttons */
 
 footer {
-	display: flex;
-	align-items: center;
-	padding: 12px;
-	background-color: var(--secondaryColor);
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  background-color: var(--secondaryColor);
 }
 
 /* Header for title and optional buttons ( addressed per module ) */
 
 header {
-	margin: 5px;
+  margin: 5px;
 }
 
 /* Darken interactable elements on hover to show that they are clickable */
 
-button:hover, li:hover, i.social-icon:hover {
+button:hover,
+li:hover,
+i.social-icon:hover {
   filter: brightness(95%);
 }
 
 /* Darken interactable elements on mouse-down */
-button:active, li:active, i.social-icon:active {
-  filter: brightness(85%); /* Usage of !important is only to override :hover's filter */
+button:active,
+li:active,
+i.social-icon:active {
+  filter: brightness(
+    85%
+  ); /* Usage of !important is only to override :hover's filter */
 }
 
 i.social-icon {
-	width: 40px;
-	height: 40px;
-	border-radius: 25px;
-	line-height: 1em;
-	color:var(--icon-foreground);
-	background-color:var(--icon-background);
+  width: 40px;
+  height: 40px;
+  border-radius: 25px;
+  line-height: 1em;
+  color: var(--icon-foreground);
+  background-color: var(--icon-background);
 }
 
 i.social-icon::before {
-	width: 40px;
-	height: 40px;
-	position: relative;
-	left:8px;
-	top:8px;
-	border-radius: 25px;
-	color:var(--icon-foreground);
-	background-color:var(--icon-background);
+  width: 40px;
+  height: 40px;
+  position: relative;
+  left: 8px;
+  top: 8px;
+  border-radius: 25px;
+  color: var(--icon-foreground);
+  background-color: var(--icon-background);
 }
 
 .disabled {
-	filter: brightness(50%) !important;
+  filter: brightness(50%) !important;
 }

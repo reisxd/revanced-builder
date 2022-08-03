@@ -1,7 +1,29 @@
 import { promisify } from 'util';
 import { exec } from 'child_process';
 import os from 'os';
+import mountReVanced from '../utils/mountReVanced.js';
 const actualExec = promisify(exec);
+
+async function mount(pkg, ws) {
+  let pkg;
+  switch (global.jarNames.selectedApp) {
+    case 'youtube': {
+      pkg = 'com.google.android.youtube';
+    }
+
+    case 'music': {
+      pkg = 'com.google.android.apps.youtube.music';
+    }
+  }
+
+  ws.send(
+    JSON.stringify({
+      event: 'patchLog',
+      log: 'Trying to mount ReVanced...'
+    })
+  );
+  await mountReVanced(pkg, ws);
+}
 
 export default async function (message, ws) {
   const buildProcess = await exec(
@@ -28,17 +50,23 @@ export default async function (message, ws) {
     );
 
     if (data.toString().includes('Finished')) {
-      await actualExec(
-        'cp revanced/revanced.apk /storage/emulated/0/revanced.apk'
-      );
-      await actualExec('cp revanced/microg.apk /storage/emulated/0/microg.apk');
+      if (!global.jarNames.isRooted) {
+        await actualExec(
+          'cp revanced/revanced.apk /storage/emulated/0/revanced.apk'
+        );
+        await actualExec(
+          'cp revanced/microg.apk /storage/emulated/0/microg.apk'
+        );
 
-      ws.send(
-        JSON.stringify({
-          event: 'patchLog',
-          log: 'Copied files over to /storage/emulated/0/!\nPlease install ReVanced, its located in /storage/emulated/0/revanced.apk\nand if you are building YT/YTM ReVanced without root, also install /storage/emulated/0/microg.apk.'
-        })
-      );
+        ws.send(
+          JSON.stringify({
+            event: 'patchLog',
+            log: 'Copied files over to /storage/emulated/0/!\nPlease install ReVanced, its located in /storage/emulated/0/revanced.apk\nand if you are building YT/YTM ReVanced without root, also install /storage/emulated/0/microg.apk.'
+          })
+        );
+      } else {
+        await mount(pkg, ws);
+      }
     }
   });
 
@@ -51,17 +79,23 @@ export default async function (message, ws) {
     );
 
     if (data.toString().includes('Finished')) {
-      await actualExec(
-        'cp revanced/revanced.apk /storage/emulated/0/revanced.apk'
-      );
-      await actualExec('cp revanced/microg.apk /storage/emulated/0/microg.apk');
+      if (!global.jarNames.isRooted) {
+        await actualExec(
+          'cp revanced/revanced.apk /storage/emulated/0/revanced.apk'
+        );
+        await actualExec(
+          'cp revanced/microg.apk /storage/emulated/0/microg.apk'
+        );
 
-      ws.send(
-        JSON.stringify({
-          event: 'patchLog',
-          log: 'Copied files over to /storage/emulated/0/!\nPlease install ReVanced, its located in /storage/emulated/0/revanced.apk\nand if you are building YT/YTM ReVanced without root, also install /storage/emulated/0/microg.apk.'
-        })
-      );
+        ws.send(
+          JSON.stringify({
+            event: 'patchLog',
+            log: 'Copied files over to /storage/emulated/0/!\nPlease install ReVanced, its located in /storage/emulated/0/revanced.apk\nand if you are building YT/YTM ReVanced without root, also install /storage/emulated/0/microg.apk.'
+          })
+        );
+      } else {
+        await mount(pkg, ws);
+      }
     }
   });
 }

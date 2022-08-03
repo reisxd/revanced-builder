@@ -7,6 +7,7 @@ import {
   GetPatches,
   SelectPatches,
   GetAppVersion,
+  CheckFileAlreadyExists,
   SelectAppVersion,
   PatchApp
 } from './wsEvents/index.js';
@@ -51,6 +52,11 @@ wsServer.on('connection', (ws) => {
 
       case 'selectPatches': {
         await SelectPatches(message, ws);
+        break;
+      }
+
+      case 'checkFileAlreadyExists': {
+        await CheckFileAlreadyExists(message, ws);
         break;
       }
 

@@ -1,40 +1,55 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-    <meta charset="utf-8">
-	<meta name="viewport" content="width=device-width">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
     <title>Downloading dependencies</title>
     <link href="../fontawesome.css" rel="stylesheet" type="text/css" />
     <link href="../core.css" rel="stylesheet" type="text/css" />
     <link href="dependencies.css" rel="stylesheet" type="text/css" />
     <script src="../index.js"></script>
-</head>
+  </head>
 
-<body>
+  <body>
     <div id="container">
-        <main>
-            <header>
-                <h1>Downloading dependencies</h1>
-                <span>Please wait while the app downloads the required dependencies.</span>
-            </header>
-            <div id="content--wrapper">
-                <div id="content">
-                    <span class="log"></span>
-                </div>
-            </div>
-            <progress value="0"></progress>
-        </main>
-        <footer>
-            <i class="social-icon fa-brands fa-xl fa-github" onclick="openGitHub();"></i>
-            <div style="margin-left: 10px;"></div>
-            <i class="social-icon fa-xl fa-solid fa-question-circle" onclick="openAbout();"></i>
-            <span class="right"></span>
-            <button onclick="location.href='../index.html'">Back</button>
-            <button id="continue" class="highlighted disabled" onclick="goToPatches();">Continue</button>
-        </footer>
+      <main>
+        <header>
+          <h1>Downloading dependencies</h1>
+          <span
+            >Please wait while the app downloads the required
+            dependencies.</span
+          >
+        </header>
+        <div id="content--wrapper">
+          <div id="content">
+            <span class="log"></span>
+          </div>
+        </div>
+        <progress value="0"></progress>
+      </main>
+      <footer>
+        <i
+          class="social-icon fa-brands fa-xl fa-github"
+          onclick="openGitHub();"
+        ></i>
+        <div style="margin-left: 10px"></div>
+        <i
+          class="social-icon fa-xl fa-solid fa-question-circle"
+          onclick="openAbout();"
+        ></i>
+        <span class="right"></span>
+        <button onclick="location.href='../index.html'">Back</button>
+        <button
+          id="continue"
+          class="highlighted disabled"
+          onclick="goToPatches();"
+        >
+          Continue
+        </button>
+      </footer>
     </div>
-</body>
-<script>setTimeout(() => updateFiles(), 1000);</script>
-
+  </body>
+  <script>
+    setTimeout(() => updateFiles(), 1000);
+  </script>
 </html>

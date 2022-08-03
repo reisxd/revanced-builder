@@ -1,24 +1,26 @@
 span.log {
-	font-family: 'Fira Code', monospace;
-	font-weight: 300;
-	font-size: 0.8em;
-	line-height: 0.8em;
-	width: 100%;
-	height: 100%;
+  font-family: 'Fira Code', monospace;
+  font-weight: 300;
+  font-size: 0.8em;
+  line-height: 0.8em;
+  width: 100%;
+  height: 100%;
 }
 span.log:after {
-	content: "｜";
-	 animation: blinking-cursor 1s steps(2, start) infinite;
+  content: '｜';
+  animation: blinking-cursor 1s steps(2, start) infinite;
 }
 
 @keyframes blinking-cursor {
-  to { opacity: 0.0; }
+  to {
+    opacity: 0;
+  }
 }
 
 progress {
-	margin-top: 20px;
-	width:100%;
-	border-radius: 25px;
+  margin-top: 20px;
+  width: 100%;
+  border-radius: 25px;
 }
 progress::-webkit-progress-bar {
   background-color: var(--contrastColor);

@@ -1,40 +1,40 @@
 /* Make unordered lists actually look good */
 
 ul {
-	width: 100%;
-	margin: 0;
-	padding: 0;
-	list-style: none;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 /* Styles for the devices */
 
 li {
-	display: flex;
-	margin-bottom: 15px;
+  display: flex;
+  margin-bottom: 15px;
 }
 
 /* Hides multiple choice inputs */
 
-input[type="radio"] {
-	display:none;
+input[type='radio'] {
+  display: none;
 }
 
 /* Makes selected list items look selected */
 
-input[type="radio"]:checked + label {
+input[type='radio']:checked + label {
   background: var(--accentColor);
 }
 
 /* Labels */
 
-input[type="radio"] + label {
-	width:100%;
-	font-family: 'Roboto', sans-serif;
-	font-size: 14px;
-	color: var(--textColor);
-	border-radius: var(--border-radius);
-	padding:7px;
-	background-color: var(--interactableColor);
-	font-weight: bold;
+input[type='radio'] + label {
+  width: 100%;
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  color: var(--textColor);
+  border-radius: var(--border-radius);
+  padding: 7px;
+  background-color: var(--interactableColor);
+  font-weight: bold;
 }

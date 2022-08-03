@@ -9,7 +9,8 @@ global.jarNames = {
   integrations: './revanced/',
   microG: './revanced/',
   selectedApp: '',
-  patches: ''
+  patches: '',
+  isRooted: false
 };
 
 async function UpdateFiles (message, ws) {
