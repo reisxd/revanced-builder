@@ -28,7 +28,7 @@ export default async function (pkg, ws) {
   );
   // Move Mount script to folder
   await actualExec(
-    `su -c "cp ./mount.sh /data/adb/service.d/mount_revanced_${pkg}.sh`
+    `su -c "cp ./mount.sh /data/adb/service.d/mount_revanced_${pkg}.sh"`
   );
   // Give execution perms to Mount script
   await actualExec(
