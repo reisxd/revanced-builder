@@ -13,7 +13,7 @@ export default async function (pkg, ws) {
   await actualExec('su -c "mkdir -p /data/adb/revanced/"');
   // Move APK to folder
   await actualExec(
-    `su -c "base_path=\"/data/adb/revanced/${pkg}.apk\" && mv /data/local/tmp/revanced.delete $base_path && chmod 644 $base_path && chown system:system $base_path && chcon u:object_r:apk_data_file:s0  $base_path"`
+    `su -c 'base_path=\"/data/adb/revanced/${pkg}.apk\" && mv /data/local/tmp/revanced.delete $base_path && chmod 644 $base_path && chown system:system $base_path && chcon u:object_r:apk_data_file:s0  $base_path'`
   );
   // Create Mount script
   fs.writeFileSync(
