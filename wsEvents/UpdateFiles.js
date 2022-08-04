@@ -1,7 +1,7 @@
 import fs from 'fs';
 import { downloadFiles } from '../utils/FileDownlader.js';
 import checkJDKandAapt2 from '../utils/checkJDKandAapt2.js';
-import checkJDkAndADB from '../utils/checkJDkAndADB.js';
+import checkJDkAndADB from '../utils/checkJDKAndADB.js';
 import os from 'os';
 
 global.jarNames = {
