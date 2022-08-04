@@ -22,6 +22,15 @@ export default async function (message, ws) {
 
   let index = -1;
 
+  let hasRoot = true;
+  await actualExec('su -c exit').catch((err) => {
+    if (
+      err.stderr.includes('No su program found on this device.') ||
+      err.stderr.includes('Permission denied')
+    )
+      hasRoot = false;
+  });
+
   for (const patchName of patchesArray) {
     const patch = patchName.replace(firstWord, '').replace(/\s/g, '');
     index++;
@@ -33,21 +42,18 @@ export default async function (message, ws) {
       continue;
     }
 
-    if (patch.includes('microg-support')) {
-      isRooted = true;
-    }
+    const rootedPatches = ['microg-support', 'hide-cast-button'];
 
-    if (patch.includes('hide-cast-button')) {
-      isRooted = true;
-    }
+    if (rootedPatches.includes(patch.trim())) isRooted = true;
 
-    patchList.push({
-      name: patch,
-      description: patchDescsArray[index]
-        .replace('\t', '')
-        .match(new RegExp(`\\t(.*) ${os.EOL}`))[1],
-      isRooted
-    });
+    if (!isRooted || hasRoot)
+      patchList.push({
+        name: patch,
+        description: patchDescsArray[index]
+          .replace('\t', '')
+          .match(new RegExp(`\\t(.*) ${os.EOL}`))[1],
+        isRooted
+      });
   }
 
   return ws.send(
