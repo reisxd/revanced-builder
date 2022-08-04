@@ -1,8 +1,8 @@
-import fs from 'fs';
-import { downloadFiles } from '../utils/FileDownlader.js';
-import checkJDKandAapt2 from '../utils/checkJDKandAapt2.js';
-import checkJDkAndADB from '../utils/checkJDKAndADB.js';
-import os from 'os';
+const fs = require('fs');
+const { downloadFiles } = require('../utils/FileDownlader.js');
+const checkJDKandAapt2 = require('../utils/checkJDKandAapt2.js');
+const checkJDkAndADB = require('../utils/checkJDKAndADB.js');
+const os = require('os');
 
 global.jarNames = {
   cli: '',
@@ -56,4 +56,4 @@ async function UpdateFiles (message, ws) {
   );
 }
 
-export default UpdateFiles;
+module.exports =  UpdateFiles;

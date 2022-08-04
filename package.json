@@ -4,7 +4,7 @@
   "description": "",
   "bin": "index.js",
   "main": "index.js",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,7 +15,7 @@
     "cheerio": "^1.0.0-rc.12",
     "express": "^4.18.1",
     "morgan": "^1.10.0",
-    "node-fetch": "^3.2.10",
+    "node-fetch": "2.6.x",
     "node-fetch-progress": "^1.0.2",
     "ws": "^8.8.1"
   },

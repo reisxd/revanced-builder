@@ -1,13 +1,13 @@
-import PatchApp from './PatchApp.js';
-import SelectApp from './SelectApp.js';
-import SelectAppVersion from './SelectAppVersion.js';
-import SelectPatches from './SelectPatches.js';
-import UpdateFiles from './UpdateFiles.js';
-import GetPatches from './GetPatches.js';
-import GetAppVersion from './GetAppVersion.js';
-import CheckFileAlreadyExists from './CheckFileAlreadyExists.js';
+const PatchApp = require('./PatchApp.js');
+const SelectApp = require('./SelectApp.js');
+const SelectAppVersion = require('./SelectAppVersion.js');
+const SelectPatches = require('./SelectPatches.js');
+const UpdateFiles = require('./UpdateFiles.js');
+const GetPatches = require('./GetPatches.js');
+const GetAppVersion = require('./GetAppVersion.js');
+const CheckFileAlreadyExists = require('./CheckFileAlreadyExists.js');
 
-export {
+module.exports = {
   PatchApp,
   SelectApp,
   SelectAppVersion,

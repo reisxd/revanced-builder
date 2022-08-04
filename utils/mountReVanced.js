@@ -1,10 +1,10 @@
-import fs from 'fs';
-import { promisify } from 'util';
-import { exec } from 'child_process';
+const fs = require('fs');
+const { promisify } = require('util');
+const { exec } = require('child_process');
 
 const actualExec = promisify(exec);
 
-export default async function (pkg, ws) {
+module.exports =  async function (pkg, ws) {
   // Copy ReVanced APK to temp.
   await actualExec(
     'su -c \'cp "revanced/revanced.apk" "/data/local/tmp/revanced.delete"\''

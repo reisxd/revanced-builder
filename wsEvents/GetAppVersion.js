@@ -1,8 +1,8 @@
-import fetchURL from 'node-fetch';
-import { load } from 'cheerio';
-import os from 'os';
-import getAppVersion from '../utils/getAppVersion.js';
-import downloadApp from '../utils/downloadApp.js';
+const fetchURL = require('node-fetch');
+const { load } = require('cheerio');
+const os = require('os');
+const getAppVersion = require('../utils/getAppVersion.js');
+const downloadApp = require('../utils/downloadApp.js');
 
 async function getPage (pageUrl) {
   const pageRequest = await fetchURL(pageUrl, {
@@ -14,7 +14,7 @@ async function getPage (pageUrl) {
   return await pageRequest.text();
 }
 
-export default async function (message, ws) {
+module.exports =  async function (message, ws) {
   let versionsList;
 
   if (global.jarNames.isRooted && os.platform() !== 'android') {

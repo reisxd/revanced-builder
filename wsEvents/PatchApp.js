@@ -1,7 +1,7 @@
-import { promisify } from 'util';
-import { exec } from 'child_process';
-import os from 'os';
-import mountReVanced from '../utils/mountReVanced.js';
+const { promisify } = require('util');
+const { exec } = require('child_process');
+const os = require('os');
+const mountReVanced = require('../utils/mountReVanced.js');
 const actualExec = promisify(exec);
 
 async function mount (ws) {
@@ -58,7 +58,7 @@ async function afterBuild (ws) {
   );
 }
 
-export default async function (message, ws) {
+module.exports =  async function (message, ws) {
   const buildProcess = await exec(
     `java -jar ${global.jarNames.cli} -b ${global.jarNames.patchesJar} ${
       os.platform() === 'android' ? '--custom-aapt2-binary revanced/aapt2' : ''

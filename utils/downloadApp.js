@@ -1,8 +1,8 @@
-import fetchURL from 'node-fetch';
-import { load } from 'cheerio';
-import { dloadFromURL } from '../utils/FileDownlader.js';
+const fetchURL = require('node-fetch');
+const { load } = require('cheerio');
+const { dloadFromURL } = require('../utils/FileDownlader.js');
 
-export default async function (version, ws) {
+module.exports =  async function (version, ws) {
   const apkVersion = version.replace(/\./g, '-');
 
   let versionDownload;

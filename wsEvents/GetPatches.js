@@ -1,9 +1,9 @@
-import { promisify } from 'util';
-import { exec } from 'child_process';
-import os from 'os';
+const { promisify } = require('util');
+const { exec } = require('child_process');
+const os = require('os');
 const actualExec = promisify(exec);
 
-export default async function (message, ws) {
+module.exports =  async function (message, ws) {
   const patchList = [];
   const getPatches = await actualExec(
     `java -jar ${global.jarNames.cli} -a ${global.jarNames.integrations} -b ${global.jarNames.patchesJar} -l --with-packages`

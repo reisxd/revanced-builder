@@ -1,7 +1,7 @@
-import Express from 'express';
-import { WebSocketServer } from 'ws';
-import http from 'http';
-import {
+const Express = require('express');
+const { WebSocketServer } = require('ws');
+const http = require('http');
+const {
   UpdateFiles,
   SelectApp,
   GetPatches,
@@ -10,8 +10,8 @@ import {
   CheckFileAlreadyExists,
   SelectAppVersion,
   PatchApp
-} from './wsEvents/index.js';
-import morgan from 'morgan';
+} = require('./wsEvents/index.js');
+const morgan = require('morgan');
 
 const app = Express();
 const server = http.createServer(app);

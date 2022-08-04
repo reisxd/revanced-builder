@@ -1,7 +1,7 @@
-import { load } from 'cheerio';
-import fetchURL from 'node-fetch';
-import Progress from 'node-fetch-progress';
-import fs from 'fs';
+const { load } = require('cheerio');
+const fetchURL = require('node-fetch');
+const Progress = require('node-fetch-progress');
+const fs = require('fs');
 
 let ws;
 
@@ -125,4 +125,4 @@ async function downloadFiles (repos, websocket) {
   }
 }
 
-export { downloadFiles, dloadFromURL };
+module.exports = { downloadFiles, dloadFromURL };

@@ -1,6 +1,6 @@
-import fs from 'fs';
+const fs = require('fs');
 
-export default async function (message, ws) {
+module.exports =  async function (message, ws) {
   if (fs.existsSync(`./revanced/${global.jarNames.selectedApp}.apk`)) {
     ws.send(
       JSON.stringify({

@@ -1,9 +1,9 @@
-import os from 'os';
-import { promisify } from 'util';
-import { exec } from 'child_process';
+const os = require('os');
+const { promisify } = require('util');
+const { exec } = require('child_process');
 const actualExec = promisify(exec);
 
-export default async function (pkgName, ws) {
+module.exports =  async function (pkgName, ws) {
   try {
     const { stdout, stderr } = await actualExec(
       `adb shell dumpsys package ${pkgName}`,

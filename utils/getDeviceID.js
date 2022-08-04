@@ -1,9 +1,9 @@
-import os from 'os';
-import { promisify } from 'util';
-import { exec } from 'child_process';
+const os = require('os');
+const { promisify } = require('util');
+const { exec } = require('child_process');
 const actualExec = promisify(exec);
 
-export default async function () {
+module.exports =  async function () {
   try {
     const { stdout } = await actualExec('adb devices');
     const adbDeviceIdRegex = new RegExp(`${os.EOL}(.*?)\t`);

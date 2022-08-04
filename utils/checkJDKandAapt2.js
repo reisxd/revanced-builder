@@ -1,11 +1,11 @@
-import { promisify } from 'util';
-import { exec } from 'child_process';
-import { dloadFromURL } from './FileDownlader.js';
-import os from 'os';
-import fs from 'fs';
+const { promisify } = require('util');
+const { exec } = require('child_process');
+const { dloadFromURL } = require('./FileDownlader.js');
+const os = require('os');
+const fs = require('fs');
 const actualExec = promisify(exec);
 
-export default async function (ws) {
+module.exports =  async function (ws) {
   try {
     await actualExec('java -v');
   } catch (e) {

@@ -1,9 +1,9 @@
-import { promisify } from 'util';
-import { exec } from 'child_process';
-import getDeviceID from '../utils/getDeviceID.js';
+const { promisify } = require('util');
+const { exec } = require('child_process');
+const getDeviceID = require('../utils/getDeviceID.js');
 const actualExec = promisify(exec);
 
-export default async function (ws) {
+module.exports =  async function (ws) {
   try {
     const javaCheck = await actualExec('java -version');
     const javaVerLog = javaCheck.stderr || javaCheck.stdout;

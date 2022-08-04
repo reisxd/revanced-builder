@@ -1,5 +1,5 @@
-import downloadApp from '../utils/downloadApp.js';
+const downloadApp = require('../utils/downloadApp.js');
 
-export default async function (message, ws) {
+module.exports =  async function (message, ws) {
   await downloadApp(message.versionChoosen, ws);
 }
