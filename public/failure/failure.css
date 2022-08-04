@@ -1,0 +1,19 @@
+span.log-error {
+  color: red;
+  font-family: 'Fira Code', monospace;
+  font-weight: 300;
+  font-size: 0.8em;
+  line-height: 0.8em;
+  width: 100%;
+  height: 100%;
+}
+span.log:after {
+  content: '｜';
+  animation: blinking-cursor 1s steps(2, start) infinite;
+}
+
+@keyframes blinking-cursor {
+  to {
+    opacity: 0;
+  }
+}

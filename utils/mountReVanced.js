@@ -7,10 +7,10 @@ const actualExec = promisify(exec);
 export default async function (pkg, ws) {
   // Copy ReVanced APK to temp.
   await actualExec(
-    `su -c 'cp "revanced/revanced.apk" "/data/local/tmp/revanced.delete"'`
+    'su -c \'cp "revanced/revanced.apk" "/data/local/tmp/revanced.delete"\''
   );
   // Create folder
-  await actualExec(`su -c 'mkdir -p "/data/adb/revanced/"'`);
+  await actualExec('su -c \'mkdir -p "/data/adb/revanced/"\'');
   // Move APK to folder
   await actualExec(
     `su -c 'base_path="/data/adb/revanced/${pkg}.apk" && mv "/data/local/tmp/revanced.delete" "$base_path" && chmod 644 "$base_path" && chown system:system "$base_path" && chcon u:object_r:apk_data_file:s0  "$base_path"'`
@@ -36,14 +36,14 @@ export default async function (pkg, ws) {
   );
 
   // Unmount APK
-  //await actualExec(
+  // await actualExec(
   //  `su -c 'stock_path="$( pm path ${pkg} | grep base | sed 's/package://g' )" && umount -l "$stock_path"'`
-  //);
+  // );
 
   // Run Mount script
   await actualExec(`su -c '"/data/adb/service.d/mount_revanced_${pkg}.sh"'`);
   // Kill mounted process
-  //await actualExec(`su -c 'monkey -p ${pkg} 1 && kill $(pidof -s ${pkg})'`);
+  // await actualExec(`su -c 'monkey -p ${pkg} 1 && kill $(pidof -s ${pkg})'`);
 
   ws.send(
     JSON.stringify({

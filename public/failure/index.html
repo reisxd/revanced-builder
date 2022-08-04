@@ -1,29 +1,23 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-US">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
-    <title>Select Patches</title>
+    <title>Failure</title>
     <link href="../fontawesome.css" rel="stylesheet" type="text/css" />
     <link href="../core.css" rel="stylesheet" type="text/css" />
-    <link href="patches.css" rel="stylesheet" type="text/css" />
-    <script src="../index.js"></script>
+    <link href="failure.css" rel="stylesheet" type="text/css" />
   </head>
 
   <body>
     <div id="container">
       <main>
         <header>
-          <h1>Select patches to include</h1>
-          <span class="left"></span>
-          <div>
-            <button onclick="toggle(true)">Select All</button>
-            <button onclick="toggle(false)">Deselect all</button>
-          </div>
+          <h1>Failure</h1>
         </header>
         <div id="content--wrapper">
           <div id="content">
-            <ul id="patchList"></ul>
+            <span class="log-error"></span>
           </div>
         </div>
       </main>
@@ -38,12 +32,17 @@
           onclick="openAbout();"
         ></i>
         <span class="right"></span>
-        <button onclick="history.back()">Back</button>
-        <button class="highlighted" onclick="setPatches();">Continue</button>
+        <button onclick="history.back();">Back</button>
+        <button class="highlighted" onclick="location.href='/'">Restart</button>
       </footer>
     </div>
   </body>
+
   <script>
-    ws.onopen = () => loadPatches();
+    document.getElementsByClassName(
+      'log-error'
+    )[0].innerHTML += `<strong>[builder]</strong> ${new URLSearchParams(
+      window.location.search
+    ).get('error')}<br>`;
   </script>
 </html>

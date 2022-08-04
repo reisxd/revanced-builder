@@ -27,8 +27,9 @@ export default async function (message, ws) {
     if (
       err.stderr.includes('No su program found on this device.') ||
       err.stderr.includes('Permission denied')
-    )
+    ) {
       hasRoot = false;
+    }
   });
 
   for (const patchName of patchesArray) {
@@ -46,7 +47,7 @@ export default async function (message, ws) {
 
     if (rootedPatches.includes(patch.trim())) isRooted = true;
 
-    if (!isRooted || hasRoot)
+    if (!isRooted || hasRoot) {
       patchList.push({
         name: patch,
         description: patchDescsArray[index]
@@ -54,6 +55,7 @@ export default async function (message, ws) {
           .match(new RegExp(`\\t(.*) ${os.EOL}`))[1],
         isRooted
       });
+    }
   }
 
   return ws.send(

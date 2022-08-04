@@ -11,12 +11,14 @@ async function overWriteJarNames (link) {
     global.jarNames.cli = `./revanced/${fileName}`;
   }
   if (fileName.includes('revanced-patches') && fileName.endsWith('.jar')) {
-    global.jarNames.patchesJar += fileName;
+    global.jarNames.patchesJar = `./revanced/${fileName}`;
   }
   if (fileName.endsWith('unsigned.apk')) {
-    global.jarNames.integrations += fileName;
+    global.jarNames.integrations = `./revanced/${fileName}`;
   }
-  if (fileName.startsWith('microg')) global.jarNames.microG += fileName;
+  if (fileName.startsWith('microg')) {
+    global.jarNames.microG = `./revanced/${fileName}`;
+  }
 }
 
 async function getDownloadLink (json) {

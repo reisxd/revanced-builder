@@ -1,5 +1,8 @@
 import fetchURL from 'node-fetch';
 import { load } from 'cheerio';
+import os from 'os';
+import getAppVersion from '../utils/getAppVersion.js';
+import downloadApp from '../utils/downloadApp.js';
 
 async function getPage (pageUrl) {
   const pageRequest = await fetchURL(pageUrl, {
@@ -13,6 +16,32 @@ async function getPage (pageUrl) {
 
 export default async function (message, ws) {
   let versionsList;
+
+  if (global.jarNames.isRooted && os.platform() !== 'android') {
+    if (!global.jarNames.deviceID) {
+      return ws.send(
+        JSON.stringify({
+          event: 'error',
+          error:
+            "You either don't have a device plugged in or don't have ADB installed."
+        })
+      );
+    }
+
+    let pkgName;
+    switch (global.jarNames.selectedApp) {
+      case 'youtube': {
+        pkgName = 'com.google.android.youtube';
+        break;
+      }
+      case 'music': {
+        pkgName = 'com.google.android.apps.youtube.music';
+        break;
+      }
+    }
+    const appVersion = await getAppVersion(pkgName);
+    return await downloadApp(appVersion, ws);
+  }
 
   switch (global.jarNames.selectedApp) {
     case 'youtube': {

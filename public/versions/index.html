@@ -46,6 +46,6 @@
     </div>
   </body>
   <script>
-    setTimeout(() => getAlreadyExists(), 1000);
+    ws.onopen = () => getAlreadyExists();
   </script>
 </html>

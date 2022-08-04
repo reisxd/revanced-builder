@@ -108,7 +108,7 @@ function getAppVersions (isRooted) {
     <h1>Select the version you want to download</h1>
     ${
       isRooted
-        ? "<span>You are builing rooted ReVanced, you'll need to download the version matching with your YouTube version.<br>(You'll also need YouTube installed)<span>"
+        ? "<span>You are building rooted ReVanced, you'll need to download the version matching with your YouTube version.<br>(You'll also need YouTube installed)<span>"
         : ''
     }
     `;
@@ -236,6 +236,22 @@ ws.onmessage = (msg) => {
 
     case 'fileDoesntExists': {
       getAppVersions(message.isRooted);
+      break;
+    }
+
+    case 'buildFinished': {
+      document.getElementsByTagName('header')[0].innerHTML =
+        '<h1>ReVanced has been built.</h1>';
+      document.getElementsByTagName(
+        'footer'
+      )[0].innerHTML += '<button class="highlighted" onclick="location.href = \'/\'">Build Again</button>';
+      break;
+    }
+
+    case 'error': {
+      const failureURL = `/failure?error=${message.error}`;
+      console.log(failureURL);
+      location.href = failureURL;
       break;
     }
   }

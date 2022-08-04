@@ -1,6 +1,7 @@
 import fs from 'fs';
 import { downloadFiles } from '../utils/FileDownlader.js';
 import checkJDKandAapt2 from '../utils/checkJDKandAapt2.js';
+import checkJDkAndADB from '../utils/checkJDkAndADB.js';
 import os from 'os';
 
 global.jarNames = {
@@ -10,7 +11,8 @@ global.jarNames = {
   microG: './revanced/',
   selectedApp: '',
   patches: '',
-  isRooted: false
+  isRooted: false,
+  deviceID: ''
 };
 
 async function UpdateFiles (message, ws) {
@@ -43,6 +45,8 @@ async function UpdateFiles (message, ws) {
   await downloadFiles(filesToDownload, ws);
   if (os.platform() === 'android') {
     await checkJDKandAapt2(ws);
+  } else {
+    await checkJDkAndADB(ws);
   }
 
   return ws.send(
