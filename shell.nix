@@ -8,4 +8,7 @@ in
       pkgs.nodejs
       pkgs.jdk17_headless
     ];
+    shellHook = ''
+      npm install
+    '';
   }
