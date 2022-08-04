@@ -108,7 +108,7 @@ function getAppVersions (isRooted) {
     <h1>Select the version you want to download</h1>
     ${
       isRooted
-        ? "<span>You are building rooted ReVanced, you'll need to download the version matching with your YouTube version.<br>(You'll also need YouTube installed; if there's only one version of YouTube, it's the one you have installed)<span>"
+        ? "<span>You are building rooted ReVanced, you'll need to download the version matching with your YouTube version.<br>(You'll also need YouTube installed)<span>"
         : ''
     }
     `;
