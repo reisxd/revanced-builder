@@ -23,14 +23,17 @@ export default async function (message, ws) {
   let index = -1;
 
   let hasRoot = true;
-  await actualExec('su -c exit').catch((err) => {
-    if (
-      err.stderr.includes('No su program found on this device.') ||
-      err.stderr.includes('Permission denied')
-    ) {
-      hasRoot = false;
-    }
-  });
+  if (os.platform() === 'android') {
+    await actualExec('su -c exit').catch((err) => {
+      const error = err.stderr || err.stdout;
+      if (
+        error.includes('No su program found on this device.') ||
+        error.includes('Permission denied')
+      ) {
+        hasRoot = false;
+      }
+    });
+  }
 
   for (const patchName of patchesArray) {
     const patch = patchName.replace(firstWord, '').replace(/\s/g, '');
