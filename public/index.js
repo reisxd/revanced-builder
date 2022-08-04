@@ -167,7 +167,7 @@ ws.onmessage = (msg) => {
     }
 
     case 'downloadingFile': {
-      if (!document.getElementsByClassName('log'[0])) {
+      if (!document.getElementsByClassName('log')[0]) {
         document.getElementById('content').innerHTML = '<span class="log"></span>';
         document.getElementsByTagName('main')[0].innerHTML +=
       '<progress value="0"></progress>';
