@@ -1,6 +1,7 @@
 const Express = require('express');
 const { WebSocketServer } = require('ws');
 const http = require('http');
+const path = require('path');
 const {
   UpdateFiles,
   SelectApp,
@@ -18,7 +19,7 @@ const server = http.createServer(app);
 const wsServer = new WebSocketServer({ server });
 
 app.use(morgan('dev'));
-app.use(Express.static('public'));
+app.use(Express.static(path.join(__dirname, 'public')));
 
 server.listen(8080, () => {
   console.log(
