@@ -167,6 +167,7 @@ ws.onmessage = (msg) => {
     }
 
     case 'downloadingFile': {
+      isDownloading = true;
       if (!document.getElementsByClassName('log')[0]) {
         document.getElementById('content').innerHTML = '<span class="log"></span>';
         document.getElementsByTagName('main')[0].innerHTML +=
