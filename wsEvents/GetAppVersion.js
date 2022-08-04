@@ -4,7 +4,7 @@ const os = require('os');
 const getAppVersion = require('../utils/getAppVersion.js');
 const downloadApp = require('../utils/downloadApp.js');
 
-async function getPage (pageUrl) {
+async function getPage(pageUrl) {
   const pageRequest = await fetchURL(pageUrl, {
     headers: {
       'user-agent':
@@ -14,8 +14,9 @@ async function getPage (pageUrl) {
   return await pageRequest.text();
 }
 
-module.exports =  async function (message, ws) {
+module.exports = async function (message, ws) {
   let versionsList;
+  let localAppVersion;
 
   if (global.jarNames.isRooted && os.platform() !== 'android') {
     if (!global.jarNames.deviceID) {
@@ -39,8 +40,14 @@ module.exports =  async function (message, ws) {
         break;
       }
     }
-    const appVersion = await getAppVersion(pkgName);
-    return await downloadApp(appVersion, ws);
+
+    localAppVersion = await getAppVersion(pkgName);
+    return ws.send(
+      JSON.stringify({
+        event: 'appVersions',
+        versionList: [{ version: localAppVersion }]
+      })
+    );
   }
 
   switch (global.jarNames.selectedApp) {
@@ -104,4 +111,4 @@ module.exports =  async function (message, ws) {
       versionList
     })
   );
-}
+};
