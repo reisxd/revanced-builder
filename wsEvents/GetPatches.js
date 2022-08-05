@@ -4,24 +4,19 @@ const { getPatchList } = require('../utils/PatchListRememberer.js');
 const os = require('os');
 const actualExec = promisify(exec);
 
-module.exports = async function (message, ws) {
+const rootedPatches = [
+  'microg-support',
+  'hide-cast-button',
+  'music-microg-support'
+];
+
+module.exports = async function(message, ws) {
   const patchList = [];
   const getPatches = await actualExec(
     `java -jar ${global.jarNames.cli} -a ${global.jarNames.integrations} -b ${global.jarNames.patchesJar} -l --with-packages`
   );
-  let patchesText = getPatches.stdout;
-  patchesText = patchesText.replace('\tdi', '\t di');
-  const firstWord = patchesText.slice(0, patchesText.indexOf(' '));
-  const patchRegex = new RegExp('\\t\\s([^\\t]+)', 'g');
-
-  const patchesArray = patchesText.match(patchRegex);
-
-  const pkgRegex = new RegExp(`${firstWord}\\s([^\\t]+)`, 'g');
-  const pkgNameArray = patchesText.match(pkgRegex);
-  const patchDescRegex = new RegExp(`\\t(.*) ${os.EOL}`, 'g');
-  const patchDescsArray = patchesText.match(patchDescRegex);
-
-  let index = -1;
+  const patchesText = getPatches.stdout;
+  const matches = patchesText.matchAll(/:\s+(?<pkg>\S+)\s+(?<name>\S+)\s+(?<description>.+)/g);
 
   let hasRoot = true;
   if (os.platform() === 'android') {
@@ -36,33 +31,13 @@ module.exports = async function (message, ws) {
     });
   }
 
-  for (const patchName of patchesArray) {
-    const patch = patchName.replace(firstWord, '').replace(/\s/g, '');
-    index++;
-    let isRooted = false;
-    if (
-      pkgNameArray[index].replace(firstWord, '').replace(/\s/g, '') !==
-      global.jarNames.selectedApp
-    ) {
-      continue;
-    }
+  for (const match of matches) {
+    const { name, description, pkg } = match.groups;
+    const isRooted = rootedPatches.includes(name);
+    const isCompatible = pkg === global.jarNames.selectedApp;
 
-    const rootedPatches = [
-      'microg-support',
-      'hide-cast-button',
-      'music-microg-support'
-    ];
-
-    if (rootedPatches.includes(patch.trim())) isRooted = true;
-
-    if (!isRooted || hasRoot) {
-      patchList.push({
-        name: patch,
-        description: patchDescsArray[index]
-          .replace('\t', '')
-          .match(new RegExp(`\\t(.*) ${os.EOL}`))[1],
-        isRooted
-      });
+    if (isCompatible && (!isRooted || hasRoot)) {
+      patchList.push({ name, description: description.trim(), isRooted });
     }
   }
 
