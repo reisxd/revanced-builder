@@ -5,11 +5,11 @@ let alreadyAddedLog = false;
 let isDownloading = false;
 let hasFinished = false;
 
-function sendCommand(args) {
+function sendCommand (args) {
   ws.send(JSON.stringify(args));
 }
 
-function setApp() {
+function setApp () {
   if (!document.querySelector('input[name="app"]:checked')) {
     return alert("You didn't select an app to patch!");
   }
@@ -20,27 +20,27 @@ function setApp() {
   location.href = '/dependencies';
 }
 
-function loadPatches() {
+function loadPatches () {
   sendCommand({ event: 'getPatches' });
 }
 
-function updateFiles() {
+function updateFiles () {
   sendCommand({ event: 'updateFiles' });
 }
 
-function toggle(bool) {
+function toggle (bool) {
   for (const checkbox of document.getElementsByClassName('select')) {
     checkbox.checked = bool;
   }
 }
 
-function goToPatches() {
+function goToPatches () {
   if (hasFinished) {
     location.href = '/patches';
   }
 }
 
-function setPatches() {
+function setPatches () {
   // To the person whos reading:
   // For some fucking reason, assigning the checked checkboxes into a constant variable would
   // give me an empty array. This is why I'm doing this -reis
@@ -82,7 +82,7 @@ function setPatches() {
   location.href = '/versions';
 }
 
-function setAppVersion() {
+function setAppVersion () {
   if (!isDownloading) {
     if (!document.querySelector('input[name="version"]:checked')) {
       return alert("You didn't select an app version!");
@@ -103,7 +103,7 @@ function setAppVersion() {
   }
 }
 
-function getAppVersions(isRooted) {
+function getAppVersions (isRooted) {
   document.getElementsByTagName('header')[0].innerHTML = `
     <h1>Select the version you want to download</h1>
     ${
@@ -121,18 +121,18 @@ function getAppVersions(isRooted) {
   sendCommand({ event: 'getAppVersion' });
 }
 
-function buildReVanced() {
+function buildReVanced () {
   sendCommand({ event: 'patchApp' });
 }
 
-function getAlreadyExists() {
+function getAlreadyExists () {
   sendCommand({ event: 'checkFileAlreadyExists' });
 }
-function openAbout() {
+function openAbout () {
   window.open('/about', '_blank');
 }
 
-function openGitHub() {
+function openGitHub () {
   window.open('https://github.com/reisxd/revanced-builder', '_blank');
 }
 
