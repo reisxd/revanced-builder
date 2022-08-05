@@ -136,6 +136,13 @@ function openGitHub () {
   window.open('https://github.com/reisxd/revanced-builder', '_blank');
 }
 
+function toTitleCase (phrase) {
+  return phrase
+    .split('-')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
+
 ws.onmessage = (msg) => {
   const message = JSON.parse(msg.data);
   switch (message.event) {
@@ -154,7 +161,7 @@ ws.onmessage = (msg) => {
 								<input class="dropdown" id="dropdown-patch-${i}" type="checkbox">
 								<label for="dropdown-patch-${i}">
 									<i class="fa-solid fa-lg fa-caret-down"></i>
-									<span><strong>${patch.name}</strong></span>
+									<span><strong>${toTitleCase(patch.name)}</strong></span>
 									<div class="dropdown-content">
 										<span>${patch.description}</span>
 									</div>
