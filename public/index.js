@@ -168,9 +168,10 @@ ws.onmessage = (msg) => {
 
     case 'downloadingFile': {
       if (!document.getElementsByClassName('log')[0]) {
-        document.getElementById('content').innerHTML = '<span class="log"></span>';
+        document.getElementById('content').innerHTML =
+          '<span class="log"></span>';
         document.getElementsByTagName('main')[0].innerHTML +=
-      '<progress value="0"></progress>';
+          '<progress value="0"></progress>';
       }
       if (!currentFile) currentFile = message.name;
       if (currentFile === message.name) {
@@ -247,9 +248,8 @@ ws.onmessage = (msg) => {
     case 'buildFinished': {
       document.getElementsByTagName('header')[0].innerHTML =
         '<h1>ReVanced has been built.</h1>';
-      document.getElementsByTagName(
-        'footer'
-      )[0].innerHTML += '<button class="highlighted" onclick="location.href = \'/\'">Build Again</button>';
+      document.getElementsByTagName('footer')[0].innerHTML +=
+        '<button class="highlighted" onclick="location.href = \'/\'">Build Again</button>';
       break;
     }
 

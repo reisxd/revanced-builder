@@ -3,7 +3,7 @@ const { exec } = require('child_process');
 const os = require('os');
 const actualExec = promisify(exec);
 
-module.exports =  async function (message, ws) {
+module.exports = async function (message, ws) {
   const patchList = [];
   const getPatches = await actualExec(
     `java -jar ${global.jarNames.cli} -a ${global.jarNames.integrations} -b ${global.jarNames.patchesJar} -l --with-packages`
@@ -67,4 +67,4 @@ module.exports =  async function (message, ws) {
       patchList
     })
   );
-}
+};

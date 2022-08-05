@@ -3,7 +3,7 @@ const { promisify } = require('util');
 const { exec } = require('child_process');
 const actualExec = promisify(exec);
 
-module.exports =  async function (pkgName, ws) {
+module.exports = async function (pkgName, ws) {
   try {
     const { stdout, stderr } = await actualExec(
       `adb shell dumpsys package ${pkgName}`,
@@ -27,4 +27,4 @@ module.exports =  async function (pkgName, ws) {
   } catch (e) {
     return null;
   }
-}
+};

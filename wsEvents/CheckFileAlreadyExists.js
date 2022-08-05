@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-module.exports =  async function (message, ws) {
+module.exports = async function (message, ws) {
   if (fs.existsSync(`./revanced/${global.jarNames.selectedApp}.apk`)) {
     ws.send(
       JSON.stringify({
@@ -16,4 +16,4 @@ module.exports =  async function (message, ws) {
       })
     );
   }
-}
+};

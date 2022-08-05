@@ -2,7 +2,7 @@ const fetchURL = require('node-fetch');
 const { load } = require('cheerio');
 const { dloadFromURL } = require('../utils/FileDownlader.js');
 
-module.exports =  async function (version, ws) {
+module.exports = async function (version, ws) {
   const apkVersion = version.replace(/\./g, '-');
 
   let versionDownload;
@@ -36,6 +36,16 @@ module.exports =  async function (version, ws) {
       break;
     }
   }
+
+  if (!versionDownload.ok) {
+    return ws.send(
+      JSON.stringify({
+        event: 'error',
+        error: `Failed to scrape download link for ${version}.<br>Please try downgrading.`
+      })
+    );
+  }
+
   const versionDownloadList = await versionDownload.text();
 
   const vDLL = load(versionDownloadList);
@@ -69,4 +79,4 @@ module.exports =  async function (version, ws) {
       event: 'finished'
     })
   );
-}
+};

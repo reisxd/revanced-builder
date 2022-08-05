@@ -3,7 +3,7 @@ const { promisify } = require('util');
 const { exec } = require('child_process');
 const actualExec = promisify(exec);
 
-module.exports =  async function () {
+module.exports = async function () {
   try {
     const { stdout } = await actualExec('adb devices');
     const adbDeviceIdRegex = new RegExp(`${os.EOL}(.*?)\t`);
@@ -18,4 +18,4 @@ module.exports =  async function () {
   } catch (e) {
     return null;
   }
-}
+};

@@ -56,4 +56,4 @@ async function UpdateFiles (message, ws) {
   );
 }
 
-module.exports =  UpdateFiles;
+module.exports = UpdateFiles;

@@ -14,7 +14,7 @@ async function getPage (pageUrl) {
   return await pageRequest.text();
 }
 
-module.exports =  async function (message, ws) {
+module.exports = async function (message, ws) {
   let versionsList;
 
   if (global.jarNames.isRooted && os.platform() !== 'android') {
@@ -104,4 +104,4 @@ module.exports =  async function (message, ws) {
       versionList
     })
   );
-}
+};
