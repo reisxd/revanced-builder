@@ -93,6 +93,10 @@ module.exports = async function (message, ws) {
       );
       break;
     }
+    case 'warnapp': {
+      versionsList = await getPage('https://www.apkmirror.com/apk/deutscher-wetterdienst/warnwetter');
+      break;
+    }
   }
 
   const versionList = [];
@@ -107,7 +111,8 @@ module.exports = async function (message, ws) {
       .replace('YouTube ', '')
       .replace('Music ', '')
       .replace('Twitter ', '')
-      .replace('Reddit ', '');
+      .replace('Reddit ', '')
+      .replace('WarnWetter ', '');
 
     indx++;
     if (versionName.includes('beta')) continue;

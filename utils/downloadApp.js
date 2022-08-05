@@ -35,6 +35,12 @@ module.exports = async function (version, ws) {
       );
       break;
     }
+
+    case 'warnapp': {
+      versionDownload = await fetchURL(
+        `https://www.apkmirror.com/apk/deutscher-wetterdienst/warnwetter/warnwetter-${apkVersion}-release/`)
+      break;
+    }
   }
 
   if (!versionDownload.ok) {
