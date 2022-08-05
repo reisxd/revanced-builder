@@ -6,6 +6,7 @@ revanced-builder-nodejs-macos
 revanced-builder-nodejs-linux
 revanced-builder-nodejs-win.exe
 excludedPatchesList.json
+includedPatchesList.json
 dist/
 revanced-cache/
 index-old.js

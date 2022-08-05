@@ -1,5 +1,6 @@
 const { promisify } = require('util');
 const { exec } = require('child_process');
+const { getPatchList } = require('../utils/PatchListRememberer.js');
 const os = require('os');
 const actualExec = promisify(exec);
 
@@ -61,10 +62,13 @@ module.exports = async function (message, ws) {
     }
   }
 
+  const rememberedPatchList = getPatchList(global.jarNames.selectedApp);
+
   return ws.send(
     JSON.stringify({
       event: 'patchList',
-      patchList
+      patchList,
+      rememberedPatchList
     })
   );
 };

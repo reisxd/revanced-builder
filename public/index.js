@@ -163,6 +163,16 @@ ws.onmessage = (msg) => {
 						</li>`;
         i++;
       }
+
+      for (const patch of document.getElementsByClassName('select')) {
+        if (
+          message.rememberedPatchList.includes(
+            patch.attributes.patchName.nodeValue
+          )
+        ) {
+          patch.checked = true;
+        }
+      }
       break;
     }
 
@@ -256,7 +266,6 @@ ws.onmessage = (msg) => {
 
     case 'error': {
       const failureURL = `/failure?error=${message.error}`;
-      console.log(failureURL);
       location.href = failureURL;
       break;
     }

@@ -1,5 +1,8 @@
+const { writePatches } = require('../utils/PatchListRememberer.js');
+
 module.exports = async function (message, ws) {
   global.jarNames.patches = '';
+  writePatches(global.jarNames.selectedApp, message.selectedPatches);
   const includedPatchesArray = [];
   for (const patch of message.selectedPatches) {
     const patchName = patch.replace(/\|.+(.*)$/, '').replace(/\s/g, '');
