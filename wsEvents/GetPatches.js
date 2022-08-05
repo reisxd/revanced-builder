@@ -47,7 +47,11 @@ module.exports = async function (message, ws) {
       continue;
     }
 
-    const rootedPatches = ['microg-support', 'hide-cast-button'];
+    const rootedPatches = [
+      'microg-support',
+      'hide-cast-button',
+      'music-microg-support'
+    ];
 
     if (rootedPatches.includes(patch.trim())) isRooted = true;
 
