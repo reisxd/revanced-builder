@@ -3,8 +3,12 @@ const { load } = require('cheerio');
 const os = require('os');
 const getAppVersion = require('../utils/getAppVersion.js');
 const downloadApp = require('../utils/downloadApp.js');
+const { exec } = require('child_process');
+const { promisify } = require('util');
 
-async function getPage (pageUrl) {
+const actualExec = promisify(exec);
+
+async function getPage(pageUrl) {
   const pageRequest = await fetchURL(pageUrl, {
     headers: {
       'user-agent':
@@ -14,7 +18,7 @@ async function getPage (pageUrl) {
   return await pageRequest.text();
 }
 
-module.exports =  async function (message, ws) {
+module.exports = async function (message, ws) {
   let versionsList;
 
   if (global.jarNames.isRooted && os.platform() !== 'android') {
@@ -28,6 +32,17 @@ module.exports =  async function (message, ws) {
       );
     }
 
+    actualExec('adb shell su -c exit').catch(() => {
+      return ws.send(
+        JSON.stringify({
+          event: 'error',
+          error:
+            'The plugged in device is not rooted or Shell was denied root access. \
+            If you didn\'t intend on doing a rooted build, include all "Root required to exclude" patches'
+        })
+      );
+    });
+
     let pkgName;
     switch (global.jarNames.selectedApp) {
       case 'youtube': {
@@ -40,6 +55,16 @@ module.exports =  async function (message, ws) {
       }
     }
     const appVersion = await getAppVersion(pkgName);
+    // if youtube isn't installed the function just returns null instead of erroring. i do not want to mess with regex's so i added this instead
+    if (!appVersion) {
+      return ws.send(
+        JSON.stringify({
+          event: 'error',
+          error:
+            "The app you selected is not installed on your device. It's needed for rooted ReVanced."
+        })
+      );
+    }
     return await downloadApp(appVersion, ws);
   }
 
@@ -104,4 +129,4 @@ module.exports =  async function (message, ws) {
       versionList
     })
   );
-}
+};
