@@ -27,8 +27,19 @@ server.listen(8080, () => {
   );
 });
 
-// The websocket server
+process.on('uncaughtException', (reason) => {
+  console.log(
+    `An error occured.\n${reason.stack}\nPlease report this bug here: https://github.com/reisxd/revanced-builder/issues`
+  );
+});
 
+process.on('unhandledRejection', (reason) => {
+  console.log(
+    `An error occured.\n${reason.stack}\nPlease report this bug here: https://github.com/reisxd/revanced-builder/issues`
+  );
+});
+
+// The websocket server
 wsServer.on('connection', (ws) => {
   ws.on('message', async (msg) => {
     const message = JSON.parse(msg);

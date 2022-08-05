@@ -1,4 +1,4 @@
-module.exports =  async function (message, ws) {
+module.exports = async function (message, ws) {
   global.jarNames.patches = '';
   const includedPatchesArray = [];
   for (const patch of message.selectedPatches) {
@@ -15,4 +15,4 @@ module.exports =  async function (message, ws) {
 
     global.jarNames.patches += ` -e ${patch}`;
   }
-}
+};

@@ -58,7 +58,7 @@ async function afterBuild (ws) {
   );
 }
 
-module.exports =  async function (message, ws) {
+module.exports = async function (message, ws) {
   const buildProcess = await exec(
     `java -jar ${global.jarNames.cli} -b ${global.jarNames.patchesJar} ${
       os.platform() === 'android' ? '--custom-aapt2-binary revanced/aapt2' : ''
@@ -101,4 +101,4 @@ module.exports =  async function (message, ws) {
       await afterBuild(ws);
     }
   });
-}
+};

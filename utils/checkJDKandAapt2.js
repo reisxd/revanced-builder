@@ -5,7 +5,7 @@ const os = require('os');
 const fs = require('fs');
 const actualExec = promisify(exec);
 
-module.exports =  async function (ws) {
+module.exports = async function (ws) {
   try {
     await actualExec('java -v');
   } catch (e) {
@@ -41,4 +41,4 @@ module.exports =  async function (ws) {
       }
     }
   }
-}
+};

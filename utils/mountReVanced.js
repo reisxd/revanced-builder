@@ -4,7 +4,7 @@ const { exec } = require('child_process');
 
 const actualExec = promisify(exec);
 
-module.exports =  async function (pkg, ws) {
+module.exports = async function (pkg, ws) {
   // Copy ReVanced APK to temp.
   await actualExec(
     'su -c \'cp "revanced/revanced.apk" "/data/local/tmp/revanced.delete"\''
@@ -51,4 +51,4 @@ module.exports =  async function (pkg, ws) {
       log: 'ReVanced should be now mounted! Please restart the device and check if the app has been mounted.'
     })
   );
-}
+};
