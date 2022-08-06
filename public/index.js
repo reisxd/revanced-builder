@@ -199,7 +199,7 @@ ws.onmessage = (msg) => {
         if (!alreadyAddedLog) {
           document.getElementsByClassName(
             'log'
-          )[0].innerHTML += `<strong>[builder]</strong> Downloading ${message.name}...<br/>`;
+          )[0].innerHTML += `<span class="log-line"><strong>[builder]</strong> Downloading ${message.name}...</span><br/>`;
           alreadyAddedLog = true;
         }
         document.getElementsByTagName('progress')[0].value =
@@ -208,7 +208,7 @@ ws.onmessage = (msg) => {
         currentFile = message.name;
         document.getElementsByClassName(
           'log'
-        )[0].innerHTML += `<strong>[builder]</strong> Downloading ${message.name}...<br/>`;
+        )[0].innerHTML += `<span class="log-line"><strong>[builder]</strong> Downloading ${message.name}...</span><br/>`;
         document.getElementsByTagName('progress')[0].value =
           '' + message.percentage / 100;
       }
@@ -219,7 +219,7 @@ ws.onmessage = (msg) => {
       hasFinished = true;
       document.getElementById('continue').classList.remove('disabled');
       document.getElementsByClassName('log')[0].innerHTML +=
-        '<strong>[builder]</strong> Finished downloading files<br>';
+        '<span class="log-line"><strong>[builder]</strong> Finished downloading files.</span><br/>';
       break;
     }
 
@@ -236,15 +236,9 @@ ws.onmessage = (msg) => {
     }
 
     case 'patchLog': {
-      if (message.isStdErr) {
-        document.getElementsByClassName(
-          'log'
-        )[0].innerHTML += `<div style="color: red;"><strong>[builder]</strong> ${message.log}<br></div>`;
-      } else {
-        document.getElementsByClassName(
-          'log'
-        )[0].innerHTML += `<strong>[builder]</strong> ${message.log}<br>`;
-      }
+      document.getElementsByClassName(
+        'log'
+      )[0].innerHTML += `<span class="log-line${message.isStdErr ? ' stderr' : ''}"><strong>[builder]</strong> ${message.log}</span><br>`;
       break;
     }
 
