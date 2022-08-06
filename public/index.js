@@ -1,4 +1,7 @@
-const ws = new WebSocket('ws://localhost:8080');
+WS_URI = `${window?.location?.protocol === 'https:' ? 'wss' : 'ws'}://${
+  window?.location?.host ?? 'localhost:8080'
+}`;
+const ws = new WebSocket(WS_URI);
 
 let currentFile;
 let alreadyAddedLog = false;
