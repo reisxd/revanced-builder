@@ -1,4 +1,4 @@
-span.log {
+span.log .log-line {
   font-family: 'Fira Code', monospace;
   font-weight: 300;
   font-size: 0.8em;
@@ -6,6 +6,11 @@ span.log {
   width: 100%;
   height: 100%;
 }
+
+span.log .log-line.stderr {
+  color: #d21404;
+}
+
 span.log:after {
   content: '｜';
   animation: blinking-cursor 1s steps(2, start) infinite;
