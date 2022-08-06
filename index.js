@@ -1,7 +1,6 @@
 const Express = require('express');
 const { WebSocketServer } = require('ws');
 const http = require('http');
-const os = require('os');
 const path = require('path');
 const {
   UpdateFiles,
