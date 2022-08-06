@@ -29,17 +29,17 @@ module.exports = async function (ws) {
     await actualExec('unzip revanced/aapt2.zip');
     switch (os.arch()) {
       case 'arm64': {
-        await actualExec('cp revanced/arm64-v8a/aapt2 revanced/aapt2');
+        await actualExec('cp arm64-v8a/aapt2 revanced/aapt2');
         await actualExec('chmod +x revanced/aapt2');
         break;
       }
 
       case 'arm': {
-        await actualExec('cp revanced/armeabi-v7a/aapt2 revanced/aapt2');
+        await actualExec('cp armeabi-v7a/aapt2 revanced/aapt2');
         await actualExec('chmod +x revanced/aapt2');
         break;
       }
     }
-    await actualExec('rm -rf revanced/arm64-v8a revanced/armeabi-v7a revanced/x86 revanced/aapt2.zip');
+    await actualExec('rm -rf arm64-v8a armeabi-v7a x86 revanced/aapt2.zip');
   }
 };
