@@ -13,6 +13,7 @@ const {
   PatchApp
 } = require('./wsEvents/index.js');
 const morgan = require('morgan');
+const open = require('open');
 
 const app = Express();
 const server = http.createServer(app);
@@ -27,8 +28,15 @@ app.use(
 
 server.listen(8080, () => {
   console.log(
-    'The webserver is now running!\nOpen up http://localhost:8080 in your browser.'
+    'The webserver is now running!'
   );
+  try {
+    process.stdout.write('Opening the app in the default browser... ');
+    open('http://localhost:8080');
+    console.log('Done. Check if a browser window has opened');
+  } catch (e){
+    console.log('Failed. Open up http://localhost:8080 in your browser.');
+  }
 });
 
 process.on('uncaughtException', (reason) => {
