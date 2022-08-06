@@ -4,7 +4,7 @@ const os = require('os');
 const mountReVanced = require('../utils/mountReVanced.js');
 const actualExec = promisify(exec);
 
-async function mount (ws) {
+async function mount(ws) {
   let pkg;
   switch (global.jarNames.selectedApp) {
     case 'youtube': {
@@ -55,7 +55,7 @@ async function mount (ws) {
   await mountReVanced(pkg, ws);
 }
 
-async function afterBuild (ws) {
+async function afterBuild(ws) {
   if (!global.jarNames.isRooted && os.platform() === 'android') {
     await actualExec(
       'cp revanced/revanced.apk /storage/emulated/0/revanced.apk'
