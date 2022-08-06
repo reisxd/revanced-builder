@@ -1,6 +1,6 @@
 # ReVanced Builder
 
-This project will allow you to download the YouTube APK and build ReVanced easily!
+This project will allow you to download the APK of any of the [officially supported](https://github.com/revanced/revanced-patches#-list-of-available-patches) apps and build ReVanced easily!
 
 ## Required
 
