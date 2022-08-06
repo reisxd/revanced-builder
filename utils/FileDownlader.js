@@ -5,7 +5,7 @@ const fs = require('fs');
 
 let ws;
 
-async function overWriteJarNames (link) {
+async function overWriteJarNames(link) {
   const fileName = link.split('/').pop();
   if (fileName.includes('revanced-cli')) {
     global.jarNames.cli = `./revanced/${fileName}`;
@@ -21,7 +21,7 @@ async function overWriteJarNames (link) {
   }
 }
 
-async function getDownloadLink (json) {
+async function getDownloadLink(json) {
   const apiRequest = await fetchURL(
     `https://api.github.com/repos/${json.owner}/${json.repo}/releases/latest`
   );
@@ -53,7 +53,7 @@ async function getDownloadLink (json) {
   return assets;
 }
 
-async function downloadFile (assets) {
+async function downloadFile(assets) {
   for (const asset of assets) {
     const dir = fs.readdirSync('./revanced/');
     overWriteJarNames(asset.browser_download_url);
@@ -74,7 +74,7 @@ async function downloadFile (assets) {
   }
 }
 
-async function dloadFromURL (url, outputPath, websocket) {
+async function dloadFromURL(url, outputPath, websocket) {
   if (websocket) {
     ws = websocket;
   }
@@ -117,7 +117,7 @@ async function dloadFromURL (url, outputPath, websocket) {
   });
 }
 
-async function downloadFiles (repos, websocket) {
+async function downloadFiles(repos, websocket) {
   ws = websocket;
   for (const repo of repos) {
     const downloadLink = await getDownloadLink(repo);

@@ -40,6 +40,8 @@ module.exports = async function (ws) {
         break;
       }
     }
-    await actualExec('rm -rf revanced/arm64-v8a revanced/armeabi-v7a revanced/x86 revanced/aapt2.zip');
+    await actualExec(
+      'rm -rf revanced/arm64-v8a revanced/armeabi-v7a revanced/x86 revanced/aapt2.zip'
+    );
   }
 };

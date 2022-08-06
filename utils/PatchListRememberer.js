@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-function createRemembererFile () {
+function createRemembererFile() {
   fs.writeFileSync(
     './includedPatchesList.json',
     JSON.stringify({
@@ -26,7 +26,7 @@ function createRemembererFile () {
   );
 }
 
-function getPatchesList (pkgName) {
+function getPatchesList(pkgName) {
   let file = fs.readFileSync('./includedPatchesList.json');
   file = file.toString();
   file = JSON.parse(file);
@@ -38,7 +38,7 @@ function getPatchesList (pkgName) {
   }
 }
 
-function writePatches (pkgName, patches) {
+function writePatches(pkgName, patches) {
   let file = fs.readFileSync('./includedPatchesList.json');
   file = file.toString();
   file = JSON.parse(file);
@@ -53,7 +53,7 @@ function writePatches (pkgName, patches) {
   }
 }
 
-function getPatchList (pkgName) {
+function getPatchList(pkgName) {
   if (!fs.existsSync('./includedPatchesList.json')) {
     createRemembererFile();
     return [];
