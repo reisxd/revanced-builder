@@ -1,10 +1,11 @@
 const { promisify } = require('util');
-const { exec } = require('child_process');
+const { exec, spawn } = require('child_process');
 const os = require('os');
 const mountReVanced = require('../utils/mountReVanced.js');
 const actualExec = promisify(exec);
+const actualSpawn = promisify(spawn);
 
-async function mount(ws) {
+async function mount (ws) {
   let pkg;
   switch (global.jarNames.selectedApp) {
     case 'youtube': {
@@ -18,34 +19,6 @@ async function mount(ws) {
     }
   }
 
-  let pkgNameToGetUninstalled;
-
-  switch (global.jarNames.selectedApp) {
-    case 'youtube': {
-      if (!global.jarNames.isRooted) {
-        pkgNameToGetUninstalled = 'app.revanced.android.youtube';
-        break;
-      } else break;
-    }
-
-    case 'music': {
-      if (!global.jarNames.isRooted) {
-        pkgNameToGetUninstalled = 'app.revanced.android.apps.youtube.music';
-        break;
-      } else break;
-    }
-
-    case 'android': {
-      pkgNameToGetUninstalled = 'com.twitter.android';
-      break;
-    }
-
-    case 'frontpage': {
-      pkgNameToGetUninstalled = 'com.reddit.frontpage';
-      break;
-    }
-  }
-
   ws.send(
     JSON.stringify({
       event: 'patchLog',
@@ -55,7 +28,7 @@ async function mount(ws) {
   await mountReVanced(pkg, ws);
 }
 
-async function afterBuild(ws) {
+async function afterBuild (ws) {
   if (!global.jarNames.isRooted && os.platform() === 'android') {
     await actualExec(
       'cp revanced/revanced.apk /storage/emulated/0/revanced.apk'
@@ -94,23 +67,90 @@ async function afterBuild(ws) {
   );
 }
 
-module.exports = async function (message, ws) {
-  const buildProcess = await exec(
-    `java -jar ${global.jarNames.cli} -b ${global.jarNames.patchesJar} ${
-      os.platform() === 'android' ? '--custom-aapt2-binary revanced/aapt2' : ''
-    } -t ./revanced-cache --experimental -a ./revanced/${
-      global.jarNames.selectedApp
-    }.apk -o ./revanced/revanced.apk ${
-      global.jarNames.selectedApp.endsWith('frontpage') ? '-r' : ''
-    } ${
-      global.jarNames.selectedApp === 'youtube'
-        ? '-m ' + global.jarNames.integrations
-        : ''
-    } ${global.jarNames.patches} ${
-      global.jarNames.deviceID ? `-d ${global.jarNames.deviceID}` : ''
-    } ${global.jarNames.isRooted && global.jarNames.deviceID ? '--mount' : ''}`,
-    { maxBuffer: 5120 * 1024 }
+async function reinstallReVanced (ws) {
+  let pkgNameToGetUninstalled;
+
+  switch (global.jarNames.selectedApp) {
+    case 'youtube': {
+      if (!global.jarNames.isRooted) {
+        pkgNameToGetUninstalled = 'app.revanced.android.youtube';
+        break;
+      } else break;
+    }
+
+    case 'music': {
+      if (!global.jarNames.isRooted) {
+        pkgNameToGetUninstalled = 'app.revanced.android.apps.youtube.music';
+        break;
+      } else break;
+    }
+
+    case 'android': {
+      pkgNameToGetUninstalled = 'com.twitter.android';
+      break;
+    }
+
+    case 'frontpage': {
+      pkgNameToGetUninstalled = 'com.reddit.frontpage';
+      break;
+    }
+  }
+
+  await actualExec(`adb uninstall ${pkgNameToGetUninstalled}`);
+  await actualExec('adb install revanced/revanced.apk');
+  ws.send(
+    JSON.stringify({
+      event: 'buildFinished'
+    })
   );
+}
+
+module.exports = async function (message, ws) {
+  const args = [
+    '-jar',
+    global.jarNames.cli,
+    '-b',
+    global.jarNames.patchesJar,
+    '-t',
+    './revanced-cache',
+    '--experimental',
+    '-a',
+    `./revanced/${global.jarNames.selectedApp}.apk`,
+    '-o',
+    './revanced/revanced.apk',
+  ];
+
+  if (os.platform() === 'android') {
+    args.push('--custom-aapt2-binary');
+    args.push('revanced/aapt2');
+  }
+
+  if (global.jarNames.selectedApp === 'youtube') {
+    args.push('-m');
+    args.push(global.jarNames.integrations);
+  }
+
+  if (global.jarNames.deviceID) {
+    args.push('-d');
+    args.push(global.jarNames.deviceID);
+  }
+
+  for (const patch of global.jarNames.patches.split(' ')) {
+    args.push(patch);
+  }
+
+  if (global.jarNames.selectedApp.endsWith('frontpage')) {
+    args.push('-r')
+  }
+  
+  if (global.jarNames.isRooted && global.jarNames.deviceID) {
+    args.push('--mount');
+  }
+  console.log(`java ${args.join(' ')}`);
+
+  const buildProcess = await spawn('java', args, {
+    maxBuffer: 5120 * 1024
+  });
 
   buildProcess.stdout.on('data', async (data) => {
     ws.send(
@@ -126,13 +166,7 @@ module.exports = async function (message, ws) {
     }
 
     if (data.toString().includes('INSTALL_FAILED_UPDATE_INCOMPATIBLE')) {
-      await actualExec(`adb uninstall ${pkgNameToGetUninstalled}`);
-      await actualExec('adb install revanced/revanced.apk');
-      ws.send(
-        JSON.stringify({
-          event: 'buildFinished'
-        })
-      );
+      await reinstallReVanced(ws);
     }
   });
 
@@ -150,13 +184,7 @@ module.exports = async function (message, ws) {
     }
 
     if (data.toString().includes('INSTALL_FAILED_UPDATE_INCOMPATIBLE')) {
-      await actualExec(`adb uninstall ${pkgNameToGetUninstalled}`);
-      await actualExec('adb install revanced/revanced.apk');
-      ws.send(
-        JSON.stringify({
-          event: 'buildFinished'
-        })
-      );
+      await reinstallReVanced(ws);
     }
   });
 };
