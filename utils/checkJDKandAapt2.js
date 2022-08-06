@@ -26,7 +26,7 @@ module.exports = async function (ws) {
       'revanced/aapt2.zip',
       ws
     );
-    await actualExec('unzip revanced/aapt2.zip');
+    await actualExec('unzip revanced/aapt2.zip -d revanced/');
     switch (os.arch()) {
       case 'arm64': {
         await actualExec('cp revanced/arm64-v8a/aapt2 revanced/aapt2');
