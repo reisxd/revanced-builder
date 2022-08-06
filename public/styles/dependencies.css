@@ -22,6 +22,11 @@ progress {
   width: 100%;
   border-radius: 25px;
 }
+
+progress::-moz-progress-bar {   
+  border-radius: 25px;
+}
+
 progress::-webkit-progress-bar {
   background-color: var(--contrastColor);
   border-radius: 7px;
