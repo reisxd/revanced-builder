@@ -1,4 +1,3 @@
-.fa,
 .fa-brands,
 .fa-solid {
   -moz-osx-font-smoothing: grayscale;
@@ -9,11 +8,6 @@
   line-height: 1;
   text-rendering: auto;
 }
-.fa-lg {
-  font-size: 1.25em;
-  line-height: 0.05em;
-  vertical-align: -0.075em;
-}
 .fa-xl {
   font-size: 1.5em;
   line-height: 0.04167em;
@@ -22,20 +16,12 @@
 .fa-github:before {
   content: '';
 }
-.fa-caret-down:before {
-  content: '';
-}
 .fa-question-circle:before {
   content: '';
 }
 .fa-brands {
   font-family: 'Font Awesome 6 Brands';
-  font-weight: 400;
-}
-.fa-light,
-.fal {
-  font-family: 'Font Awesome 6 Pro';
-  font-weight: 300;
+  font-size: 400;
 }
 @font-face {
   font-family: 'Font Awesome 6 Brands';
@@ -45,20 +31,14 @@
   src: url(webfonts/fa-brands-400.woff2) format('woff2'),
     url(../webfonts/fa-brands-400.ttf) format('truetype');
 }
-:host,
-:root {
-  --fa-font-solid: normal 900 1em/1 'Font Awesome 6 Pro';
-  --fa-font-brands: normal 400 1em/1 'Font Awesome 6 Brands';
-}
 @font-face {
   font-family: 'Font Awesome 6 Pro';
   font-style: normal;
   font-weight: 900;
   font-display: block;
-  src: url(webfonts/fa-solid-900.woff2) format('woff2'),
-    url(../webfonts/fa-solid-900.ttf) format('truetype');
+  src: url(webfonts/fa-solid-900.woff2) format('woff2'), url(../webfonts/fa-solid-900.ttf) format('truetype');
 }
 .fa-solid {
   font-family: 'Font Awesome 6 Pro';
-  font-weight: 900;
+  font-size: 900;
 }

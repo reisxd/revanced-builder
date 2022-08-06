@@ -44,41 +44,19 @@ function goToPatches() {
 }
 
 function setPatches() {
-  // To the person whos reading:
-  // For some fucking reason, assigning the checked checkboxes into a constant variable would
-  // give me an empty array. This is why I'm doing this -reis
-
-  if (
-    ([...document.querySelectorAll('.select:checked')].map(
-      (e) => e.attributes.patchName.nodeValue
-    ).length = 0)
-  ) {
+  const patchElementList = [...document.querySelectorAll('.select')];
+  const selectedPatchElementList = patchElementList.filter(x => x.checked === true);
+  
+  if (selectedPatchElementList.length === 0) {
     return alert("You haven't selected any patches.");
   }
 
-  const patchList = [...document.querySelectorAll('.select')].map(
-    (e) => e.attributes.patchName.nodeValue
-  );
-
-  const excludedPatchList = [];
-
-  for (const patch of patchList) {
-    if (
-      [...document.querySelectorAll('.select:checked')]
-        .map((e) => e.attributes.patchName.nodeValue)
-        .includes(patch)
-    ) {
-      continue;
-    }
-
-    excludedPatchList.push(patch);
-  }
+  const selectedPatchList = selectedPatchElementList.map(x => x.getAttribute("data-patch-name"));
+  const excludedPatchList = patchElementList.filter(x => x.checked !== true).map(x => x.getAttribute("data-patch-name"));
 
   sendCommand({
     event: 'selectPatches',
-    selectedPatches: [...document.querySelectorAll('.select:checked')].map(
-      (e) => e.attributes.patchName.nodeValue
-    ),
+    selectedPatches: selectedPatchList,
     excludedPatches: excludedPatchList
   });
 
@@ -150,36 +128,21 @@ ws.onmessage = (msg) => {
   const message = JSON.parse(msg.data);
   switch (message.event) {
     case 'patchList': {
-      let i = 1;
-      for (const patch of message.patchList) {
-        document.getElementById('patchList').innerHTML += `
-                <li>
-							<input class="select" id="select-patch-${i}" type="checkbox" patchName="${
-          patch.name
-        }">
-							<label for="select-patch-${i}">
-								<span style="float:right;"><strong>${
-                  patch.isRooted ? 'Needed for Non-Root Building' : ''
-                }</strong></span>
-								<input class="dropdown" id="dropdown-patch-${i}" type="checkbox">
-								<label for="dropdown-patch-${i}">
-									<i class="fa-solid fa-lg fa-caret-down"></i>
-									<span>${toTitleCase(patch.name)}</span>
-									<div class="dropdown-content">
-										<span>${patch.description}</span>
-									</div>
-								</label>
-							</label>
-						</li>`;
-        i++;
+      for (let i = 0; i < message.patchList.length; i++) {
+        const patch = message.patchList[i];
+        document.getElementById('patchList').innerHTML += 
+`<li>
+  <input class="select" id="select-patch-${i}" data-patch-name="${patch.name}" type="checkbox">
+  <label for="select-patch-${i}">
+    <span style="float:right;"><strong>${patch.isRooted ? 'Needed for Non-Root Building' : ''}</strong></span>
+    <span><strong>${toTitleCase(patch.name)}</strong></span>
+    <span class="patch-description">${patch.description}</span>
+  </label>
+</li>`;
       }
 
       for (const patch of document.getElementsByClassName('select')) {
-        if (
-          message.rememberedPatchList.includes(
-            patch.attributes.patchName.nodeValue
-          )
-        ) {
+        if (message.rememberedPatchList.includes(patch.getAttribute("data-patch-name"))) {
           patch.checked = true;
         }
       }
