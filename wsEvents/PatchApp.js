@@ -49,6 +49,14 @@ async function afterBuild (ws) {
         log: 'ReVanced has been built!\nPlease transfer over revanced/revanced.apk and if you are using YT/YTM, revanced/microg.apk and install them!'
       })
     );
+  } else if (!global.jarNames.isRooted && global.jarNames.deviceID) {
+    await actualExec('adb install revanced/microg.apk');
+    ws.send(
+      JSON.stringify({
+        event: 'patchLog',
+        log: 'MicroG has been installed.'
+      })
+    );
   }
 
   ws.send(
