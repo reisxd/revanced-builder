@@ -10,6 +10,8 @@ module.exports = async function (message, ws) {
     global.jarNames.patches += ` -i ${patchName}`;
   }
 
+  global.jarNames.isRooted = false;
+
   for (const patch of message.excludedPatches) {
     if (includedPatchesArray.includes(patch)) continue;
     if (patch.includes('microg-support')) {

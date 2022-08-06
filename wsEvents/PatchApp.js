@@ -18,6 +18,34 @@ async function mount (ws) {
     }
   }
 
+  let pkgNameToGetUninstalled;
+
+  switch (global.jarNames.selectedApp) {
+    case 'youtube': {
+      if (!global.jarNames.isRooted) {
+        pkgNameToGetUninstalled = 'app.revanced.android.youtube';
+        break;
+      } else break;
+    }
+
+    case 'music': {
+      if (!global.jarNames.isRooted) {
+        pkgNameToGetUninstalled = 'app.revanced.android.apps.youtube.music';
+        break;
+      } else break;
+    }
+
+    case 'android': {
+      pkgNameToGetUninstalled = 'com.twitter.android';
+      break;
+    }
+
+    case 'frontpage': {
+      pkgNameToGetUninstalled = 'com.reddit.frontpage';
+      break;
+    }
+  }
+
   ws.send(
     JSON.stringify({
       event: 'patchLog',
@@ -88,12 +116,23 @@ module.exports = async function (message, ws) {
     ws.send(
       JSON.stringify({
         event: 'patchLog',
-        log: data.toString()
+        log: data.toString(),
+        isStdErr: false
       })
     );
 
     if (data.toString().includes('Finished')) {
       await afterBuild(ws);
+    }
+
+    if (data.toString().includes('INSTALL_FAILED_UPDATE_INCOMPATIBLE')) {
+      await actualExec(`adb uninstall ${pkgNameToGetUninstalled}`);
+      await actualExec('adb install revanced/revanced.apk');
+      ws.send(
+        JSON.stringify({
+          event: 'buildFinished'
+        })
+      );
     }
   });
 
@@ -101,12 +140,23 @@ module.exports = async function (message, ws) {
     ws.send(
       JSON.stringify({
         event: 'patchLog',
-        log: data.toString()
+        log: data.toString(),
+        isStdErr: true
       })
     );
 
     if (data.toString().includes('Finished')) {
       await afterBuild(ws);
+    }
+
+    if (data.toString().includes('INSTALL_FAILED_UPDATE_INCOMPATIBLE')) {
+      await actualExec(`adb uninstall ${pkgNameToGetUninstalled}`);
+      await actualExec('adb install revanced/revanced.apk');
+      ws.send(
+        JSON.stringify({
+          event: 'buildFinished'
+        })
+      );
     }
   });
 };

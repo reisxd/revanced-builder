@@ -159,12 +159,12 @@ ws.onmessage = (msg) => {
         }">
 							<label for="select-patch-${i}">
 								<span style="float:right;"><strong>${
-                  patch.isRooted ? 'Requires root to be excluded' : ''
+                  patch.isRooted ? 'Needed for Non-Root Building' : ''
                 }</strong></span>
 								<input class="dropdown" id="dropdown-patch-${i}" type="checkbox">
 								<label for="dropdown-patch-${i}">
 									<i class="fa-solid fa-lg fa-caret-down"></i>
-									<span><strong>${toTitleCase(patch.name)}</strong></span>
+									<span>${toTitleCase(patch.name)}</span>
 									<div class="dropdown-content">
 										<span>${patch.description}</span>
 									</div>
@@ -236,10 +236,15 @@ ws.onmessage = (msg) => {
     }
 
     case 'patchLog': {
-      document.getElementsByClassName(
-        'log'
-      )[0].innerHTML += `<strong>[builder]</strong> ${message.log}<br>`;
-      document.getElementsByClassName('log')[0].scrollBy(0, 20);
+      if (message.isStdErr) {
+        document.getElementsByClassName(
+          'log'
+        )[0].innerHTML += `<div style="color: red;"><strong>[builder]</strong> ${message.log}<br></div>`;
+      } else {
+        document.getElementsByClassName(
+          'log'
+        )[0].innerHTML += `<strong>[builder]</strong> ${message.log}<br>`;
+      }
       break;
     }
 
