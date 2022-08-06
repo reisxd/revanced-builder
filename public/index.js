@@ -1,4 +1,7 @@
-const ws = new WebSocket('ws://localhost:8080');
+WS_URI = `${window?.location?.protocol === 'https:' ? 'wss' : 'ws'}://${
+  window?.location?.host ?? 'localhost:8080'
+}`;
+const ws = new WebSocket(WS_URI);
 
 let currentFile;
 let alreadyAddedLog = false;
@@ -270,6 +273,7 @@ ws.onmessage = (msg) => {
       document.getElementsByTagName('header')[0].innerHTML =
         '<h1>ReVanced has been built.</h1>';
       document.getElementsByTagName('footer')[0].innerHTML +=
+        '<button class="highlighted" onclick="window.open(\'/revanced.apk\', \'_blank\')">Download</button>' +
         '<button class="highlighted" onclick="location.href = \'/\'">Build Again</button>';
       break;
     }

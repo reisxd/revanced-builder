@@ -20,6 +20,10 @@ const wsServer = new WebSocketServer({ server });
 
 app.use(morgan('dev'));
 app.use(Express.static(path.join(__dirname, 'public')));
+app.use(
+  '/revanced.apk',
+  Express.static(path.join(__dirname, 'revanced/revanced.apk'))
+);
 
 server.listen(8080, () => {
   console.log(
