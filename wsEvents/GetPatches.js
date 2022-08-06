@@ -10,13 +10,15 @@ const rootedPatches = [
   'music-microg-support'
 ];
 
-module.exports = async function(message, ws) {
+module.exports = async function (message, ws) {
   const patchList = [];
   const getPatches = await actualExec(
     `java -jar ${global.jarNames.cli} -a ${global.jarNames.integrations} -b ${global.jarNames.patchesJar} -l --with-packages`
   );
   const patchesText = getPatches.stdout;
-  const matches = patchesText.matchAll(/:\s+(?<pkg>\S+)\s+(?<name>\S+)\s+(?<description>.+)/g);
+  const matches = patchesText.matchAll(
+    /:\s+(?<pkg>\S+)\s+(?<name>\S+)\s+(?<description>.+)/g
+  );
 
   let hasRoot = true;
   if (os.platform() === 'android') {

@@ -94,7 +94,9 @@ module.exports = async function (message, ws) {
       break;
     }
     case 'warnapp': {
-      versionsList = await getPage('https://www.apkmirror.com/apk/deutscher-wetterdienst/warnwetter');
+      versionsList = await getPage(
+        'https://www.apkmirror.com/apk/deutscher-wetterdienst/warnwetter'
+      );
       break;
     }
   }
