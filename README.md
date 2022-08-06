@@ -1,10 +1,10 @@
 # ReVanced Builder
 
-This project will allow you to download the YouTube APK and build ReVanced easily!
+This project will allow you to download the APK of any of the [officially supported](https://github.com/revanced/revanced-patches#-list-of-available-patches) apps and build ReVanced easily!
 
 ## Required
 
-You'll need at least [Zulu JDK 17](https://www.azul.com/downloads/?version=java-17-lts&package=jdk) and [ADB](https://developer.android.com/studio/command-line/adb) (optional, required only for rooted phones).
+You'll need at least [OpenJDK 17](https://jdk.java.net/archive) \(Download the zip/tar.gz for your OS under "17.0.2 (build 17.0.2+8)"\) and [ADB](https://developer.android.com/studio/command-line/adb) (optional, required only for rooted phones).
 
 If you plan to use it from source, you'll also require [NodeJS >=13](https://nodejs.org/).
 
