@@ -1,6 +1,7 @@
 const Express = require('express');
 const { WebSocketServer } = require('ws');
 const http = require('http');
+const os = require('os');
 const path = require('path');
 const {
   UpdateFiles,
@@ -20,6 +21,10 @@ const wsServer = new WebSocketServer({ server });
 
 app.use(morgan('dev'));
 app.use(Express.static(path.join(__dirname, 'public')));
+app.use(
+  '/revanced.apk',
+  Express.static(path.join(os.homedir(), 'revanced/revanced.apk'))
+);
 
 server.listen(8080, () => {
   console.log(

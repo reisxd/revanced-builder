@@ -270,6 +270,7 @@ ws.onmessage = (msg) => {
       document.getElementsByTagName('header')[0].innerHTML =
         '<h1>ReVanced has been built.</h1>';
       document.getElementsByTagName('footer')[0].innerHTML +=
+        '<button class="highlighted" onclick="location.href = \'/revanced.apk\'">Download</button>' +
         '<button class="highlighted" onclick="location.href = \'/\'">Build Again</button>';
       break;
     }
