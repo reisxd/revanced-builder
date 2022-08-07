@@ -139,10 +139,19 @@ function toTitleCase (phrase) {
     .join(' ');
 }
 
+window.addEventListener("keypress", (e) => {
+  if(e.key === "Enter"){
+    e.preventDefault();
+
+    document.getElementById("continue").click();
+  }
+})
+
 ws.onmessage = (msg) => {
   const message = JSON.parse(msg.data);
   switch (message.event) {
     case 'patchList': {
+      console.log(message);
       for (let i = 0; i < message.patchList.length; i++) {
         const patch = message.patchList[i];
         document.getElementById('patchList').innerHTML += `<li>
@@ -153,7 +162,7 @@ ws.onmessage = (msg) => {
     <span style="float:right;"><strong>${
       patch.isRooted ? 'Needed for Non-Root Building' : ''
     }</strong></span>
-    <span><strong>${toTitleCase(patch.name)}</strong></span>
+    <span><strong>${toTitleCase(patch.name)}</strong>&nbsp;&nbsp;(${patch.maxVersion !== " " ? patch.maxVersion : "ALL"})</span>
     <span class="patch-description">${patch.description}</span>
   </label>
 </li>`;
