@@ -132,6 +132,7 @@ module.exports = async function (message, ws) {
   if (global.jarNames.deviceID) {
     args.push('-d');
     args.push(global.jarNames.deviceID);
+    args.push('-c');
   }
 
   for (const patch of global.jarNames.patches.split(' ')) {
