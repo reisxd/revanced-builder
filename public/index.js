@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 
-WS_URI = `${window?.location?.protocol === 'https:' ? 'wss' : 'ws'}://${
+const WS_URI = `${window?.location?.protocol === 'https:' ? 'wss' : 'ws'}://${
   window?.location?.host ?? 'localhost:8080'
 }`;
 const ws = new WebSocket(WS_URI);

@@ -3,7 +3,6 @@ const { exec, spawn } = require('child_process');
 const os = require('os');
 const mountReVanced = require('../utils/mountReVanced.js');
 const actualExec = promisify(exec);
-const actualSpawn = promisify(spawn);
 
 async function mount (ws) {
   let pkg;
