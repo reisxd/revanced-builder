@@ -115,6 +115,7 @@ module.exports = async function (message, ws) {
     '--experimental',
     '-a',
     `./revanced/${global.jarNames.selectedApp}.apk`,
+    '-c',
     '-o',
     './revanced/revanced.apk'
   ];
