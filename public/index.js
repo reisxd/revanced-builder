@@ -82,6 +82,7 @@ function setAppVersion () {
         .value
     });
 
+    document.getElementsByTagNane('header')[0].innerHTML = '<h1>Downloading APK...</h1>'
     document.getElementById('content').innerHTML = '<span class="log"></span>';
     document.getElementsByTagName('main')[0].innerHTML +=
       '<progress value="0"></progress>';
