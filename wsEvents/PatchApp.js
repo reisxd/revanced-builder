@@ -160,7 +160,7 @@ module.exports = async function (message, ws) {
     ws.send(
       JSON.stringify({
         event: 'patchLog',
-        log: data.toString(),
+        log: data.toString()
       })
     );
 
@@ -177,7 +177,7 @@ module.exports = async function (message, ws) {
     ws.send(
       JSON.stringify({
         event: 'patchLog',
-        log: data.toString(),
+        log: data.toString()
       })
     );
 

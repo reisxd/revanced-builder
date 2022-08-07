@@ -2,7 +2,7 @@ const fetchURL = require('node-fetch');
 const { load } = require('cheerio');
 const { dloadFromURL } = require('../utils/FileDownlader.js');
 
-module.exports = async function (version, ws) {
+module.exports = async function (version, ws, arch) {
   const apkVersion = version.replace(/\./g, '-');
 
   let versionDownload;
@@ -56,12 +56,23 @@ module.exports = async function (version, ws) {
   const versionDownloadList = await versionDownload.text();
 
   const vDLL = load(versionDownloadList);
-  const dlLink = vDLL('span[class="apkm-badge"]')
-    .first()
-    .parent()
-    .children('a[class="accent_color"]')
-    .first()
-    .attr('href');
+  let dlLink;
+  if (arch) {
+    dlLink = vDLL(`div:contains("${arch}")`)
+      .parent()
+      .children('div[class^="table-cell rowheight"]')
+      .first()
+      .children('a[class="accent_color"]')
+      .first()
+      .attr('href');
+  } else {
+    dlLink = vDLL('span[class="apkm-badge"]')
+      .first()
+      .parent()
+      .children('a[class="accent_color"]')
+      .first()
+      .attr('href');
+  }
 
   const downloadLink = await fetchURL(`https://www.apkmirror.com${dlLink}`);
   const downloadLinkPage = await downloadLink.text();

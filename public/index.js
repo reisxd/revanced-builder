@@ -9,6 +9,8 @@ let currentFile;
 let alreadyAddedLog = false;
 let isDownloading = false;
 let hasFinished = false;
+let arch;
+let versionChoosen;
 
 function sendCommand (args) {
   ws.send(JSON.stringify(args));
@@ -71,18 +73,22 @@ function setPatches () {
   location.href = '/versions';
 }
 
-function setAppVersion () {
+function setAppVersion (arch, version) {
   if (!isDownloading) {
-    if (!document.querySelector('input[name="version"]:checked')) {
-      return alert("You didn't select an app version!");
+    if (!arch) {
+      if (!document.querySelector('input[name="version"]:checked')) {
+        return alert("You didn't select an app version!");
+      }
     }
+
     sendCommand({
       event: 'selectAppVersion',
-      versionChoosen: document.querySelector('input[name="version"]:checked')
-        .value
+      versionChoosen: version || document.querySelector('input[name="version"]:checked').value,
+      arch
     });
 
-    document.getElementsByTagNane('header')[0].innerHTML = '<h1>Downloading APK...</h1>'
+    document.getElementsByTagName('header')[0].innerHTML =
+      '<h1>Downloading APK...</h1>';
     document.getElementById('content').innerHTML = '<span class="log"></span>';
     document.getElementsByTagName('main')[0].innerHTML +=
       '<progress value="0"></progress>';
@@ -210,6 +216,35 @@ ws.onmessage = (msg) => {
             <input type="radio" name="version" id="app-${i}" value="${version.version}"/>
             <label for="app-${i}">${version.version}</label></li>`;
         i++;
+      }
+
+      if (message.selectedApp === 'music') {
+        document.getElementById('continue').onclick = () => {
+          let version = document.querySelector(
+            'input[name="version"]:checked'
+          ).value;
+          document.getElementsByTagName('header')[0].innerHTML = `
+          <h1>Please select the architecture</h1>
+          <span>YouTube Music APKs only have specific architecture APKs.
+          <br>If you don't know which one to choose, either look at your devices architecture using CPU-Z or select Arm64.</span>`;
+          document.getElementById('versions').innerHTML = '';
+          document.getElementById('versions').innerHTML += `
+          <li>
+          <input type="radio" name="arch" id="arch-1" value="arm64-v8a"/>
+          <label for="arch-1">Arm64 (armv8)</label></li>
+          <li>
+          <input type="radio" name="arch" id="arch-2" value="armeabi-v7a"/>
+          <label for="arch-2">Arm32 (armv7)</label></li>`;
+          document.getElementById('continue').onclick = () => {
+            if (isDownloading && hasFinished) {
+              location.href = '/patch';
+            }
+            setAppVersion(
+              document.querySelector('input[name="arch"]:checked').value,
+              version
+            );
+          };
+        };
       }
       break;
     }

@@ -132,7 +132,8 @@ module.exports = async function (message, ws) {
   return ws.send(
     JSON.stringify({
       event: 'appVersions',
-      versionList
+      versionList,
+      selectedApp: global.jarNames.selectedApp
     })
   );
 };
