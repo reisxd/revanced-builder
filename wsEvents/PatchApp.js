@@ -5,7 +5,7 @@ const mountReVanced = require('../utils/mountReVanced.js');
 const actualExec = promisify(exec);
 const actualSpawn = promisify(spawn);
 
-async function mount (ws) {
+async function mount(ws) {
   let pkg;
   switch (global.jarNames.selectedApp) {
     case 'youtube': {
@@ -28,7 +28,7 @@ async function mount (ws) {
   await mountReVanced(pkg, ws);
 }
 
-async function afterBuild (ws) {
+async function afterBuild(ws) {
   if (!global.jarNames.isRooted && os.platform() === 'android') {
     await actualExec(
       'cp revanced/revanced.apk /storage/emulated/0/revanced.apk'
@@ -67,7 +67,7 @@ async function afterBuild (ws) {
   );
 }
 
-async function reinstallReVanced (ws) {
+async function reinstallReVanced(ws) {
   let pkgNameToGetUninstalled;
 
   switch (global.jarNames.selectedApp) {
@@ -117,7 +117,7 @@ module.exports = async function (message, ws) {
     '-a',
     `./revanced/${global.jarNames.selectedApp}.apk`,
     '-o',
-    './revanced/revanced.apk',
+    './revanced/revanced.apk'
   ];
 
   if (os.platform() === 'android') {
@@ -140,9 +140,9 @@ module.exports = async function (message, ws) {
   }
 
   if (global.jarNames.selectedApp.endsWith('frontpage')) {
-    args.push('-r')
+    args.push('-r');
   }
-  
+
   if (global.jarNames.isRooted && global.jarNames.deviceID) {
     args.push('--mount');
   }

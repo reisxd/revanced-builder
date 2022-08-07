@@ -45,14 +45,20 @@ function goToPatches() {
 
 function setPatches() {
   const patchElementList = [...document.querySelectorAll('.select')];
-  const selectedPatchElementList = patchElementList.filter(x => x.checked === true);
-  
+  const selectedPatchElementList = patchElementList.filter(
+    (x) => x.checked === true
+  );
+
   if (selectedPatchElementList.length === 0) {
     return alert("You haven't selected any patches.");
   }
 
-  const selectedPatchList = selectedPatchElementList.map(x => x.getAttribute("data-patch-name"));
-  const excludedPatchList = patchElementList.filter(x => x.checked !== true).map(x => x.getAttribute("data-patch-name"));
+  const selectedPatchList = selectedPatchElementList.map((x) =>
+    x.getAttribute('data-patch-name')
+  );
+  const excludedPatchList = patchElementList
+    .filter((x) => x.checked !== true)
+    .map((x) => x.getAttribute('data-patch-name'));
 
   sendCommand({
     event: 'selectPatches',
@@ -130,11 +136,14 @@ ws.onmessage = (msg) => {
     case 'patchList': {
       for (let i = 0; i < message.patchList.length; i++) {
         const patch = message.patchList[i];
-        document.getElementById('patchList').innerHTML += 
-`<li>
-  <input class="select" id="select-patch-${i}" data-patch-name="${patch.name}" type="checkbox">
+        document.getElementById('patchList').innerHTML += `<li>
+  <input class="select" id="select-patch-${i}" data-patch-name="${
+          patch.name
+        }" type="checkbox">
   <label for="select-patch-${i}">
-    <span style="float:right;"><strong>${patch.isRooted ? 'Needed for Non-Root Building' : ''}</strong></span>
+    <span style="float:right;"><strong>${
+      patch.isRooted ? 'Needed for Non-Root Building' : ''
+    }</strong></span>
     <span><strong>${toTitleCase(patch.name)}</strong></span>
     <span class="patch-description">${patch.description}</span>
   </label>
@@ -142,7 +151,11 @@ ws.onmessage = (msg) => {
       }
 
       for (const patch of document.getElementsByClassName('select')) {
-        if (message.rememberedPatchList.includes(patch.getAttribute("data-patch-name"))) {
+        if (
+          message.rememberedPatchList.includes(
+            patch.getAttribute('data-patch-name')
+          )
+        ) {
           patch.checked = true;
         }
       }
