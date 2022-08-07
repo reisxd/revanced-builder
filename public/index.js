@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+
 WS_URI = `${window?.location?.protocol === 'https:' ? 'wss' : 'ws'}://${
   window?.location?.host ?? 'localhost:8080'
 }`;
