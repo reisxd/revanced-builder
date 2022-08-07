@@ -139,6 +139,14 @@ function toTitleCase (phrase) {
     .join(' ');
 }
 
+window.addEventListener("keypress", (e) => {
+  if(e.key === "Enter"){
+    e.preventDefault();
+
+    document.getElementById("continue").click();
+  }
+})
+
 ws.onmessage = (msg) => {
   const message = JSON.parse(msg.data);
   switch (message.event) {
