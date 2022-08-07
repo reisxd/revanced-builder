@@ -93,6 +93,11 @@ async function reinstallReVanced (ws) {
       pkgNameToGetUninstalled = 'com.reddit.frontpage';
       break;
     }
+
+    case 'warnapp': {
+      pkgNameToGetUninstalled = 'de.dwd.warnapp';
+      break;
+    }
   }
 
   await actualExec(`adb uninstall ${pkgNameToGetUninstalled}`);
@@ -146,7 +151,6 @@ module.exports = async function (message, ws) {
   if (global.jarNames.isRooted && global.jarNames.deviceID) {
     args.push('--mount');
   }
-  console.log(`java ${args.join(' ')}`);
 
   const buildProcess = await spawn('java', args, {
     maxBuffer: 5120 * 1024
@@ -157,7 +161,6 @@ module.exports = async function (message, ws) {
       JSON.stringify({
         event: 'patchLog',
         log: data.toString(),
-        isStdErr: false
       })
     );
 
@@ -175,7 +178,6 @@ module.exports = async function (message, ws) {
       JSON.stringify({
         event: 'patchLog',
         log: data.toString(),
-        isStdErr: true
       })
     );
 

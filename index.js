@@ -29,7 +29,9 @@ app.use(
 server.listen(8080, () => {
   console.log('The webserver is now running!');
   try {
-    process.stdout.write('Opening the app in the default browser... ');
+    // Shrihan, I sometimes question what are you doing with the console
+    // :moyai:
+    console.log('Opening the app in the default browser...');
     open('http://localhost:8080');
     console.log('Done. Check if a browser window has opened');
   } catch (e) {

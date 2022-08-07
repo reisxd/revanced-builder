@@ -215,11 +215,16 @@ ws.onmessage = (msg) => {
     }
 
     case 'patchLog': {
+      let logLevel;
+      if (message.log.includes('WARNING')) {
+        logLevel = 'warn';
+      } else if (message.log.includes('SEVERE')) {
+        logLevel = 'error';
+      }
+
       document.getElementsByClassName(
         'log'
-      )[0].innerHTML += `<span class="log-line${
-        message.isStdErr ? ' stderr' : ''
-      }"><strong>[builder]</strong> ${message.log}</span><br>`;
+      )[0].innerHTML += `<span class="log-line ${logLevel}"><strong>[builder]</strong> ${message.log}</span><br>`;
       break;
     }
 

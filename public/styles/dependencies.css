@@ -7,8 +7,12 @@ span.log .log-line {
   height: 100%;
 }
 
-span.log .log-line.stderr {
+span.log .log-line.error {
   color: #d21404;
+}
+
+span.log .log-line.warn {
+  color: #c4d204;
 }
 
 span.log:after {
