@@ -13,7 +13,6 @@ module.exports = async function (message, ws) {
       isFirstElement = false;
     } else {
       global.jarNames.patches += ` -i ${patchName}`;
-
     }
   }
 

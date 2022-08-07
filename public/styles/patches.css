@@ -1,35 +1,35 @@
-input[type="checkbox"] {
-	display:none;
+input[type='checkbox'] {
+  display: none;
 }
 
-input[type="checkbox"].select:checked + label {
+input[type='checkbox'].select:checked + label {
   background: var(--accentColor);
 }
 
 .patch-description {
-	display: inline-block;
-	width:100%;
+  display: inline-block;
+  width: 100%;
 }
 
-input[type="checkbox"].select + label {
-	width:100%;
-	font-family: 'Roboto', sans-serif;
-	font-weight: 400;
-	font-size: 14px;
-	color: var(--textColor);
-	border-radius: var(--border-radius);
-	padding:9px;
-	background-color: var(--interactableColor);
+input[type='checkbox'].select + label {
+  width: 100%;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: var(--textColor);
+  border-radius: var(--border-radius);
+  padding: 9px;
+  background-color: var(--interactableColor);
 }
 
 ul {
-	width: 100%;
-	margin: 0;
-	padding: 0;
-	list-style: none;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 li {
-	display: flex;
-	margin-bottom: 15px;
+  display: flex;
+  margin-bottom: 15px;
 }

@@ -1,4 +1,6 @@
-WS_URI = `${window?.location?.protocol === 'https:' ? 'wss' : 'ws'}://${
+/* eslint-disable no-unused-vars */
+
+const WS_URI = `${window?.location?.protocol === 'https:' ? 'wss' : 'ws'}://${
   window?.location?.host ?? 'localhost:8080'
 }`;
 const ws = new WebSocket(WS_URI);
@@ -8,11 +10,11 @@ let alreadyAddedLog = false;
 let isDownloading = false;
 let hasFinished = false;
 
-function sendCommand(args) {
+function sendCommand (args) {
   ws.send(JSON.stringify(args));
 }
 
-function setApp() {
+function setApp () {
   if (!document.querySelector('input[name="app"]:checked')) {
     return alert("You didn't select an app to patch!");
   }
@@ -23,36 +25,42 @@ function setApp() {
   location.href = '/dependencies';
 }
 
-function loadPatches() {
+function loadPatches () {
   sendCommand({ event: 'getPatches' });
 }
 
-function updateFiles() {
+function updateFiles () {
   sendCommand({ event: 'updateFiles' });
 }
 
-function toggle(bool) {
+function toggle (bool) {
   for (const checkbox of document.getElementsByClassName('select')) {
     checkbox.checked = bool;
   }
 }
 
-function goToPatches() {
+function goToPatches () {
   if (hasFinished) {
     location.href = '/patches';
   }
 }
 
-function setPatches() {
+function setPatches () {
   const patchElementList = [...document.querySelectorAll('.select')];
-  const selectedPatchElementList = patchElementList.filter(x => x.checked === true);
-  
+  const selectedPatchElementList = patchElementList.filter(
+    (x) => x.checked === true
+  );
+
   if (selectedPatchElementList.length === 0) {
     return alert("You haven't selected any patches.");
   }
 
-  const selectedPatchList = selectedPatchElementList.map(x => x.getAttribute("data-patch-name"));
-  const excludedPatchList = patchElementList.filter(x => x.checked !== true).map(x => x.getAttribute("data-patch-name"));
+  const selectedPatchList = selectedPatchElementList.map((x) =>
+    x.getAttribute('data-patch-name')
+  );
+  const excludedPatchList = patchElementList
+    .filter((x) => x.checked !== true)
+    .map((x) => x.getAttribute('data-patch-name'));
 
   sendCommand({
     event: 'selectPatches',
@@ -63,7 +71,7 @@ function setPatches() {
   location.href = '/versions';
 }
 
-function setAppVersion() {
+function setAppVersion () {
   if (!isDownloading) {
     if (!document.querySelector('input[name="version"]:checked')) {
       return alert("You didn't select an app version!");
@@ -84,7 +92,7 @@ function setAppVersion() {
   }
 }
 
-function getAppVersions(isRooted) {
+function getAppVersions (isRooted) {
   document.getElementsByTagName('header')[0].innerHTML = `
     <h1>Select the version you want to download</h1>
     ${
@@ -102,22 +110,22 @@ function getAppVersions(isRooted) {
   sendCommand({ event: 'getAppVersion' });
 }
 
-function buildReVanced() {
+function buildReVanced () {
   sendCommand({ event: 'patchApp' });
 }
 
-function getAlreadyExists() {
+function getAlreadyExists () {
   sendCommand({ event: 'checkFileAlreadyExists' });
 }
-function openAbout() {
+function openAbout () {
   window.open('/about', '_blank');
 }
 
-function openGitHub() {
+function openGitHub () {
   window.open('https://github.com/reisxd/revanced-builder', '_blank');
 }
 
-function toTitleCase(phrase) {
+function toTitleCase (phrase) {
   return phrase
     .split('-')
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
@@ -130,11 +138,14 @@ ws.onmessage = (msg) => {
     case 'patchList': {
       for (let i = 0; i < message.patchList.length; i++) {
         const patch = message.patchList[i];
-        document.getElementById('patchList').innerHTML += 
-`<li>
-  <input class="select" id="select-patch-${i}" data-patch-name="${patch.name}" type="checkbox">
+        document.getElementById('patchList').innerHTML += `<li>
+  <input class="select" id="select-patch-${i}" data-patch-name="${
+          patch.name
+        }" type="checkbox">
   <label for="select-patch-${i}">
-    <span style="float:right;"><strong>${patch.isRooted ? 'Needed for Non-Root Building' : ''}</strong></span>
+    <span style="float:right;"><strong>${
+      patch.isRooted ? 'Needed for Non-Root Building' : ''
+    }</strong></span>
     <span><strong>${toTitleCase(patch.name)}</strong></span>
     <span class="patch-description">${patch.description}</span>
   </label>
@@ -142,7 +153,11 @@ ws.onmessage = (msg) => {
       }
 
       for (const patch of document.getElementsByClassName('select')) {
-        if (message.rememberedPatchList.includes(patch.getAttribute("data-patch-name"))) {
+        if (
+          message.rememberedPatchList.includes(
+            patch.getAttribute('data-patch-name')
+          )
+        ) {
           patch.checked = true;
         }
       }

@@ -1,85 +1,110 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width" />
-        <title>About</title>
-        <link href="../styles/fontawesome.css" rel="stylesheet" type="text/css" />
-        <link href="../styles/core.css" rel="stylesheet" type="text/css" />
-        <link href="../styles/about.css" rel="stylesheet" type="text/css" />
-        <script src="../index.js"></script>
-    </head>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>About</title>
+    <link href="../styles/fontawesome.css" rel="stylesheet" type="text/css" />
+    <link href="../styles/core.css" rel="stylesheet" type="text/css" />
+    <link href="../styles/about.css" rel="stylesheet" type="text/css" />
+    <script src="../index.js"></script>
+  </head>
 
-    <body>
-        <div id="container">
-            <main>
-                <header>
-                    <h1>Credits:</h1>
-                </header>
-                <div id="content--wrapper">
-                    <div id="content">
-                        <ul>
-                            <li>
-                                <h4>Original UI Design</h4>
-                                <div class="members">
-                                    <span class="member">
-                                        <span class="member-image sn"></span>
-                                        <span class="member-name"><a href="https://github.com/baiorett">sn</a></span>
-                                    </span>
-                                    <span class="member">
-                                        <span class="member-image afn"></span>
-                                        <span class="member-name"><a href="https://github.com/afnzmn">afn</a></span>
-                                    </span>
-                                    <span class="member">
-                                        <span class="member-image"></span>
-                                        <span class="member-name"><a href="https://www.figma.com/file/p9tO8LyUuPaovZ5tz40TzH/ReVanced-Desktop">Original UI</a></span>
-                                    </span>
-                                </div>
-                            </li>
-                            <li>
-                                <h4>HTML UI Design</h4>
-                                <div class="members">
-                                    <span class="member">
-                                        <span class="member-image"></span>
-                                        <span class="member-name"><a href="https://github.com/Elijah629">Elijah629</a></span>
-                                    </span>
-                                </div>
-                            </li>
-                            <li>
-                                <h4>
-                                    <a href="https://github.com/reisxd/revanced-builder">ReVanced Builder</a>
-                                </h4>
-                                <div class="members" id="revanced-builder"></div>
-                            </li>
-                        </ul>
-                    </div>
+  <body>
+    <div id="container">
+      <main>
+        <header>
+          <h1>Credits:</h1>
+        </header>
+        <div id="content--wrapper">
+          <div id="content">
+            <ul>
+              <li>
+                <h4>Original UI Design</h4>
+                <div class="members">
+                  <span class="member">
+                    <span class="member-image sn"></span>
+                    <span class="member-name"
+                      ><a href="https://github.com/baiorett">sn</a></span
+                    >
+                  </span>
+                  <span class="member">
+                    <span class="member-image afn"></span>
+                    <span class="member-name"
+                      ><a href="https://github.com/afnzmn">afn</a></span
+                    >
+                  </span>
+                  <span class="member">
+                    <span class="member-image"></span>
+                    <span class="member-name"
+                      ><a
+                        href="https://www.figma.com/file/p9tO8LyUuPaovZ5tz40TzH/ReVanced-Desktop"
+                        >Original UI</a
+                      ></span
+                    >
+                  </span>
                 </div>
-            </main>
-            <footer>
-                <i class="social-icon fa-brands fa-xl fa-github" onclick="openGitHub();"></i>
-                <span class="right"></span>
-                <button onclick="history.back()">Back</button>
-            </footer>
+              </li>
+              <li>
+                <h4>HTML UI Design</h4>
+                <div class="members">
+                  <span class="member">
+                    <span class="member-image"></span>
+                    <span class="member-name"
+                      ><a href="https://github.com/Elijah629"
+                        >Elijah629</a
+                      ></span
+                    >
+                  </span>
+                </div>
+              </li>
+              <li>
+                <h4>
+                  <a href="https://github.com/reisxd/revanced-builder"
+                    >ReVanced Builder</a
+                  >
+                </h4>
+                <div class="members" id="revanced-builder"></div>
+              </li>
+            </ul>
+          </div>
         </div>
-        <script>
-          // Generate list of contributors
-          const contributors = [
-            {username:"reisxd",name:"Reis"},
-            {username:"shrihanDev"},
-            {username:"Elijah629"},
-            {username:"victor141516",name:"Víctor Fernández"},
-            {username:"xemulat"},
-            {username:"viperML",name:"Fernando Ayats"},
-            {username:"SebiAi"},
-            {username:"CnC-Robert",name:"Robert"},
-            {username:"Aunali321"},
-            {username:"Katrovsky",name:"Кирилл Катровский"},
-            {username:"JavaCafe01",name:"Gokul Swaminathan"},
-            {username:"naserkesetovic",name:"Naser Kešetović"},
-            {username:"j4k0xb"},
-            {username:"sakya",name:"Paolo Iommarini"}
-          ];
-          for(const e of contributors)document.getElementById("revanced-builder").innerHTML+=`<span class="member"><span class="member-image" style="background-image:url('https://github.com/${e.username}.png')"></span><span class="member-name"><a href="https://github.com/${e.username}">${e.name||e.username}</a></span></span>`;
-        </script>
-    </body>
+      </main>
+      <footer>
+        <i
+          class="social-icon fa-brands fa-xl fa-github"
+          onclick="openGitHub();"
+        ></i>
+        <span class="right"></span>
+        <button onclick="history.back()">Back</button>
+      </footer>
+    </div>
+    <script>
+      // Generate list of contributors
+      const contributors = [
+        { username: 'reisxd', name: 'Reis' },
+        { username: 'shrihanDev' },
+        { username: 'Elijah629' },
+        { username: 'victor141516', name: 'Víctor Fernández' },
+        { username: 'xemulat' },
+        { username: 'viperML', name: 'Fernando Ayats' },
+        { username: 'SebiAi' },
+        { username: 'CnC-Robert', name: 'Robert' },
+        { username: 'Aunali321' },
+        { username: 'Katrovsky', name: 'Кирилл Катровский' },
+        { username: 'JavaCafe01', name: 'Gokul Swaminathan' },
+        { username: 'naserkesetovic', name: 'Naser Kešetović' },
+        { username: 'j4k0xb' },
+        { username: 'sakya', name: 'Paolo Iommarini' }
+      ];
+      for (const e of contributors)
+        document.getElementById(
+          'revanced-builder'
+        ).innerHTML += `<span class="member"><span class="member-image" style="background-image:url('https://github.com/${
+          e.username
+        }.png')"></span><span class="member-name"><a href="https://github.com/${
+          e.username
+        }">${e.name || e.username}</a></span></span>`;
+    </script>
+  </body>
 </html>

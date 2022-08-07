@@ -37,8 +37,7 @@ module.exports = async function (message, ws) {
         JSON.stringify({
           event: 'error',
           error:
-            'The plugged in device is not rooted or Shell was denied root access. \
-            If you didn\'t intend on doing a rooted build, include all "Root required to exclude" patches'
+            'The plugged in device is not rooted or Shell was denied root access. If you didn\'t intend on doing a rooted build, include all "Root required to exclude" patches'
         })
       );
     });
