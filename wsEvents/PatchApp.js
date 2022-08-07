@@ -115,7 +115,6 @@ module.exports = async function (message, ws) {
     '--experimental',
     '-a',
     `./revanced/${global.jarNames.selectedApp}.apk`,
-    '-c',
     '-o',
     './revanced/revanced.apk'
   ];
@@ -133,6 +132,7 @@ module.exports = async function (message, ws) {
   if (global.jarNames.deviceID) {
     args.push('-d');
     args.push(global.jarNames.deviceID);
+    args.push('-c');
   }
 
   for (const patch of global.jarNames.patches.split(' ')) {
