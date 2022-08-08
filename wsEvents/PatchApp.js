@@ -111,10 +111,10 @@ async function reinstallReVanced (ws) {
   );
 }
 
-function outputName() {
-  const part1 = "ReVanced";
+function outputName () {
+  const part1 = 'ReVanced';
   let part2;
-  switch(global.jarNames.selectedApp) {
+  switch (global.jarNames.selectedApp) {
     case 'youtube':
       part2 = 'YouTube';
       break;
@@ -134,11 +134,17 @@ function outputName() {
   // TODO: If the existing input APK is used from revanced/ without downloading, version and arch aren't set
   const part3 = global?.apkInfo?.version;
   const part4 = global?.apkInfo?.arch;
-  const part5 = global.jarNames.cli.split(require('path').sep)[2].replace('revanced-cli-', '').replace('-all.jar', '');
-  const part6 = global.jarNames.patchesJar.split(require('path').sep)[2].replace('revanced-patches-', '').replace('.jar', '');
+  const part5 = global.jarNames.cli
+    .split(require('path').sep)[2]
+    .replace('revanced-cli-', '')
+    .replace('-all.jar', '');
+  const part6 = global.jarNames.patchesJar
+    .split(require('path').sep)[2]
+    .replace('revanced-patches-', '')
+    .replace('.jar', '');
   // Filename: ReVanced-<AppName>-<AppVersion>-[Arch]-<CLI_Version>-<PatchesVersion>.apk
   global.outputName = '';
-  for (part of [part1, part2, part3, part4, part5, part6]){
+  for (part of [part1, part2, part3, part4, part5, part6]) {
     if (part) global.outputName += `-${part}`;
   }
   global.outputName += '.apk';

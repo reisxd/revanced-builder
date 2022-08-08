@@ -20,7 +20,7 @@ const wsServer = new WebSocketServer({ server });
 
 app.use(morgan('dev'));
 app.use(Express.static(path.join(__dirname, 'public')));
-app.get('/revanced.apk', function (req, res){
+app.get('/revanced.apk', function (req, res) {
   const file = path.join(__dirname, 'revanced', global.outputName);
   res.download(file);
 });
