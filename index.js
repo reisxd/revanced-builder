@@ -22,7 +22,7 @@ app.use(morgan('dev'));
 app.use(Express.static(path.join(__dirname, 'public')));
 app.use(
   '/revanced.apk',
-  Express.static(path.join(__dirname, 'revanced/revanced.apk'))
+  Express.static(path.join(__dirname, `revanced/${global.apkInfo.outputName}`))
 );
 
 const open = async () => {

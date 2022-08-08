@@ -7,7 +7,7 @@ const actualExec = promisify(exec);
 module.exports = async function (pkg, ws) {
   // Copy ReVanced APK to temp.
   await actualExec(
-    'su -c \'cp "revanced/revanced.apk" "/data/local/tmp/revanced.delete"\''
+    `su -c \'cp "revanced/${global.apkInfo.outputName}" "/data/local/tmp/revanced.delete"\'`
   );
   // Create folder
   await actualExec('su -c \'mkdir -p "/data/adb/revanced/"\'');

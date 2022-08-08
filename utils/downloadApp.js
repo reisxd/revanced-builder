@@ -2,43 +2,44 @@ const fetchURL = require('node-fetch');
 const { load } = require('cheerio');
 const { dloadFromURL } = require('../utils/FileDownlader.js');
 
-module.exports = async function (version, ws, arch) {
-  const apkVersion = version.replace(/\./g, '-');
+module.exports = async function (ws) {
+  const { version, arch } = global.apkInfo;
+  const apkMirrorVersionArg = version.replace(/\./g, '-');
 
   let versionDownload;
 
   switch (global.jarNames.selectedApp) {
     case 'youtube': {
       versionDownload = await fetchURL(
-        `https://www.apkmirror.com/apk/google-inc/youtube/youtube-${apkVersion}-release/`
+        `https://www.apkmirror.com/apk/google-inc/youtube/youtube-${apkMirrorVersionArg}-release/`
       );
       break;
     }
 
     case 'music': {
       versionDownload = await fetchURL(
-        `https://www.apkmirror.com/apk/google-inc/youtube-music/youtube-music-${apkVersion}-release/`
+        `https://www.apkmirror.com/apk/google-inc/youtube-music/youtube-music-${apkMirrorVersionArg}-release/`
       );
       break;
     }
 
     case 'android': {
       versionDownload = await fetchURL(
-        `https://www.apkmirror.com/apk/twitter-inc/twitter/twitter-${apkVersion}-release/`
+        `https://www.apkmirror.com/apk/twitter-inc/twitter/twitter-${apkMirrorVersionArg}-release/`
       );
       break;
     }
 
     case 'frontpage': {
       versionDownload = await fetchURL(
-        `https://www.apkmirror.com/apk/redditinc/reddit/reddit-${apkVersion}-release/`
+        `https://www.apkmirror.com/apk/redditinc/reddit/reddit-${apkMirrorVersionArg}-release/`
       );
       break;
     }
 
     case 'warnapp': {
       versionDownload = await fetchURL(
-        `https://www.apkmirror.com/apk/deutscher-wetterdienst/warnwetter/warnwetter-${apkVersion}-release/`
+        `https://www.apkmirror.com/apk/deutscher-wetterdienst/warnwetter/warnwetter-${apkMirrorVersionArg}-release/`
       );
       break;
     }
