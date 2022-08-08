@@ -13,7 +13,6 @@ const {
   PatchApp
 } = require('./wsEvents/index.js');
 const morgan = require('morgan');
-const open = require('open');
 
 const app = Express();
 const server = http.createServer(app);
@@ -26,17 +25,25 @@ app.use(
   Express.static(path.join(__dirname, 'revanced/revanced.apk'))
 );
 
+const open = async () => {
+  if (require('os').platform === 'android') {
+    await require('util').promisify(
+      require('child_process').exec('termux-open-url http://localhost:8080')
+    );
+  } else require('open')('http://localhost:8080');
+};
+
 server.listen(8080, () => {
   console.log('The webserver is now running!');
-  if (require('os').platform() !== 'android') {
-    try {
-      console.log('Opening the app in the default browser...');
-      open('http://localhost:8080');
-      console.log('Done. Check if a browser window has opened');
-    } catch (e) {
-      console.log('Failed. Open up http://localhost:8080 in your browser.');
-    }
-  } else console.log('Open up http://localhost:8080 in your browser.');
+  try {
+    console.log('Opening the app in the default browser...');
+    open('http://localhost:8080');
+    console.log('Done. Check if a browser window has opened');
+  } catch (e) {
+    console.log(
+      'Failed. Open up http://localhost:8080 manually in your browser.'
+    );
+  }
 });
 
 process.on('uncaughtException', (reason) => {
