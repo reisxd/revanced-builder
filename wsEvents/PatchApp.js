@@ -134,7 +134,7 @@ function outputName () {
       break;
   }
   // TODO: If the existing input APK is used from revanced/ without downloading, version and arch aren't set
-  const part3 = 'v' + global?.apkInfo?.version;
+  const part3 = global?.apkInfo?.version ? `v${global.apkInfo.version}` : '';
   const part4 = global?.apkInfo?.arch;
   const part5 = 'cli_' + global.jarNames.cli
     .split(require('path').sep)[2]
