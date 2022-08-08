@@ -144,7 +144,7 @@ function outputName () {
     .replace('.jar', '');
   // Filename: ReVanced-<AppName>-<AppVersion>-[Arch]-<CLI_Version>-<PatchesVersion>.apk
   global.outputName = '';
-  for (part of [part1, part2, part3, part4, part5, part6]) {
+  for (const part of [part1, part2, part3, part4, part5, part6]) {
     if (part) global.outputName += `-${part}`;
   }
   global.outputName += '.apk';
