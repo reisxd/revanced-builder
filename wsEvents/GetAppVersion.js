@@ -64,7 +64,10 @@ module.exports = async function (message, ws) {
         })
       );
     }
-    return await downloadApp(appVersion, ws);
+    if (global.jarNames.selectedApp === 'music') {
+      const deviceArch = await actualExec('adb shell getprop ro.product.cpu.abi');
+      return await downloadApp(appVersion, ws, deviceArch.stdout);
+    } else return await downloadApp(appVersion, ws);
   }
 
   switch (global.jarNames.selectedApp) {
@@ -128,12 +131,12 @@ module.exports = async function (message, ws) {
       version: versionName
     });
   }
-
   return ws.send(
     JSON.stringify({
       event: 'appVersions',
       versionList,
-      selectedApp: global.jarNames.selectedApp
+      selectedApp: global.jarNames.selectedApp,
+      foundDevice: global.jarNames.deviceID ? true : os.platform() === 'android'
     })
   );
 };
