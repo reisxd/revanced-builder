@@ -31,7 +31,7 @@ async function mount (ws) {
 async function afterBuild (ws) {
   fs.rmdirSync('./revanced-cache', { recursive: true, force: true });
   outputName();
-  fs.renameSync('./revanced/revanced.apk', `./revanced/${global.outputName}`;
+  fs.renameSync('./revanced/revanced.apk', `./revanced/${global.outputName}`);
   if (!global.jarNames.isRooted && os.platform() === 'android') {
     await actualExec(
       `cp revanced/${global.outputName} /storage/emulated/0/${global.outputName}`
