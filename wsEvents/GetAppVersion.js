@@ -65,7 +65,9 @@ module.exports = async function (message, ws) {
       );
     }
     if (global.jarNames.selectedApp === 'music') {
-      const deviceArch = await actualExec('adb shell getprop ro.product.cpu.abi');
+      const deviceArch = await actualExec(
+        'adb shell getprop ro.product.cpu.abi'
+      );
       return await downloadApp(appVersion, ws, deviceArch.stdout);
     } else return await downloadApp(appVersion, ws);
   }

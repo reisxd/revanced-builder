@@ -3,6 +3,7 @@ const { exec, spawn } = require('child_process');
 const os = require('os');
 const mountReVanced = require('../utils/mountReVanced.js');
 const actualExec = promisify(exec);
+const fs = require('fs');
 
 async function mount (ws) {
   let pkg;
@@ -28,6 +29,7 @@ async function mount (ws) {
 }
 
 async function afterBuild (ws) {
+  fs.rmdirSync('./revanced', { recursive: true, force: true });
   if (!global.jarNames.isRooted && os.platform() === 'android') {
     await actualExec(
       'cp revanced/revanced.apk /storage/emulated/0/revanced.apk'
@@ -137,7 +139,6 @@ module.exports = async function (message, ws) {
   if (global.jarNames.deviceID) {
     args.push('-d');
     args.push(global.jarNames.deviceID);
-    args.push('-c');
   }
 
   for (const patch of global.jarNames.patches.split(' ')) {

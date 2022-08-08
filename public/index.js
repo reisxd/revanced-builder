@@ -83,7 +83,9 @@ function setAppVersion (arch, version) {
 
     sendCommand({
       event: 'selectAppVersion',
-      versionChoosen: version || document.querySelector('input[name="version"]:checked').value,
+      versionChoosen:
+        version ||
+        document.querySelector('input[name="version"]:checked').value,
       arch
     });
 
@@ -139,13 +141,13 @@ function toTitleCase (phrase) {
     .join(' ');
 }
 
-window.addEventListener("keypress", (e) => {
-  if(e.key === "Enter"){
+window.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
     e.preventDefault();
 
-    document.getElementById("continue").click();
+    document.getElementById('continue').click();
   }
-})
+});
 
 ws.onmessage = (msg) => {
   const message = JSON.parse(msg.data);
@@ -162,7 +164,9 @@ ws.onmessage = (msg) => {
     <span style="float:right;"><strong>${
       patch.isRooted ? 'Needed for Non-Root Building' : ''
     }</strong></span>
-    <span><strong>${toTitleCase(patch.name)}</strong>&nbsp;&nbsp;(${patch.maxVersion !== " " ? patch.maxVersion : "ALL"})</span>
+    <span><strong>${toTitleCase(patch.name)}</strong>&nbsp;&nbsp;(${
+          patch.maxVersion !== ' ' ? patch.maxVersion : 'ALL'
+        })</span>
     <span class="patch-description">${patch.description}</span>
   </label>
 </li>`;
@@ -229,7 +233,7 @@ ws.onmessage = (msg) => {
 
       if (message.selectedApp === 'music' && !message.foundDevice) {
         document.getElementById('continue').onclick = () => {
-          let version = document.querySelector(
+          const version = document.querySelector(
             'input[name="version"]:checked'
           ).value;
           document.getElementsByTagName('header')[0].innerHTML = `
@@ -301,8 +305,11 @@ ws.onmessage = (msg) => {
     case 'buildFinished': {
       document.getElementsByTagName('header')[0].innerHTML =
         '<h1>ReVanced has been built.</h1>';
+      if (WS_URI !== 'ws://localhost:8080') {
+        document.getElementsByTagName('footer')[0].innerHTML +=
+          '<button class="highlighted" onclick="window.open(\'/revanced.apk\', \'_blank\')">Download</button>';
+      }
       document.getElementsByTagName('footer')[0].innerHTML +=
-        '<button class="highlighted" onclick="window.open(\'/revanced.apk\', \'_blank\')">Download</button>' +
         '<button class="highlighted" onclick="location.href = \'/\'">Build Again</button>';
       break;
     }

@@ -28,13 +28,15 @@ app.use(
 
 server.listen(8080, () => {
   console.log('The webserver is now running!');
-  try {
-    console.log('Opening the app in the default browser...');
-    open('http://localhost:8080');
-    console.log('Done. Check if a browser window has opened');
-  } catch (e) {
-    console.log('Failed. Open up http://localhost:8080 in your browser.');
-  }
+  if (require('os').platform() !== 'android') {
+    try {
+      console.log('Opening the app in the default browser...');
+      open('http://localhost:8080');
+      console.log('Done. Check if a browser window has opened');
+    } catch (e) {
+      console.log('Failed. Open up http://localhost:8080 in your browser.');
+    }
+  } else console.log('Open up http://localhost:8080 in your browser.');
 });
 
 process.on('uncaughtException', (reason) => {

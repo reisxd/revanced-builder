@@ -20,7 +20,6 @@ module.exports = async function (message, ws) {
     /:\s+(?<pkg>\S+)\s+(?<name>\S+)\s+(?<description>.+)\t+(?<versions>.+)/g
   );
 
-
   let hasRoot = true;
   if (os.platform() === 'android') {
     await actualExec('su -c exit').catch((err) => {
@@ -38,12 +37,17 @@ module.exports = async function (message, ws) {
     const { name, description, pkg, versions } = match.groups;
     const isRooted = rootedPatches.includes(name);
     const isCompatible = pkg === global.jarNames.selectedApp;
-    
-    const versionsArr = versions.split(", ")
-    const maxVersion = versionsArr.sort()[versionsArr.length - 1]
+
+    const versionsArr = versions.split(', ');
+    const maxVersion = versionsArr.sort()[versionsArr.length - 1];
 
     if (isCompatible && (!isRooted || hasRoot)) {
-      patchList.push({ name, description: description.trim(), maxVersion: maxVersion, isRooted });
+      patchList.push({
+        name,
+        description: description.trim(),
+        maxVersion,
+        isRooted
+      });
     }
   }
 
