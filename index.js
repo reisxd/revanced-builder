@@ -20,10 +20,10 @@ const wsServer = new WebSocketServer({ server });
 
 app.use(morgan('dev'));
 app.use(Express.static(path.join(__dirname, 'public')));
-app.use(
-  '/revanced.apk',
-  Express.static(path.join(__dirname, 'revanced/revanced.apk'))
-);
+app.get('/revanced.apk', function (req, res) {
+  const file = path.join(__dirname, 'revanced', global.outputName);
+  res.download(file);
+});
 
 const open = async () => {
   if (require('os').platform === 'android') {
