@@ -144,6 +144,7 @@ function outputName() {
 }
 
 module.exports = async function (message, ws) {
+  outputName();
   const args = [
     '-jar',
     global.jarNames.cli,
