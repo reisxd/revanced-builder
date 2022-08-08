@@ -20,7 +20,9 @@ module.exports = async function (message, ws) {
       arch = deviceArch.arch;
     }
   }
-  global.apkInfo.version = message.versionChoosen;
-  global.apkInfo.arch = arch;
+  global.apkInfo = {
+    version: message.versionChoosen,
+    arch: arch
+  }
   await downloadApp(ws);
 };
