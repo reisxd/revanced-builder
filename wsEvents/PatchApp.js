@@ -163,9 +163,9 @@ module.exports = async function (message, ws) {
     './revanced-cache',
     '--experimental',
     '-a',
-    `./revanced/revanced.apk`,
+    `./revanced/${global.jarNames.selectedApp}.apk`,
     '-o',
-    `./revanced/${global.outputName}`
+    `./revanced/revanced.apk`
   ];
 
   if (os.platform() === 'android') {
