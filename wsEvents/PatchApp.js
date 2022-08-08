@@ -142,6 +142,7 @@ function outputName() {
     if (part) global.outputName += `-${part}`;
   }
   global.outputName += '.apk';
+  global.outputName = global.outputName.substring(1);
 }
 
 module.exports = async function (message, ws) {
