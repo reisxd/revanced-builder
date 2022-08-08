@@ -26,10 +26,12 @@ app.use(
 );
 
 const open = async () => {
-  if (require('os').platform === 'android')
-    await require('util').promisify(require('child_process').exec(('termux-open-url http://localhost:8080')));
-  else require('open')('http://localhost:8080');
-}
+  if (require('os').platform === 'android') {
+    await require('util').promisify(
+      require('child_process').exec('termux-open-url http://localhost:8080')
+    );
+  } else require('open')('http://localhost:8080');
+};
 
 server.listen(8080, () => {
   console.log('The webserver is now running!');
@@ -38,7 +40,9 @@ server.listen(8080, () => {
     open('http://localhost:8080');
     console.log('Done. Check if a browser window has opened');
   } catch (e) {
-    console.log('Failed. Open up http://localhost:8080 manually in your browser.');
+    console.log(
+      'Failed. Open up http://localhost:8080 manually in your browser.'
+    );
   }
 });
 

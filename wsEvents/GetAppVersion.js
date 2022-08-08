@@ -8,7 +8,7 @@ const { promisify } = require('util');
 
 const actualExec = promisify(exec);
 
-async function getPage(pageUrl) {
+async function getPage (pageUrl) {
   const pageRequest = await fetchURL(pageUrl, {
     headers: {
       'user-agent':
