@@ -32,14 +32,14 @@ async function afterBuild (ws) {
   fs.rmdirSync('./revanced-cache', { recursive: true, force: true });
   if (!global.jarNames.isRooted && os.platform() === 'android') {
     await actualExec(
-      `cp revanced/${global.apkInfo.outputName} /storage/emulated/0/${global.apkInfo.outputName}`
+      `cp revanced/${global.outputName} /storage/emulated/0/${global.outputName}`
     );
     await actualExec('cp revanced/microg.apk /storage/emulated/0/microg.apk');
 
     ws.send(
       JSON.stringify({
         event: 'patchLog',
-        log: `Copied files over to /storage/emulated/0/!\nPlease install ReVanced, its located in /storage/emulated/0/${global.apkInfo.outputName}\nand if you are building YT/YTM ReVanced without root, also install /storage/emulated/0/microg.apk.`
+        log: `Copied files over to /storage/emulated/0/!\nPlease install ReVanced, its located in /storage/emulated/0/${global.outputName}\nand if you are building YT/YTM ReVanced without root, also install /storage/emulated/0/microg.apk.`
       })
     );
   } else if (os.platform() === 'android') {
@@ -48,7 +48,7 @@ async function afterBuild (ws) {
     ws.send(
       JSON.stringify({
         event: 'patchLog',
-        log: `ReVanced has been built!\nPlease transfer over revanced/${global.apkInfo.outputName} and if you are using YT/YTM, revanced/microg.apk and install them!`
+        log: `ReVanced has been built!\nPlease transfer over revanced/${global.outputName} and if you are using YT/YTM, revanced/microg.apk and install them!`
       })
     );
   } else if (!global.jarNames.isRooted && global.jarNames.deviceID) {
@@ -103,7 +103,7 @@ async function reinstallReVanced (ws) {
   }
 
   await actualExec(`adb uninstall ${pkgNameToGetUninstalled}`);
-  await actualExec(`adb install revanced/${global.apkInfo.outputName}`);
+  await actualExec(`adb install revanced/${global.outputName}`);
   ws.send(
     JSON.stringify({
       event: 'buildFinished'
@@ -137,11 +137,11 @@ function outputName() {
   const part5 = global.jarNames.cli.split(require('path').sep)[2].replace('revanced-cli-', '').replace('-all.jar', '');
   const part6 = global.jarNames.patchesJar.split(require('path').sep)[2].replace('revanced-patches-', '').replace('.jar', '');
   // Filename: ReVanced-<AppName>-<AppVersion>-[Arch]-<CLI_Version>-<PatchesVersion>.apk
-  global.apkInfo.outputName = '';
+  global.outputName = '';
   for (part of [part1, part2, part3, part4, part5, part6]){
-    if (part) global.apkInfo.outputName += `-${part}`;
+    if (part) global.outputName += `-${part}`;
   }
-  global.apkInfo.outputName += '.apk';
+  global.outputName += '.apk';
 }
 
 module.exports = async function (message, ws) {
@@ -157,7 +157,7 @@ module.exports = async function (message, ws) {
     '-a',
     `./revanced/${global.jarNames.selectedApp}.apk`,
     '-o',
-    `./revanced/${global.apkInfo.outputName}`
+    `./revanced/${global.outputName}`
   ];
 
   if (os.platform() === 'android') {
