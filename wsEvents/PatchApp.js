@@ -5,7 +5,7 @@ const mountReVanced = require('../utils/mountReVanced.js');
 const actualExec = promisify(exec);
 const fs = require('fs');
 
-async function mount (ws) {
+async function mount(ws) {
   let pkg;
   switch (global.jarNames.selectedApp) {
     case 'youtube': {
@@ -28,7 +28,7 @@ async function mount (ws) {
   await mountReVanced(pkg, ws);
 }
 
-async function afterBuild (ws) {
+async function afterBuild(ws) {
   fs.rmdirSync('./revanced-cache', { recursive: true, force: true });
   if (!global.jarNames.isRooted && os.platform() === 'android') {
     await actualExec(
@@ -68,7 +68,7 @@ async function afterBuild (ws) {
   );
 }
 
-async function reinstallReVanced (ws) {
+async function reinstallReVanced(ws) {
   let pkgNameToGetUninstalled;
 
   switch (global.jarNames.selectedApp) {
