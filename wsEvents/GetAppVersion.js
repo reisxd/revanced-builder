@@ -70,13 +70,13 @@ module.exports = async function (message, ws) {
       );
       global.apkInfo = {
                           version: appVersion,
-                          arch: deviceArch.stdout.replace(os.EOL, '');
+                          arch: deviceArch.stdout.replace(os.EOL, '')
                        };
       return await downloadApp(ws);
     } else {
       global.apkInfo = {
                           version: appVersion,
-                          arch: null;
+                          arch: null
                        };
       return await downloadApp(ws);
      }
