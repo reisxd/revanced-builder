@@ -68,11 +68,16 @@ module.exports = async function (message, ws) {
       const deviceArch = await actualExec(
         'adb shell getprop ro.product.cpu.abi'
       );
-      global.apkInfo.version = appVersion;
-      global.apkInfo.arch = deviceArch.stdout.replace(os.EOL, '');
+      global.apkInfo = {
+                          version: appVersion,
+                          arch: deviceArch.stdout.replace(os.EOL, '');
+                       };
       return await downloadApp(ws);
     } else {
-      global.apkInfo.version = appVersion;
+      global.apkInfo = {
+                          version: appVersion,
+                          arch: null;
+                       };
       return await downloadApp(ws);
      }
   }
