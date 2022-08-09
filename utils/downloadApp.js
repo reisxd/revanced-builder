@@ -58,7 +58,7 @@ module.exports = async function (ws) {
 
   const vDLL = load(versionDownloadList);
   let dlLink;
-  if (arch) {
+  if (arch && global.jarNames.selectedApp === 'music') {
     dlLink = vDLL(`div:contains("${arch}")`)
       .parent()
       .children('div[class^="table-cell rowheight"]')
