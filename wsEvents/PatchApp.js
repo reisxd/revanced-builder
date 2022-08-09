@@ -137,11 +137,11 @@ function outputName () {
   const part3 = global?.apkInfo?.version ? `v${global.apkInfo.version}` : '';
   const part4 = global?.apkInfo?.arch;
   const part5 = 'cli_' + global.jarNames.cli
-    .split(require('path').sep)[2]
+    .split('/')[2]
     .replace('revanced-cli-', '')
     .replace('-all.jar', '');
   const part6 = 'patches_' + global.jarNames.patchesJar
-    .split(require('path').sep)[2]
+    .split('/')[2]
     .replace('revanced-patches-', '')
     .replace('.jar', '');
   // Filename: ReVanced-<AppName>-<AppVersion>-[Arch]-cli_<CLI_Version>-patches_<PatchesVersion>.apk
