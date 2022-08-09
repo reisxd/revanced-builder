@@ -68,8 +68,13 @@ module.exports = async function (message, ws) {
       const deviceArch = await actualExec(
         'adb shell getprop ro.product.cpu.abi'
       );
-      return await downloadApp(appVersion, ws, deviceArch.stdout);
-    } else return await downloadApp(appVersion, ws);
+      global.apkInfo.version = appVersion;
+      global.apkInfo.arch = deviceArch.stdout.replace(os.EOL, '');
+      return await downloadApp(ws);
+    } else {
+      global.apkInfo.version = appVersion;
+      return await downloadApp(ws);
+     }
   }
 
   switch (global.jarNames.selectedApp) {
