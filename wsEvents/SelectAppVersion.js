@@ -14,10 +14,10 @@ module.exports = async function (message, ws) {
       const deviceArch = await actualExec(
         'adb shell getprop ro.product.cpu.abi'
       );
-      arch = deviceArch.arch;
+      arch = deviceArch.stdout.replace(os.EOL, '');
     } else {
       const deviceArch = await actualExec('getprop ro.product.cpu.abi');
-      arch = deviceArch.arch;
+      arch = deviceArch.stdout.replace(os.EOL, '');
     }
   }
   global.apkInfo = {
