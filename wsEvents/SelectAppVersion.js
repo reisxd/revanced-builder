@@ -22,7 +22,7 @@ module.exports = async function (message, ws) {
   }
   global.apkInfo = {
     version: message.versionChoosen,
-    arch: arch
-  }
+    arch
+  };
   await downloadApp(ws);
 };

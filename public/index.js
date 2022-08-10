@@ -273,7 +273,7 @@ ws.onmessage = (msg) => {
       document.getElementsByClassName(
         'log'
       )[0].innerHTML += `<span class="log-line ${logLevel}"><strong>[builder]</strong> ${message.log}</span><br>`;
-      let logWrap = document.getElementById("content--wrapper");
+      const logWrap = document.getElementById('content--wrapper');
       logWrap.scrollTop = logWrap.scrollHeight;
       break;
     }
