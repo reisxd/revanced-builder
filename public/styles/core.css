@@ -96,6 +96,7 @@ div#content--wrapper {
   margin-top: 5px;
   background-color: var(--contrastColor);
   overflow-x: auto;
+  scroll-behavior: smooth;
 }
 
 /* Content Wrapper Scrollbar */
