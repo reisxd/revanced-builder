@@ -69,17 +69,17 @@ module.exports = async function (message, ws) {
         'adb shell getprop ro.product.cpu.abi'
       );
       global.apkInfo = {
-                          version: appVersion,
-                          arch: deviceArch.stdout.replace(os.EOL, '')
-                       };
+        version: appVersion,
+        arch: deviceArch.stdout.replace(os.EOL, '')
+      };
       return await downloadApp(ws);
     } else {
       global.apkInfo = {
-                          version: appVersion,
-                          arch: null
-                       };
+        version: appVersion,
+        arch: null
+      };
       return await downloadApp(ws);
-     }
+    }
   }
 
   switch (global.jarNames.selectedApp) {

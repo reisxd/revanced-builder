@@ -136,14 +136,18 @@ function outputName () {
   // TODO: If the existing input APK is used from revanced/ without downloading, version and arch aren't set
   const part3 = global?.apkInfo?.version ? `v${global.apkInfo.version}` : '';
   const part4 = global?.apkInfo?.arch;
-  const part5 = 'cli_' + global.jarNames.cli
-    .split('/')[2]
-    .replace('revanced-cli-', '')
-    .replace('-all.jar', '');
-  const part6 = 'patches_' + global.jarNames.patchesJar
-    .split('/')[2]
-    .replace('revanced-patches-', '')
-    .replace('.jar', '');
+  const part5 =
+    'cli_' +
+    global.jarNames.cli
+      .split('/')[2]
+      .replace('revanced-cli-', '')
+      .replace('-all.jar', '');
+  const part6 =
+    'patches_' +
+    global.jarNames.patchesJar
+      .split('/')[2]
+      .replace('revanced-patches-', '')
+      .replace('.jar', '');
   // Filename: ReVanced-<AppName>-<AppVersion>-[Arch]-cli_<CLI_Version>-patches_<PatchesVersion>.apk
   global.outputName = '';
   for (const part of [part1, part2, part3, part4, part5, part6]) {
@@ -165,7 +169,7 @@ module.exports = async function (message, ws) {
     '-a',
     `./revanced/${global.jarNames.selectedApp}.apk`,
     '-o',
-    `./revanced/revanced.apk`
+    './revanced/revanced.apk'
   ];
 
   if (os.platform() === 'android') {
