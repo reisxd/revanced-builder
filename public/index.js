@@ -141,6 +141,13 @@ function toTitleCase (phrase) {
     .join(' ');
 }
 
+function exitApp () {
+  sendCommand({ event: 'exit' });
+  const tempW = window.open(location, '_self');
+  tempW.close();
+  return false;
+}
+
 window.addEventListener('keypress', (e) => {
   if (e.key === 'Enter') {
     e.preventDefault();
@@ -313,6 +320,8 @@ ws.onmessage = (msg) => {
       }
       document.getElementsByTagName('footer')[0].innerHTML +=
         '<button class="highlighted" onclick="location.href = \'/\'">Build Again</button>';
+      document.getElementsByTagName('footer')[0].innerHTML +=
+        '<button onclick="exitApp();">Quit</button>';
       break;
     }
 

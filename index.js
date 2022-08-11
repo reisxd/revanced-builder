@@ -58,6 +58,13 @@ process.on('unhandledRejection', (reason) => {
   );
 });
 
+process.on('SIGTERM', () => {
+  server.close(() => {
+    console.log('The webserver was stopped.');
+    setTimeout(() => process.exit(0), 2000);
+  });
+});
+
 // The websocket server
 wsServer.on('connection', (ws) => {
   ws.on('message', async (msg) => {
@@ -103,6 +110,11 @@ wsServer.on('connection', (ws) => {
 
       case 'patchApp': {
         await PatchApp(message, ws);
+        break;
+      }
+
+      case 'exit': {
+        process.kill(process.pid, 'SIGTERM');
         break;
       }
     }
