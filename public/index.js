@@ -143,7 +143,7 @@ function toTitleCase (phrase) {
 
 function exitApp () {
   sendCommand({ event: 'exit' });
-  let tempW = window.open(location, '_self');
+  const tempW = window.open(location, '_self');
   tempW.close();
   return false;
 }
