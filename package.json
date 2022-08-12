@@ -25,6 +25,7 @@
     "node-fetch-progress": "^1.0.2",
     "open": "^8.4.0",
     "path": "^0.12.7",
+    "portfinder": "^1.0.29",
     "ws": "^8.8.1"
   },
   "devDependencies": {
