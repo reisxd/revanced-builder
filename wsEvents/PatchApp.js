@@ -29,7 +29,7 @@ async function mount (ws) {
 }
 
 async function afterBuild (ws) {
-  fs.rmdirSync('./revanced-cache', { recursive: true, force: true });
+  fs.rmSync('./revanced-cache', { recursive: true, force: true });
   outputName();
   fs.renameSync('./revanced/revanced.apk', `./revanced/${global.outputName}`);
   if (!global.jarNames.isRooted && os.platform() === 'android') {

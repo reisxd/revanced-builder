@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { downloadFiles } = require('../utils/FileDownlader.js');
+const { downloadFiles } = require('../utils/FileDownloader.js');
 const checkJDKandAapt2 = require('../utils/checkJDKandAapt2.js');
 const checkJDkAndADB = require('../utils/checkJDKAndADB.js');
 const os = require('os');

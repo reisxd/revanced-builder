@@ -1,6 +1,6 @@
 const { promisify } = require('util');
 const { exec } = require('child_process');
-const { dloadFromURL } = require('./FileDownlader.js');
+const { dloadFromURL } = require('./FileDownloader.js');
 const os = require('os');
 const fs = require('fs');
 const actualExec = promisify(exec);

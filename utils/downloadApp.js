@@ -1,6 +1,6 @@
 const fetchURL = require('node-fetch');
 const { load } = require('cheerio');
-const { dloadFromURL } = require('../utils/FileDownlader.js');
+const { dloadFromURL } = require('./FileDownloader.js');
 
 module.exports = async function (ws) {
   const { version, arch } = global.apkInfo;
