@@ -25,26 +25,39 @@ app.get('/revanced.apk', function (req, res) {
   res.download(file);
 });
 
-const open = async () => {
+const open = async (PORT) => {
   if (require('os').platform === 'android') {
     await require('util').promisify(
-      require('child_process').exec('termux-open-url http://localhost:8080')
+      require('child_process').exec(`termux-open-url http://localhost:${PORT}`)
     );
-  } else require('open')('http://localhost:8080');
+  } else require('open')(`http://localhost:${PORT}`);
 };
 
-server.listen(8080, () => {
-  console.log('The webserver is now running!');
-  try {
-    console.log('Opening the app in the default browser...');
-    open('http://localhost:8080');
-    console.log('Done. Check if a browser window has opened');
-  } catch (e) {
-    console.log(
-      'Failed. Open up http://localhost:8080 manually in your browser.'
-    );
-  }
-});
+const listen = (PORT) => {
+  server.listen(PORT, () => {
+    console.log('The webserver is now running!');
+    try {
+      console.log('Opening the app in the default browser...');
+      open(PORT);
+      console.log('Done. Check if a browser window has opened');
+    } catch (e) {
+      console.log(
+        `Failed. Open up http://localhost:${PORT} manually in your browser.`
+      );
+    }
+  });
+};
+
+require('portfinder')
+  .getPortPromise()
+  .then((port) => {
+    console.log(`[builder] Using port ${port}`);
+    listen(port);
+  })
+  .catch((err) => {
+    console.error(`[builder] Unable to determine free ports. Reason:\n${err}`);
+    listen(8080);
+  });
 
 process.on('uncaughtException', (reason) => {
   console.log(
