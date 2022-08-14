@@ -85,44 +85,42 @@ module.exports = async function (message, ws) {
   switch (global.jarNames.selectedApp) {
     case 'youtube': {
       versionsList = await getPage(
-        'https://www.apkmirror.com/apk/google-inc/youtube'
+        'https://www.apkmirror.com/uploads/?appcategory=youtube'
       );
       break;
     }
     case 'music': {
       versionsList = await getPage(
-        'https://www.apkmirror.com/apk/google-inc/youtube-music'
+        'https://www.apkmirror.com/uploads/?appcategory=youtube-music'
       );
       break;
     }
     case 'android': {
       versionsList = await getPage(
-        'https://www.apkmirror.com/apk/twitter/twitter'
+        'https://www.apkmirror.com/uploads/?appcategory=twitter'
       );
       break;
     }
     case 'frontpage': {
       versionsList = await getPage(
-        'https://www.apkmirror.com/apk/redditinc/reddit'
+        'https://www.apkmirror.com/uploads/?appcategory=reddit'
       );
       break;
     }
     case 'warnapp': {
       versionsList = await getPage(
-        'https://www.apkmirror.com/apk/deutscher-wetterdienst/warnwetter'
+        'https://www.apkmirror.com/uploads/?appcategory=warnwetter'
       );
       break;
     }
   }
 
   const versionList = [];
-  let indx = 0;
   const $ = load(versionsList);
 
   for (const version of $(
-    'h5[class="appRowTitle wrapText marginZero block-on-mobile"]'
+    '#primary h5.appRowTitle.wrapText.marginZero.block-on-mobile'
   ).get()) {
-    if (indx === 10) continue;
     const versionName = version.attribs.title
       .replace('YouTube ', '')
       .replace('Music ', '')
@@ -130,7 +128,6 @@ module.exports = async function (message, ws) {
       .replace('Reddit ', '')
       .replace('WarnWetter ', '');
 
-    indx++;
     if (versionName.includes('beta')) continue;
     else if (
       global.jarNames.selectedApp === 'android' &&
