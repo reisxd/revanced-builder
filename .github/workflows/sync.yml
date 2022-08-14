@@ -1,0 +1,15 @@
+name: Sync Fork
+
+on:
+  schedule:
+    - cron: '*/5 * * * *' # every 5 minutes
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: tgymnich/fork-sync@v1.4
+        with:
+          owner: reisxd
+          base: master
+          head: master
