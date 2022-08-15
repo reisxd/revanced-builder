@@ -43,6 +43,13 @@ module.exports = async function (ws) {
       );
       break;
     }
+
+    case 'trill': {
+      versionDownload = await fetchURL(
+        `https://www.apkmirror.com/apk/tiktok-pte-ltd/tik-tok/tik-tok-${apkMirrorVersionArg}-release/`
+      );
+      break;
+    }
   }
 
   if (!versionDownload.ok) {

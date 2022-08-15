@@ -191,7 +191,7 @@ module.exports = async function (message, ws) {
     args.push(patch);
   }
 
-  if (global.jarNames.selectedApp.endsWith('frontpage')) {
+  if (global.jarNames.selectedApp.endsWith('frontpage') || global.jarNames.selectedApp.endsWith('trill')) {
     args.push('-r');
   }
 

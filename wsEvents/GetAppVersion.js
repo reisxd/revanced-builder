@@ -113,6 +113,12 @@ module.exports = async function (message, ws) {
       );
       break;
     }
+    case 'trill': {
+      versionsList = await getPage(
+        'https://www.apkmirror.com/uploads/?appcategory=tik-tok'
+      );
+      break;
+    }
   }
 
   const versionList = [];
@@ -126,7 +132,8 @@ module.exports = async function (message, ws) {
       .replace('Music ', '')
       .replace('Twitter ', '')
       .replace('Reddit ', '')
-      .replace('WarnWetter ', '');
+      .replace('WarnWetter ', '')
+      .replace('TikTok ', '');
 
     if (versionName.includes('beta')) continue;
     else if (
