@@ -102,15 +102,14 @@ async function reinstallReVanced (ws) {
       pkgNameToGetUninstalled = 'de.dwd.warnapp';
       break;
     }
+
+    case 'trill': {
+      pkgNameToGetUninstalled = 'com.ss.android.ugc.trill';
+    }
   }
 
   await actualExec(`adb uninstall ${pkgNameToGetUninstalled}`);
   await actualExec(`adb install revanced/${global.outputName}`);
-  ws.send(
-    JSON.stringify({
-      event: 'buildFinished'
-    })
-  );
 }
 
 function outputName () {
@@ -217,6 +216,7 @@ module.exports = async function (message, ws) {
 
     if (data.toString().includes('INSTALL_FAILED_UPDATE_INCOMPATIBLE')) {
       await reinstallReVanced(ws);
+      await afterBuild(ws);
     }
   });
 
@@ -234,6 +234,7 @@ module.exports = async function (message, ws) {
 
     if (data.toString().includes('INSTALL_FAILED_UPDATE_INCOMPATIBLE')) {
       await reinstallReVanced(ws);
+      await afterBuild(ws);
     }
   });
 };
