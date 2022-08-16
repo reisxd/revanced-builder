@@ -13,6 +13,10 @@ const {
   PatchApp
 } = require('./wsEvents/index.js');
 const morgan = require('morgan');
+const { platform } = require('os');
+const exec = cmd => require('util').promisify(require('child_process').exec(cmd));
+const opn = require('open');
+const pf = require('portfinder');
 
 const app = Express();
 const server = http.createServer(app);
@@ -26,11 +30,9 @@ app.get('/revanced.apk', function (req, res) {
 });
 
 const open = async (PORT) => {
-  if (require('os').platform === 'android') {
-    await require('util').promisify(
-      require('child_process').exec(`termux-open-url http://localhost:${PORT}`)
-    );
-  } else require('open')(`http://localhost:${PORT}`);
+  if (platform === 'android') {
+    await exec(`termux-open-url http://localhost:${PORT}`);
+  } else opn(`http://localhost:${PORT}`);
 };
 
 const listen = (PORT) => {
@@ -48,8 +50,7 @@ const listen = (PORT) => {
   });
 };
 
-require('portfinder')
-  .getPortPromise()
+pf.getPortPromise()
   .then((port) => {
     console.log(`[builder] Using port ${port}`);
     listen(port);
