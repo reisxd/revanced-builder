@@ -53,7 +53,7 @@ const listen = (PORT) => {
   });
 };
 
-const cleanExit = svr => {
+const cleanExit = async svr => {
   svr.close(() => log('The webserver was stopped.'));
   log('Killing any dangling processes...', false);
   await fkill(['adb', 'java', 'aapt2'], { forceAfterTimeout: 5000, tree: true, ignoreCase: true });
