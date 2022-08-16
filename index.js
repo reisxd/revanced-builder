@@ -50,6 +50,14 @@ const listen = (PORT) => {
   });
 };
 
+const cleanExit = svr => {
+  svr.close(() => console.log('The webserver was stopped.'));
+  console.log('Killing any dangling processes...');
+  await fkill(['adb', 'java', 'aapt2'], { forceAfterTimeout: 5000, tree: true, ignoreCase: true });
+  console.log('Done. Exiting!');
+  setTimeout(() => process.exit(0), 2000);
+}
+
 pf.getPortPromise()
   .then((port) => {
     console.log(`[builder] Using port ${port}`);
@@ -72,12 +80,7 @@ process.on('unhandledRejection', (reason) => {
   );
 });
 
-process.on('SIGTERM', () => {
-  server.close(() => {
-    console.log('The webserver was stopped.');
-    setTimeout(() => process.exit(0), 2000);
-  });
-});
+process.on('SIGTERM', () => cleanExit(server));
 
 // The websocket server
 wsServer.on('connection', (ws) => {
