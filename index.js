@@ -14,7 +14,8 @@ const {
 } = require('./wsEvents/index.js');
 const morgan = require('morgan');
 const { platform } = require('os');
-const exec = cmd => require('util').promisify(require('child_process').exec(cmd));
+const exec = (cmd) =>
+  require('util').promisify(require('child_process').exec(cmd));
 const opn = require('open');
 const pf = require('portfinder');
 const fkill = import('fkill');
@@ -36,7 +37,10 @@ const open = async (PORT) => {
   } else opn(`http://localhost:${PORT}`);
 };
 
-const log = (msg, newline = true, tag = true) => newline ? console.log(`${tag ? "[builder] " : ""}${msg}`) : process.stdout.write(`${tag ? "[builder] ": ""}${msg} `);
+const log = (msg, newline = true, tag = true) =>
+  newline
+    ? console.log(`${tag ? '[builder] ' : ''}${msg}`)
+    : process.stdout.write(`${tag ? '[builder] ' : ''}${msg} `);
 
 const listen = (PORT) => {
   server.listen(PORT, () => {
@@ -47,19 +51,25 @@ const listen = (PORT) => {
       log('Done. Check if a browser window has opened', true, false);
     } catch (e) {
       log(
-        `Failed. Open up http://localhost:${PORT} manually in your browser.`, true, false
+        `Failed. Open up http://localhost:${PORT} manually in your browser.`,
+        true,
+        false
       );
     }
   });
 };
 
-const cleanExit = async svr => {
+const cleanExit = async (svr) => {
   svr.close(() => log('The webserver was stopped.'));
   log('Killing any dangling processes...', false);
-  await fkill(['adb', 'java', 'aapt2'], { forceAfterTimeout: 5000, tree: true, ignoreCase: true });
+  await fkill(['adb', 'java', 'aapt2'], {
+    forceAfterTimeout: 5000,
+    tree: true,
+    ignoreCase: true
+  });
   log('Done. Exiting!', true, false);
   setTimeout(() => process.exit(0), 2000);
-}
+};
 
 pf.getPortPromise()
   .then((port) => {
@@ -68,20 +78,22 @@ pf.getPortPromise()
   })
   .catch((err) => {
     log(`Unable to determine free ports.\nReason: ${err}`);
-    log('Falling back to 8080.')
+    log('Falling back to 8080.');
     listen(8080);
   });
 
 process.on('uncaughtException', (reason) => {
   log(`An error occured.\n${reason.stack}`);
-  log(`Please report this bug here: https://github.com/reisxd/revanced-builder/issues.`);
+  log(
+    'Please report this bug here: https://github.com/reisxd/revanced-builder/issues.'
+  );
 });
 
 process.on('unhandledRejection', (reason) => {
+  log(`An error occured.\n${reason.stack}`);
   log(
-    `An error occured.\n${reason.stack}`
+    'Please report this bug here: https://github.com/reisxd/revanced-builder/issues.'
   );
-  log(`Please report this bug here: https://github.com/reisxd/revanced-builder/issues.`);
 });
 
 process.on('SIGTERM', () => cleanExit(server));
