@@ -36,7 +36,7 @@ const open = async (PORT) => {
   } else opn(`http://localhost:${PORT}`);
 };
 
-const log = (msg, newline = true) => newline ? console.log(`[builder] ${msg}`) : process.stdout.write(`[builder] ${msg}`);
+const log = (msg, newline = true, tag = true) => newline ? console.log(`${tag ? "[builder] " : ""}${msg}`) : process.stdout.write(`${tag ? "[builder] ": ""}${msg} `);
 
 const listen = (PORT) => {
   server.listen(PORT, () => {
@@ -44,10 +44,10 @@ const listen = (PORT) => {
     try {
       log('Opening the app in the default browser...', false);
       open(PORT);
-      log('Done. Check if a browser window has opened');
+      log('Done. Check if a browser window has opened', true, false);
     } catch (e) {
       log(
-        `Failed. Open up http://localhost:${PORT} manually in your browser.`
+        `Failed. Open up http://localhost:${PORT} manually in your browser.`, true, false
       );
     }
   });
@@ -57,7 +57,7 @@ const cleanExit = async svr => {
   svr.close(() => log('The webserver was stopped.'));
   log('Killing any dangling processes...', false);
   await fkill(['adb', 'java', 'aapt2'], { forceAfterTimeout: 5000, tree: true, ignoreCase: true });
-  log('Done. Exiting!');
+  log('Done. Exiting!', true, false);
   setTimeout(() => process.exit(0), 2000);
 }
 
