@@ -17,7 +17,7 @@ const { platform } = require('os');
 const exec = cmd => require('util').promisify(require('child_process').exec(cmd));
 const opn = require('open');
 const pf = require('portfinder');
-const fkill = require('fkill');
+const fkill = import('fkill');
 
 const app = Express();
 const server = http.createServer(app);
