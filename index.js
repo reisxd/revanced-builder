@@ -17,6 +17,7 @@ const { platform } = require('os');
 const exec = cmd => require('util').promisify(require('child_process').exec(cmd));
 const opn = require('open');
 const pf = require('portfinder');
+const fkill = require('fkill');
 
 const app = Express();
 const server = http.createServer(app);
@@ -35,15 +36,17 @@ const open = async (PORT) => {
   } else opn(`http://localhost:${PORT}`);
 };
 
+const log = (msg, newline = true) => newline ? console.log(`[builder] ${msg}`) : process.stdout.write(`[builder] ${msg}`);
+
 const listen = (PORT) => {
   server.listen(PORT, () => {
-    console.log('The webserver is now running!');
+    log('The webserver is now running!');
     try {
-      console.log('Opening the app in the default browser...');
+      log('Opening the app in the default browser...', false);
       open(PORT);
-      console.log('Done. Check if a browser window has opened');
+      log('Done. Check if a browser window has opened');
     } catch (e) {
-      console.log(
+      log(
         `Failed. Open up http://localhost:${PORT} manually in your browser.`
       );
     }
@@ -51,33 +54,34 @@ const listen = (PORT) => {
 };
 
 const cleanExit = svr => {
-  svr.close(() => console.log('The webserver was stopped.'));
-  console.log('Killing any dangling processes...');
+  svr.close(() => log('The webserver was stopped.'));
+  log('Killing any dangling processes...', false);
   await fkill(['adb', 'java', 'aapt2'], { forceAfterTimeout: 5000, tree: true, ignoreCase: true });
-  console.log('Done. Exiting!');
+  log('Done. Exiting!');
   setTimeout(() => process.exit(0), 2000);
 }
 
 pf.getPortPromise()
   .then((port) => {
-    console.log(`[builder] Using port ${port}`);
+    log(`Listening at port ${port}`);
     listen(port);
   })
   .catch((err) => {
-    console.error(`[builder] Unable to determine free ports. Reason:\n${err}`);
+    log(`Unable to determine free ports.\nReason: ${err}`);
+    log('Falling back to 8080.')
     listen(8080);
   });
 
 process.on('uncaughtException', (reason) => {
-  console.log(
-    `An error occured.\n${reason.stack}\nPlease report this bug here: https://github.com/reisxd/revanced-builder/issues`
-  );
+  log(`An error occured.\n${reason.stack}`);
+  log(`Please report this bug here: https://github.com/reisxd/revanced-builder/issues.`);
 });
 
 process.on('unhandledRejection', (reason) => {
-  console.log(
-    `An error occured.\n${reason.stack}\nPlease report this bug here: https://github.com/reisxd/revanced-builder/issues`
+  log(
+    `An error occured.\n${reason.stack}`
   );
+  log(`Please report this bug here: https://github.com/reisxd/revanced-builder/issues.`);
 });
 
 process.on('SIGTERM', () => cleanExit(server));
