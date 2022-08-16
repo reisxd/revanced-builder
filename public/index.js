@@ -314,7 +314,7 @@ ws.onmessage = (msg) => {
     case 'buildFinished': {
       document.getElementsByTagName('header')[0].innerHTML =
         '<h1>ReVanced has been built.</h1>';
-      if (WS_URI !== 'ws://localhost:8080') {
+      if (!WS_URI.startsWith('ws://localhost')) {
         document.getElementsByTagName('footer')[0].innerHTML +=
           '<button class="highlighted" onclick="window.open(\'/revanced.apk\', \'_blank\')">Download</button>';
       }
