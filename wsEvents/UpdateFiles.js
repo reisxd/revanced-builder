@@ -15,7 +15,7 @@ global.jarNames = {
   deviceID: ''
 };
 
-async function UpdateFiles (message, ws) {
+async function UpdateFiles(message, ws) {
   if (!fs.existsSync('./revanced')) {
     fs.mkdirSync('./revanced');
   }
