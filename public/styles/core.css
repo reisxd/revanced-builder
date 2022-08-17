@@ -193,3 +193,18 @@ i.social-icon::before {
 .disabled {
   filter: brightness(50%) !important;
 }
+
+/* Dialog */
+
+dialog {
+  display: block;
+  border-radius: 10px;
+  background-color: var(--primaryColor);
+  border-color: var(--contrastColor);
+  color: var(--textColor);
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: flex-end;
+}

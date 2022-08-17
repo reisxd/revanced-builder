@@ -47,6 +47,10 @@ function goToPatches () {
   }
 }
 
+function checkForUpdates () {
+  sendCommand({ event: 'checkForUpdates' });
+}
+
 function setPatches () {
   const patchElementList = [...document.querySelectorAll('.select')];
   const selectedPatchElementList = patchElementList.filter(
@@ -329,6 +333,13 @@ ws.onmessage = (msg) => {
       const failureURL = `/failure?error=${message.error}`;
       location.href = failureURL;
       break;
+    }
+
+    case 'notUpToDate': {
+      document.getElementById('container').innerHTML += `
+      <dialog>
+      <span>Your current version of Builder is not up to date.<br>Do you want to update to ${message.builderVersion}?</span>
+      <div class="buttonContainer"><button class="highlighted" onclick="window.open('https://github.com/reisxd/revanced-builder/releases/latest', '_blank'); document.getElementById('container').removeChild(document.getElementsByTagName('dialog')[0]);">Yes</button> <button onclick="document.getElementById('container').removeChild(document.getElementsByTagName('dialog')[0]);">No</button></div></dialog>`;
     }
   }
 };

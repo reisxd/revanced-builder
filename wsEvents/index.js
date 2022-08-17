@@ -6,6 +6,7 @@ const UpdateFiles = require('./UpdateFiles.js');
 const GetPatches = require('./GetPatches.js');
 const GetAppVersion = require('./GetAppVersion.js');
 const CheckFileAlreadyExists = require('./CheckFileAlreadyExists.js');
+const CheckForUpdates = require('./CheckForUpdates.js');
 
 module.exports = {
   PatchApp,
@@ -15,5 +16,6 @@ module.exports = {
   UpdateFiles,
   GetPatches,
   GetAppVersion,
-  CheckFileAlreadyExists
+  CheckFileAlreadyExists,
+  CheckForUpdates
 };

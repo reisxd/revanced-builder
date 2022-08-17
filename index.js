@@ -10,7 +10,8 @@ const {
   GetAppVersion,
   CheckFileAlreadyExists,
   SelectAppVersion,
-  PatchApp
+  PatchApp,
+  CheckForUpdates
 } = require('./wsEvents/index.js');
 const morgan = require('morgan');
 const { platform } = require('os');
@@ -108,6 +109,10 @@ wsServer.on('connection', (ws) => {
     // Theres no file handler, soo...
 
     switch (message.event) {
+      case 'checkForUpdates': {
+        await CheckForUpdates(message, ws);
+        break;
+      }
       case 'updateFiles': {
         await UpdateFiles(message, ws);
         break;

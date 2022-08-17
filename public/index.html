@@ -83,5 +83,10 @@
         </button>
       </footer>
     </div>
+    <script>
+      ws.onopen = () => {
+        checkForUpdates();
+      };
+    </script>
   </body>
 </html>
