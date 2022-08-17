@@ -18,7 +18,6 @@ const exec = (cmd) =>
   require('util').promisify(require('child_process').exec(cmd));
 const opn = require('open');
 const pf = require('portfinder');
-const fkill = import('fkill');
 
 const app = Express();
 const server = http.createServer(app);
@@ -60,15 +59,18 @@ const listen = (PORT) => {
 };
 
 const cleanExit = async (svr) => {
-  svr.close(() => log('The webserver was stopped.'));
   log('Killing any dangling processes...', false);
-  await fkill(['adb', 'java', 'aapt2'], {
+  const fkill = await import('fkill');
+  await fkill.default(['adb', 'java', 'aapt2'], {
     forceAfterTimeout: 5000,
     tree: true,
-    ignoreCase: true
+    ignoreCase: true,
+    silent: true
   });
-  log('Done. Exiting!', true, false);
-  setTimeout(() => process.exit(0), 2000);
+  log('Done.', true, false);
+  log('Stopping the server...', false);
+  svr.close(() => log('Done', true, false));
+  setTimeout(() => process.exit(0), 2500);
 };
 
 pf.getPortPromise()
