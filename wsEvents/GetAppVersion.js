@@ -53,17 +53,8 @@ module.exports = async function (message, ws) {
         break;
       }
     }
-    const appVersion = await getAppVersion(pkgName);
-    // if youtube isn't installed the function just returns null instead of erroring. i do not want to mess with regex's so i added this instead
-    if (!appVersion) {
-      return ws.send(
-        JSON.stringify({
-          event: 'error',
-          error:
-            "The app you selected is not installed on your device. It's needed for rooted ReVanced."
-        })
-      );
-    }
+    const appVersion = await getAppVersion(pkgName, ws, true);
+
     if (global.jarNames.selectedApp === 'music') {
       const deviceArch = await actualExec(
         'adb shell getprop ro.product.cpu.abi'

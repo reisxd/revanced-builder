@@ -3,7 +3,7 @@ const { promisify } = require('util');
 const { exec } = require('child_process');
 const actualExec = promisify(exec);
 
-module.exports = async function (pkgName, ws) {
+module.exports = async function (pkgName, ws, shouldReturnMSG) {
   try {
     const { stdout, stderr } = await actualExec(
       `adb shell dumpsys package ${pkgName}`,
@@ -11,13 +11,15 @@ module.exports = async function (pkgName, ws) {
     );
     const dumpSysOut = stdout || stderr;
     if (!dumpSysOut.match(/versionName=([^=]+)/)) {
-      ws.send(
-        JSON.stringify({
-          event: 'error',
-          error:
-            "The app you selected is not installed on your device. It's needed for rooted ReVanced."
-        })
-      );
+      if (shouldReturnMSG) {
+        ws.send(
+          JSON.stringify({
+            event: 'error',
+            error:
+              "The app you selected is not installed on your device. It's needed for rooted ReVanced."
+          })
+        );
+      }
       return null;
     }
     return dumpSysOut

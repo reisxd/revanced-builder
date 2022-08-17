@@ -4,6 +4,8 @@ const os = require('os');
 const mountReVanced = require('../utils/mountReVanced.js');
 const actualExec = promisify(exec);
 const fs = require('fs');
+const getAppVersion = require('../utils/getAppVersion.js');
+const { getDownloadLink } = require('../utils/FileDownloader.js');
 
 async function mount (ws) {
   let pkg;
@@ -53,14 +55,46 @@ async function afterBuild (ws) {
         log: `ReVanced has been built!\nPlease transfer over revanced/${global.outputName} and if you are using YT/YTM, revanced/microg.apk and install them!`
       })
     );
-  } else if (!global.jarNames.isRooted && global.jarNames.deviceID) {
-    await actualExec('adb install revanced/microg.apk');
-    ws.send(
-      JSON.stringify({
-        event: 'patchLog',
-        log: 'MicroG has been installed.'
-      })
+  } else if (
+    (!global.jarNames.isRooted &&
+      global.jarNames.deviceID &&
+      global.jarNames.selectedApp === 'youtube') ||
+    global.jarNames.selectedApp === 'music'
+  ) {
+    const microGVersion = await getAppVersion(
+      'com.mgoogle.android.gms',
+      null,
+      false
     );
+    const currentMicroGVersion = (
+      await getDownloadLink({ owner: 'TeamVanced', repo: 'VancedMicroG' })
+    ).version
+      .replace('v', '')
+      .split('-')[0];
+    if (!microGVersion) {
+      await actualExec('adb install revanced/microg.apk');
+      ws.send(
+        JSON.stringify({
+          event: 'patchLog',
+          log: 'MicroG has been installed.'
+        })
+      );
+    } else if (microGVersion !== currentMicroGVersion) {
+      await actualExec('adb install revanced/microg.apk');
+      ws.send(
+        JSON.stringify({
+          event: 'patchLog',
+          log: 'MicroG has been updated.'
+        })
+      );
+    } else {
+      ws.send(
+        JSON.stringify({
+          event: 'patchLog',
+          log: 'MicroG is already up to date.'
+        })
+      );
+    }
   }
 
   ws.send(
@@ -70,7 +104,7 @@ async function afterBuild (ws) {
   );
 }
 
-async function reinstallReVanced (ws) {
+async function reinstallReVanced () {
   let pkgNameToGetUninstalled;
 
   switch (global.jarNames.selectedApp) {

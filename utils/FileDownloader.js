@@ -5,15 +5,14 @@ const fs = require('fs');
 
 let ws;
 
-async function overWriteJarNames (link) {
-  const fileName = link.split('/').pop();
+async function overWriteJarNames (fileName) {
   if (fileName.includes('revanced-cli')) {
     global.jarNames.cli = `./revanced/${fileName}`;
   }
   if (fileName.includes('revanced-patches') && fileName.endsWith('.jar')) {
     global.jarNames.patchesJar = `./revanced/${fileName}`;
   }
-  if (fileName.endsWith('unsigned.apk')) {
+  if (fileName.endsWith('.apk') && !fileName.startsWith('microg')) {
     global.jarNames.integrations = `./revanced/${fileName}`;
   }
   if (fileName.startsWith('microg')) {
@@ -21,12 +20,23 @@ async function overWriteJarNames (link) {
   }
 }
 
+// yes.
+
+function insert (str, index, value) {
+  return str.substr(0, index) + value + str.substr(index);
+}
+
 async function getDownloadLink (json) {
   const apiRequest = await fetchURL(
     `https://api.github.com/repos/${json.owner}/${json.repo}/releases/latest`
   );
   const jsonResponse = await apiRequest.json();
-  let assets = jsonResponse?.assets;
+  const assets = jsonResponse?.assets;
+  const jsonOBJ = {
+    version: jsonResponse?.tag_name,
+    assets
+  };
+
   if (jsonResponse.error || !apiRequest.ok) {
     const assetsGH = [];
     const releasesPage = await fetchURL(
@@ -48,29 +58,22 @@ async function getDownloadLink (json) {
         }
       }
     }
-    assets = assetsGH;
+
+    jsonOBJ.version = $('span[class="ml-1"]').first().text().replace(/\s/g, '');
+    jsonOBJ.assets = assetsGH;
   }
-  return assets;
+  return jsonOBJ;
 }
 
 async function downloadFile (assets) {
-  for (const asset of assets) {
+  for (const asset of assets.assets) {
     const dir = fs.readdirSync('./revanced/');
-    overWriteJarNames(asset.browser_download_url);
-    if (dir.includes(asset.browser_download_url.split('/').pop())) {
-      if (
-        asset.browser_download_url.split('/').pop() !==
-        'app-release-unsigned.apk'
-      ) {
-        if (asset.browser_download_url.split('/').pop() !== 'microg.apk') {
-          continue;
-        }
-      }
-    }
-    await dloadFromURL(
-      asset.browser_download_url,
-      `./revanced/${asset.browser_download_url.split('/').pop()}`
-    );
+    let fileName = asset.browser_download_url.split('/').pop();
+    const dotIndex = fileName.lastIndexOf('.');
+    fileName = insert(fileName, dotIndex, `-${assets.version}`);
+    overWriteJarNames(fileName);
+    if (dir.includes(fileName)) continue;
+    await dloadFromURL(asset.browser_download_url, `./revanced/${fileName}`);
   }
 }
 
@@ -125,4 +128,4 @@ async function downloadFiles (repos, websocket) {
   }
 }
 
-module.exports = { downloadFiles, dloadFromURL };
+module.exports = { downloadFiles, dloadFromURL, getDownloadLink };
