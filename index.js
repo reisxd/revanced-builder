@@ -13,6 +13,11 @@ const {
   PatchApp
 } = require('./wsEvents/index.js');
 const morgan = require('morgan');
+const { platform } = require('os');
+const exec = (cmd) =>
+  require('util').promisify(require('child_process').exec(cmd));
+const opn = require('open');
+const pf = require('portfinder');
 
 const app = Express();
 const server = http.createServer(app);
@@ -26,57 +31,74 @@ app.get('/revanced.apk', function (req, res) {
 });
 
 const open = async (PORT) => {
-  if (require('os').platform === 'android') {
-    await require('util').promisify(
-      require('child_process').exec(`termux-open-url http://localhost:${PORT}`)
-    );
-  } else require('open')(`http://localhost:${PORT}`);
+  if (platform === 'android') {
+    await exec(`termux-open-url http://localhost:${PORT}`);
+  } else opn(`http://localhost:${PORT}`);
 };
+
+const log = (msg, newline = true, tag = true) =>
+  newline
+    ? console.log(`${tag ? '[builder] ' : ''}${msg}`)
+    : process.stdout.write(`${tag ? '[builder] ' : ''}${msg} `);
 
 const listen = (PORT) => {
   server.listen(PORT, () => {
-    console.log('The webserver is now running!');
+    log('The webserver is now running!');
     try {
-      console.log('Opening the app in the default browser...');
+      log('Opening the app in the default browser...', false);
       open(PORT);
-      console.log('Done. Check if a browser window has opened');
+      log('Done. Check if a browser window has opened', true, false);
     } catch (e) {
-      console.log(
-        `Failed. Open up http://localhost:${PORT} manually in your browser.`
+      log(
+        `Failed. Open up http://localhost:${PORT} manually in your browser.`,
+        true,
+        false
       );
     }
   });
 };
 
-require('portfinder')
-  .getPortPromise()
+const cleanExit = async (svr) => {
+  log('Killing any dangling processes...', false);
+  const fkill = await import('fkill');
+  await fkill.default(['adb', 'java', 'aapt2'], {
+    forceAfterTimeout: 5000,
+    tree: true,
+    ignoreCase: true,
+    silent: true
+  });
+  log('Done.', true, false);
+  log('Stopping the server...', false);
+  svr.close(() => log('Done', true, false));
+  setTimeout(() => process.exit(0), 2500);
+};
+
+pf.getPortPromise()
   .then((port) => {
-    console.log(`[builder] Using port ${port}`);
+    log(`Listening at port ${port}`);
     listen(port);
   })
   .catch((err) => {
-    console.error(`[builder] Unable to determine free ports. Reason:\n${err}`);
+    log(`Unable to determine free ports.\nReason: ${err}`);
+    log('Falling back to 8080.');
     listen(8080);
   });
 
 process.on('uncaughtException', (reason) => {
-  console.log(
-    `An error occured.\n${reason.stack}\nPlease report this bug here: https://github.com/reisxd/revanced-builder/issues`
+  log(`An error occured.\n${reason.stack}`);
+  log(
+    'Please report this bug here: https://github.com/reisxd/revanced-builder/issues.'
   );
 });
 
 process.on('unhandledRejection', (reason) => {
-  console.log(
-    `An error occured.\n${reason.stack}\nPlease report this bug here: https://github.com/reisxd/revanced-builder/issues`
+  log(`An error occured.\n${reason.stack}`);
+  log(
+    'Please report this bug here: https://github.com/reisxd/revanced-builder/issues.'
   );
 });
 
-process.on('SIGTERM', () => {
-  server.close(() => {
-    console.log('The webserver was stopped.');
-    setTimeout(() => process.exit(0), 2000);
-  });
-});
+process.on('SIGTERM', () => cleanExit(server));
 
 // The websocket server
 wsServer.on('connection', (ws) => {
