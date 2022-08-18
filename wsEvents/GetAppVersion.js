@@ -126,8 +126,8 @@ module.exports = async function (message, ws) {
       .replace('WarnWetter ', '')
       .replace('TikTok ', '');
 
-    if (versionName.includes('beta')) continue;
-    else if (
+    //if (versionName.includes('beta')) continue;
+    if (
       global.jarNames.selectedApp === 'android' &&
       !versionName.includes('release')
     ) {
@@ -135,7 +135,7 @@ module.exports = async function (message, ws) {
     }
     if (versionName.includes('(Wear OS)')) continue;
     versionList.push({
-      version: versionName
+      version: versionName.replace(/\s/g, '-')
     });
   }
   return ws.send(

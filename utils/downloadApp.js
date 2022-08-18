@@ -4,7 +4,7 @@ const { dloadFromURL } = require('./FileDownloader.js');
 
 module.exports = async function (ws) {
   const { version, arch } = global.apkInfo;
-  const apkMirrorVersionArg = version.replace(/\./g, '-');
+  const apkMirrorVersionArg = version.replace(/\./g, '-').replace("-beta", '');
 
   let versionDownload;
 
