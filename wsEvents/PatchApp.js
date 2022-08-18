@@ -38,7 +38,7 @@ async function afterBuild (ws) {
     await actualExec(
       `cp revanced/${global.outputName} /storage/emulated/0/${global.outputName}`
     );
-    await actualExec('cp revanced/microg.apk /storage/emulated/0/microg.apk');
+    await actualExec(`cp ${global.jarNames.microG} /storage/emulated/0/microg.apk`);
 
     ws.send(
       JSON.stringify({
