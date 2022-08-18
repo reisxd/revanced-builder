@@ -14,7 +14,7 @@ module.exports = async function (ws) {
         JSON.stringify({
           event: 'error',
           error:
-            "You don't have JDK installed.Please close ReVanced Builder and install it using:pkg install openjdk-17"
+            "You don't have JDK installed.Please close ReVanced Builder and install it using: pkg install openjdk-17"
         })
       );
     }

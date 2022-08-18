@@ -15,7 +15,7 @@ module.exports = async function (ws) {
         JSON.stringify({
           event: 'error',
           error:
-            'You have an outdated version of JDK.<br>Please get it from here: https://jdk.java.net/archive<br>Download the zip/tar.gz for your OS under "17.0.2 (build 17.0.2+8)"'
+            'You have an outdated version of JDK.<br>Please get it from here: https://www.azul.com/downloads/?version=java-17-lts&package=jdk"'
         })
       );
     }
@@ -25,7 +25,7 @@ module.exports = async function (ws) {
         JSON.stringify({
           event: 'error',
           error:
-            'You have Java, but not OpenJDK. You need to install it because of signing problems.<br>Please get it from here: https://jdk.java.net/archive/ Download the zip/tar.gz for your OS under "17.0.2 (build 17.0.2+8)"'
+            'You have Java, but not OpenJDK. You need to install it because of signing problems.<br>Please get it from here: https://www.azul.com/downloads/?version=java-17-lts&package=jdk'
         })
       );
     }
@@ -36,7 +36,7 @@ module.exports = async function (ws) {
         JSON.stringify({
           event: 'error',
           error:
-            'You don\'t have JDK installed.<br>Please get it from here: https://jdk.java.net/archive<br>Download the zip/tar.gz for your OS under "17.0.2 (build 17.0.2+8)"'
+            'You don\'t have JDK installed.<br>Please get it from here: https://www.azul.com/downloads/?version=java-17-lts&package=jdk"'
         })
       );
     }

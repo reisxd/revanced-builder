@@ -12,10 +12,10 @@ async function overWriteJarNames (fileName) {
   if (fileName.includes('revanced-patches') && fileName.endsWith('.jar')) {
     global.jarNames.patchesJar = `./revanced/${fileName}`;
   }
-  if (fileName.endsWith('.apk') && !fileName.startsWith('microg')) {
+  if (fileName.endsWith('.apk') && !fileName.startsWith('VancedMicroG')) {
     global.jarNames.integrations = `./revanced/${fileName}`;
   }
-  if (fileName.startsWith('microg')) {
+  if (fileName.startsWith('VancedMicroG')) {
     global.jarNames.microG = `./revanced/${fileName}`;
   }
 }
@@ -34,7 +34,8 @@ async function getDownloadLink (json) {
   const assets = jsonResponse?.assets;
   const jsonOBJ = {
     version: jsonResponse?.tag_name,
-    assets
+    assets,
+    repo: json.repo
   };
 
   if (jsonResponse.error || !apiRequest.ok) {
@@ -68,9 +69,10 @@ async function getDownloadLink (json) {
 async function downloadFile (assets) {
   for (const asset of assets.assets) {
     const dir = fs.readdirSync('./revanced/');
-    let fileName = asset.browser_download_url.split('/').pop();
-    const dotIndex = fileName.lastIndexOf('.');
-    fileName = insert(fileName, dotIndex, `-${assets.version}`);
+    let fileExt = asset.browser_download_url.split('/').pop().split('.');
+    fileExt = fileExt[fileExt.length - 1];
+    let fileName = assets.repo
+    fileName += `-${assets.version}.${fileExt}`;
     overWriteJarNames(fileName);
     if (dir.includes(fileName)) continue;
     await dloadFromURL(asset.browser_download_url, `./revanced/${fileName}`);
