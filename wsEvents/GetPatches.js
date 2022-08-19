@@ -39,6 +39,7 @@ module.exports = async function (message, ws) {
     const isCompatible = pkg === global.jarNames.selectedApp;
 
     const versionsArr = versions.split(', ');
+    global.versions = versionsArr.map(i => i.trim());
     const maxVersion = versionsArr.sort()[versionsArr.length - 1];
 
     if (isCompatible && (!isRooted || hasRoot)) {
