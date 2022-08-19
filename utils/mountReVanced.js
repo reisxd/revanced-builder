@@ -46,10 +46,11 @@ module.exports = async function (pkg, ws) {
   // await actualExec(`su -c 'monkey -p ${pkg} 1 && kill $(pidof -s ${pkg})'`);
 
   // Mount APK with command so it doesn't require restart
-  await actualExec(`su -mm -c 'base_path="/data/adb/revanced/${pkg}.apk";stock_path=$( pm path ${pkg} | grep base | sed 's/package://g' );mount -o bind $base_path $stock_path'`)
-  // Kill app process 
+  await actualExec(
+    `su -mm -c 'base_path="/data/adb/revanced/${pkg}.apk";stock_path=$( pm path ${pkg} | grep base | sed 's/package://g' );mount -o bind $base_path $stock_path'`
+  );
+  // Kill app process
   await actualExec(`su -c 'am force-stop ${pkg}'`);
-
 
   ws.send(
     JSON.stringify({

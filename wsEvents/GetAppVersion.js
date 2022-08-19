@@ -9,7 +9,7 @@ const lt = require('semver/functions/lt');
 
 const actualExec = promisify(exec);
 
-async function getPage(pageUrl) {
+async function getPage (pageUrl) {
   const pageRequest = await fetchURL(pageUrl, {
     headers: {
       'user-agent':
@@ -137,17 +137,17 @@ module.exports = async function (message, ws) {
     versionList.push({
       version: versionName.split(' ')[0], // remove beta suffix if there is one
       recommended: global.versions.includes(versionName.split(' ')[0]),
-      beta: versionName.split(' ')[1] ? true : false
+      beta: !!versionName.split(' ')[1]
     });
   }
   versionList.sort(
     (a, b) =>
       lt(
-        a.version.replace(/\.0(?<digit>\d)/gi, ".$1"), // because apparently x.0y.z (ex. 5.09.51) isn't a valid version
-        b.version.replace(/\.0(?<digit>\d)/gi, ".$1")
+        a.version.replace(/\.0(?<digit>\d)/gi, '.$1'), // because apparently x.0y.z (ex. 5.09.51) isn't a valid version
+        b.version.replace(/\.0(?<digit>\d)/gi, '.$1')
       )
         ? 1
-        : -1 /* yes i need to add this to the end, the sort function is stupid*/
+        : -1 /* yes i need to add this to the end, the sort function is stupid */
   );
   return ws.send(
     JSON.stringify({
