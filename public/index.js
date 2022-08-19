@@ -108,6 +108,7 @@ function setAppVersion(arch, version) {
 function getAppVersions(isRooted) {
   document.getElementsByTagName('header')[0].innerHTML = `
     <h1>Select the version you want to download</h1>
+    Versions marked as beta might have bugs or be unstable, unless marked as recommended
     ${
       isRooted
         ? "<span><strong>You are building rooted ReVanced</strong>, you'll need to download the version matching with your YouTube version.<br>(You'll also need YouTube installed)<br>If you didn't intend on doing a rooted build, include all \"Root required to exclude\" patches<span>"
@@ -240,11 +241,9 @@ ws.onmessage = (msg) => {
             <input type="radio" name="version" id="app-${i}" value="${
           version.version
         }"/>
-            <label for="app-${i}">${
-          version.recommended
-            ? `${version.version} (recommended)`
-            : version.version
-        }</label></li>`;
+            <label for="app-${i}">${version.version} ${
+          version.beta ? ' (beta)' : ''
+        } ${version.recommended ? ' (recommended)' : ''}</label></li>`;
         i++;
       }
 

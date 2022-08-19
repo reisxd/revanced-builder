@@ -136,7 +136,8 @@ module.exports = async function (message, ws) {
     if (versionName.includes('(Wear OS)')) continue;
     versionList.push({
       version: versionName.split(' ')[0], // remove beta suffix if there is one
-      recommended: global.versions.includes(versionName.split(' ')[0])
+      recommended: global.versions.includes(versionName.split(' ')[0]),
+      beta: versionName.split(' ')[1] ? true : false
     });
   }
   versionList.sort(
