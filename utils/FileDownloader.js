@@ -22,9 +22,9 @@ async function overWriteJarNames (fileName) {
 
 // yes.
 
-function insert (str, index, value) {
-  return str.substr(0, index) + value + str.substr(index);
-}
+// function insert (str, index, value) {
+//   return str.substr(0, index) + value + str.substr(index);
+// }
 
 async function getDownloadLink (json) {
   const apiRequest = await fetchURL(
@@ -71,7 +71,7 @@ async function downloadFile (assets) {
     const dir = fs.readdirSync('./revanced/');
     let fileExt = asset.browser_download_url.split('/').pop().split('.');
     fileExt = fileExt[fileExt.length - 1];
-    let fileName = assets.repo
+    let fileName = assets.repo;
     fileName += `-${assets.version}.${fileExt}`;
     overWriteJarNames(fileName);
     if (dir.includes(fileName)) continue;

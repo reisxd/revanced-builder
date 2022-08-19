@@ -5,6 +5,7 @@ const getAppVersion = require('../utils/getAppVersion.js');
 const downloadApp = require('../utils/downloadApp.js');
 const { exec } = require('child_process');
 const { promisify } = require('util');
+const lt = require('semver/functions/lt');
 
 const actualExec = promisify(exec);
 
@@ -126,8 +127,7 @@ module.exports = async function (message, ws) {
       .replace('WarnWetter ', '')
       .replace('TikTok ', '');
 
-    if (versionName.includes('beta')) continue;
-    else if (
+    if (
       global.jarNames.selectedApp === 'android' &&
       !versionName.includes('release')
     ) {
@@ -135,9 +135,20 @@ module.exports = async function (message, ws) {
     }
     if (versionName.includes('(Wear OS)')) continue;
     versionList.push({
-      version: versionName
+      version: versionName.split(' ')[0], // remove beta suffix if there is one
+      recommended: global.versions.includes(versionName.split(' ')[0]),
+      beta: !!versionName.split(' ')[1]
     });
   }
+  versionList.sort(
+    (a, b) =>
+      lt(
+        a.version.replace(/\.0(?<digit>\d)/gi, '.$1'), // because apparently x.0y.z (ex. 5.09.51) isn't a valid version
+        b.version.replace(/\.0(?<digit>\d)/gi, '.$1')
+      )
+        ? 1
+        : -1 /* yes i need to add this to the end, the sort function is stupid */
+  );
   return ws.send(
     JSON.stringify({
       event: 'appVersions',
