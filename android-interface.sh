@@ -44,15 +44,11 @@ dload_and_install () {
   log "Unzipping..."
   unzip -qqo revanced-builder.zip
   rm revanced-builder.zip
-  if [[ "$1" == upd ]]; then
-    mv -fv revanced-builder-main/* $HOME/revanced-builder
-  else
-    mv revanced-builder{-main,}
-  fi
-  cd revanced-builder
+  mv revanced-builder-main/* revanced-builder-main/.* .
   log "Installing packages..."
   npm install --omit=dev
-  [[ -z "$2" ]] && log "Done. Execute \`$SCR_NAME_EXEC run\` to launch the builder."
+  rmdir revanced-builder-main
+  [[ -z "$1" ]] && log "Done. Execute \`$SCR_NAME_EXEC run\` to launch the builder."
 }
 
 preflight () {
@@ -95,7 +91,9 @@ EOM
 
   if [[ ! -d $HOME/revanced-builder ]]; then
     log "revanced-builder not installed. Installing..."
-    dload_and_install not_upd n
+    mkdir -p revanced-builder
+    cd revanced-builder
+    dload_and_install n
   else
     log "revanced-builder found."
     log "All checks done."
@@ -112,19 +110,43 @@ run_builder () {
 
 reinstall_builder () {
   log "Deleting revanced-builder..."
-  cd $HOME/revanced-builder
-  if [[ $2 != "--delete-keystore" ]]; then
-    EXCLUDE_KEYSTORE="! -name 'revanced/revanced.keystore'"
-    log "Preserving the keystore. If you do not want this, use the --delete-keystore flag."
-    log "Execute \`$SCR_NAME_EXEC help\` for more info."
+  if [[ $1 != "--delete-keystore" ]]; then
+    if [ -f "$HOME/revanced-builder/revanced/revanced.keystore" ]; then
+      mv $HOME/revanced-builder/revanced/revanced.keystore $HOME/revanced.keystore
+      log "Preserving the keystore. If you do not want this, use the --delete-keystore flag."
+      log "Execute \`$SCR_NAME_EXEC help\` for more info."
+    fi
   fi
-  find . $EXCLUDE_KEYSTORE -exec rm -rf {} +
+  rm -r revanced-builder
+  mkdir -p revanced-builder
+  if [ -f "$HOME/revanced.keystore" ]; then
+    mkdir -p revanced-builder/revanced
+    mv $HOME/revanced.keystore $HOME/revanced-builder/revanced/revanced.keystore
+  fi
+  cd $HOME/revanced-builder
   dload_and_install
 }
 
 update_builder () {
   log "Updating revanced-builder..."
-  dload_and_install upd
+  if [ -d "$HOME/revanced-builder/revanced" ]; then
+    mkdir -p $HOME/revanced_backup
+    mv $HOME/revanced-builder/revanced/* $HOME/revanced_backup
+  fi
+  if [ -f "$HOME/revanced-builder/includedPatchesList.json" ]; then
+    mv $HOME/revanced-builder/includedPatchesList.json $HOME/includedPatchesList.json
+  fi
+  rm -r revanced-builder
+  mkdir -p revanced-builder
+  if [ -d "$HOME/revanced_backup" ]; then
+    mkdir -p revanced-builder/revanced
+    mv $HOME/revanced_backup/* $HOME/revanced-builder/revanced
+  fi
+  if [ -f "$HOME/includedPatchesList.json" ]; then
+    mv $HOME/includedPatchesList.json $HOME/revanced-builder/includedPatchesList.json
+  fi
+  cd $HOME/revanced-builder
+  dload_and_install
 }
 
 main () {
