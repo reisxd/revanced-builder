@@ -2,6 +2,7 @@
 
 SCR_NAME_EXEC=$0
 SCR_NAME=$(basename $SCR_NAME_EXEC)
+SCR_NAME=${SCR_NAME%.*}
 
 help_info () {
   cat <<EOF
@@ -31,6 +32,12 @@ log () {
   echo "[$SCR_NAME] $1"
 }
 
+error () {
+  log "$1"
+  [[ "$2" == y ]] && help_info
+  exit ${3:-1}
+}
+
 dload_and_install () {
   log "Downloading revanced-builder..."
   curl -sLo revanced-builder.zip https://github.com/reisxd/revanced-builder/archive/refs/heads/main.zip
@@ -44,20 +51,56 @@ dload_and_install () {
   [[ -z $1 ]] && log "Done. Execute \`$SCR_NAME_EXEC run\` to launch the builder."
 }
 
-run_builder () {
-  if [[ ! -d $HOME/revanced-builder ]]; then
-    log "Installing revanced-builder..."
+preflight () {
+  setup_storage () {
     if [[ ! -d $HOME/storage ]]; then
       log "You will now get a permission dialog to allow access to storage."
       log "This is needed in order to move the built APK (+ MicroG) to Internal Storage."
       sleep 5
       termux-setup-storage
+    else
+      log "Already gotten storage access."
+    fi
+  }
+
+  install_dependencies () {
+    local JAVA_NF NODE_NF
+    which java >/dev/null || JAVA_NF=1
+    which node >/dev/null || NODE_NF=1
+    if [[ $JAVA_NF != 1 ]] && [[ $NODE_NF != 1 ]]; then
+      log "Node.js and JDK already installed!"
+      return
     fi
     log "Updating Termux and installing dependencies..."
     pkg update -y
-    pkg install nodejs-lts openjdk-17 -y
+    pkg install nodejs-lts openjdk-17 -y || {
+      error $(cat <<EOM
+Failed to install Node.js and OpenJDK 17.
+Possible reasons (in the order of commonality):
+1. Termux was downloaded from Play Store. Termux in Play Store is deprecated, and has packaging bugs. Please install it from F-Droid.
+2. Mirrors are down at the moment. Try running \`termux-change-repo\`.
+3. Internet connection is unstable.
+4. Lack of free storage.
+EOM
+      ) n 2
+    }
+  }
+  
+  setup_storage
+  install_dependencies
+
+  if [[ ! -d $HOME/revanced-builder ]]; then
+    log "revanced-builder not installed. Installing..."
     dload_and_install n
+  else
+    log "revanced-builder found."
+    log "All checks done."
   fi
+}
+
+run_builder () {
+  preflight
+  echo
   [[ $1 == "--delete-cache" ]] && rm -rf $HOME/revanced-builder/revanced
   cd $HOME/revanced-builder
   node .
@@ -82,11 +125,6 @@ update_builder () {
 }
 
 main () {
-  error () {
-    log "$1"
-    help_info
-    exit 1
-  }
   if [[ -z "$@" ]]; then
     run_builder
   elif [[ $# -gt 2 ]]; then
