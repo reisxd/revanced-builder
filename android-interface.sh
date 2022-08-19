@@ -44,11 +44,15 @@ dload_and_install () {
   log "Unzipping..."
   unzip -qqo revanced-builder.zip
   rm revanced-builder.zip
-  mv revanced-builder{-main,}
+  if [[ "$1" == upd ]]; then
+    mv -fv revanced-builder-main/* $HOME/revanced-builder
+  else
+    mv revanced-builder{-main,}
+  fi
   cd revanced-builder
   log "Installing packages..."
   npm install --omit=dev
-  [[ -z $1 ]] && log "Done. Execute \`$SCR_NAME_EXEC run\` to launch the builder."
+  [[ -z "$2" ]] && log "Done. Execute \`$SCR_NAME_EXEC run\` to launch the builder."
 }
 
 preflight () {
@@ -91,7 +95,7 @@ EOM
 
   if [[ ! -d $HOME/revanced-builder ]]; then
     log "revanced-builder not installed. Installing..."
-    dload_and_install n
+    dload_and_install not_upd n
   else
     log "revanced-builder found."
     log "All checks done."
@@ -120,8 +124,7 @@ reinstall_builder () {
 
 update_builder () {
   log "Updating revanced-builder..."
-  cd $HOME/revanced-builder
-  dload_and_install
+  dload_and_install upd
 }
 
 main () {
