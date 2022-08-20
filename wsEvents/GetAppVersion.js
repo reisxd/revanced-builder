@@ -140,11 +140,16 @@ module.exports = async function (message, ws) {
       beta: !!versionName.split(' ')[1]
     });
   }
+  const sanitizeVersion = (ver) => {
+    return ver
+      .replace(/\.0(?<digit>\d)/gi, '.$1') // because apparently x.0y.z (ex. 5.09.51) isn't a valid version
+      .replace(/^(?<version>\d+)\.(?<minor>\d+)$/gi, "$1.$2.0") // nor are versions without a patch (ex. 2.3)
+  }
   versionList.sort(
     (a, b) =>
       lt(
-        a.version.replace(/\.0(?<digit>\d)/gi, '.$1'), // because apparently x.0y.z (ex. 5.09.51) isn't a valid version
-        b.version.replace(/\.0(?<digit>\d)/gi, '.$1')
+        sanitizeVersion(a.version),
+        sanitizeVersion(b.version)
       )
         ? 1
         : -1 /* yes i need to add this to the end, the sort function is stupid */
