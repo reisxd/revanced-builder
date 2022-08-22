@@ -74,15 +74,13 @@ preflight () {
     log "Updating Termux and installing dependencies..."
     pkg update -y
     pkg install nodejs-lts openjdk-17 -y || {
-      error $(cat <<EOM
+      error "
 Failed to install Node.js and OpenJDK 17.
 Possible reasons (in the order of commonality):
 1. Termux was downloaded from Play Store. Termux in Play Store is deprecated, and has packaging bugs. Please install it from F-Droid.
 2. Mirrors are down at the moment. Try running \`termux-change-repo\`.
 3. Internet connection is unstable.
-4. Lack of free storage.
-EOM
-      ) n 2
+4. Lack of free storage." n 2
     }
   }
   
