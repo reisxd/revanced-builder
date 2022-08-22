@@ -68,21 +68,19 @@ preflight () {
     which java >/dev/null || JAVA_NF=1
     which node >/dev/null || NODE_NF=1
     if [[ $JAVA_NF != 1 ]] && [[ $NODE_NF != 1 ]]; then
-      log "Node.js and JDK already installed!"
+      log "Node.js and JDK already installed."
       return
     fi
     log "Updating Termux and installing dependencies..."
     pkg update -y
     pkg install nodejs-lts openjdk-17 -y || {
-      error $(cat <<EOM
+      error "
 Failed to install Node.js and OpenJDK 17.
 Possible reasons (in the order of commonality):
 1. Termux was downloaded from Play Store. Termux in Play Store is deprecated, and has packaging bugs. Please install it from F-Droid.
 2. Mirrors are down at the moment. Try running \`termux-change-repo\`.
 3. Internet connection is unstable.
-4. Lack of free storage.
-EOM
-      ) n 2
+4. Lack of free storage." n 2
     }
   }
   
@@ -103,7 +101,11 @@ EOM
 run_builder () {
   preflight
   echo
-  [[ $1 == "--delete-cache" ]] && rm -rf $HOME/revanced-builder/revanced
+  if [[ $1 == "--delete-cache" ]]; then
+    # Is this even called a cache?
+    log "Deleteting builder cache..."
+    rm -rf $HOME/revanced-builder/revanced
+  fi
   cd $HOME/revanced-builder
   node .
 }
@@ -120,15 +122,17 @@ reinstall_builder () {
   rm -r revanced-builder
   mkdir -p revanced-builder
   if [ -f "$HOME/revanced.keystore" ]; then
+    log "Restoring the keystore..."
     mkdir -p revanced-builder/revanced
     mv $HOME/revanced.keystore $HOME/revanced-builder/revanced/revanced.keystore
   fi
+  log "Reinstalling..."
   cd $HOME/revanced-builder
   dload_and_install
 }
 
 update_builder () {
-  log "Updating revanced-builder..."
+  log "Backing up some stuff..."
   if [ -d "$HOME/revanced-builder/revanced" ]; then
     mkdir -p $HOME/revanced_backup
     mv $HOME/revanced-builder/revanced/* $HOME/revanced_backup
@@ -136,7 +140,9 @@ update_builder () {
   if [ -f "$HOME/revanced-builder/includedPatchesList.json" ]; then
     mv $HOME/revanced-builder/includedPatchesList.json $HOME/includedPatchesList.json
   fi
+  log "Deleting revanced-builder..."
   rm -r revanced-builder
+  log "Restoring the backup..."
   mkdir -p revanced-builder
   if [ -d "$HOME/revanced_backup" ]; then
     mkdir -p revanced-builder/revanced
@@ -145,6 +151,7 @@ update_builder () {
   if [ -f "$HOME/includedPatchesList.json" ]; then
     mv $HOME/includedPatchesList.json $HOME/revanced-builder/includedPatchesList.json
   fi
+  log "Updating revanced-builder..."
   cd $HOME/revanced-builder
   dload_and_install
 }
