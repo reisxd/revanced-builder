@@ -50,7 +50,7 @@ dload_and_install () {
   mv revanced-builder-main/!(.|..) .
   log "Installing packages..."
   npm install --omit=dev
-  rmdir revanced-builder-main
+  rm -rf revanced-builder-main
   [[ -z "$1" ]] && log "Done. Execute \`$SCR_NAME_EXEC run\` to launch the builder."
 }
 
