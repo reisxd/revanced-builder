@@ -5,6 +5,7 @@ shopt -s extglob
 SCR_NAME_EXEC=$0
 SCR_NAME=$(basename $SCR_NAME_EXEC)
 SCR_NAME=${SCR_NAME%.*}
+RVB_DIR=$HOME/revanced-builder
 
 help_info () {
   cat <<EOF
@@ -89,10 +90,10 @@ Possible reasons (in the order of commonality):
   setup_storage
   install_dependencies
 
-  if [[ ! -d $HOME/revanced-builder ]]; then
+  if [[ ! -d $RVB_DIR ]]; then
     log "revanced-builder not installed. Installing..."
-    mkdir -p revanced-builder
-    cd revanced-builder
+    mkdir -p $RVB_DIR
+    cd $RVB_DIR
     dload_and_install n
   else
     log "revanced-builder found."
@@ -106,17 +107,17 @@ run_builder () {
   if [[ $1 == "--delete-cache" ]]; then
     # Is this even called a cache?
     log "Deleteting builder cache..."
-    rm -rf $HOME/revanced-builder/revanced
+    rm -rf $RVB_DIR/revanced
   fi
-  cd $HOME/revanced-builder
+  cd $RVB_DIR
   node .
 }
 
 reinstall_builder () {
   log "Deleting revanced-builder..."
   if [[ $1 != "--delete-keystore" ]]; then
-    if [ -f "$HOME/revanced-builder/revanced/revanced.keystore" ]; then
-      mv $HOME/revanced-builder/revanced/revanced.keystore $HOME/revanced.keystore
+    if [ -f "$RVB_DIR/revanced/revanced.keystore" ]; then
+      mv $RVB_DIR/revanced/revanced.keystore $HOME/revanced.keystore
       log "Preserving the keystore. If you do not want this, use the --delete-keystore flag."
       log "Execute \`$SCR_NAME_EXEC help\` for more info."
     fi
@@ -126,21 +127,21 @@ reinstall_builder () {
   if [ -f "$HOME/revanced.keystore" ]; then
     log "Restoring the keystore..."
     mkdir -p revanced-builder/revanced
-    mv $HOME/revanced.keystore $HOME/revanced-builder/revanced/revanced.keystore
+    mv $HOME/revanced.keystore $RVB_DIR/revanced/revanced.keystore
   fi
   log "Reinstalling..."
-  cd $HOME/revanced-builder
+  cd $RVB_DIR
   dload_and_install
 }
 
 update_builder () {
   log "Backing up some stuff..."
-  if [ -d "$HOME/revanced-builder/revanced" ]; then
+  if [ -d "$RVB_DIR/revanced" ]; then
     mkdir -p $HOME/revanced_backup
-    mv $HOME/revanced-builder/revanced/* $HOME/revanced_backup
+    mv $RVB_DIR/revanced/* $HOME/revanced_backup
   fi
-  if [ -f "$HOME/revanced-builder/includedPatchesList.json" ]; then
-    mv $HOME/revanced-builder/includedPatchesList.json $HOME/includedPatchesList.json
+  if [ -f "$RVB_DIR/includedPatchesList.json" ]; then
+    mv $RVB_DIR/includedPatchesList.json $HOME/includedPatchesList.json
   fi
   log "Deleting revanced-builder..."
   rm -r revanced-builder
@@ -148,13 +149,13 @@ update_builder () {
   mkdir -p revanced-builder
   if [ -d "$HOME/revanced_backup" ]; then
     mkdir -p revanced-builder/revanced
-    mv $HOME/revanced_backup/* $HOME/revanced-builder/revanced
+    mv $HOME/revanced_backup/* $RVB_DIR/revanced
   fi
   if [ -f "$HOME/includedPatchesList.json" ]; then
-    mv $HOME/includedPatchesList.json $HOME/revanced-builder/includedPatchesList.json
+    mv $HOME/includedPatchesList.json $RVB_DIR/includedPatchesList.json
   fi
   log "Updating revanced-builder..."
-  cd $HOME/revanced-builder
+  cd $RVB_DIR
   dload_and_install
 }
 
