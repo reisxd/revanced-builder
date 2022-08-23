@@ -11,6 +11,15 @@ module.exports = async function (pkg, ws) {
   );
   // Create folder
   await actualExec('su -c \'mkdir -p "/data/adb/revanced/"\'');
+
+  // Unmount the already existing ReVanced APK, so it can be updated
+  try {
+    // Force stop the app
+    await actualExec(`su -c 'am force-stop ${pkg}'`);
+    // Unmount
+    await actualExec(`su -mm -c 'stock_path="$( pm path ${pkg} | grep base | sed 's/package://g' )" && umount -l "$stock_path"'`);
+  } catch (error) {} // An error occured, probably because there is no existing ReVanced APK to be unmounted, ignore it and continue
+
   // Move APK to folder
   await actualExec(
     `su -c 'base_path="/data/adb/revanced/${pkg}.apk" && mv "/data/local/tmp/revanced.delete" "$base_path" && chmod 644 "$base_path" && chown system:system "$base_path" && chcon u:object_r:apk_data_file:s0  "$base_path"'`
