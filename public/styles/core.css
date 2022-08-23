@@ -123,6 +123,7 @@ button {
   font-weight: 400;
   padding: 10px 20px;
   background-color: var(--buttonColor);
+  cursor: pointer;
 }
 
 .highlighted {
