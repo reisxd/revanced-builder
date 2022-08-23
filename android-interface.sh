@@ -1,5 +1,7 @@
 #!/bin/bash
 
+shopt -s extglob
+
 SCR_NAME_EXEC=$0
 SCR_NAME=$(basename $SCR_NAME_EXEC)
 SCR_NAME=${SCR_NAME%.*}
@@ -44,7 +46,7 @@ dload_and_install () {
   log "Unzipping..."
   unzip -qqo revanced-builder.zip
   rm revanced-builder.zip
-  mv revanced-builder-main/* revanced-builder-main/.* .
+  mv revanced-builder-main/!(.|..) .
   log "Installing packages..."
   npm install --omit=dev
   rmdir revanced-builder-main
