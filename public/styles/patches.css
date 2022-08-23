@@ -4,6 +4,8 @@ input[type='checkbox'] {
 
 input[type='checkbox'].select:checked + label {
   background: var(--accentColor);
+  box-shadow: inset 0px 0px 0px 1px #ddd;
+  border-color: #ddd;
 }
 
 .patch-description {
@@ -18,8 +20,16 @@ input[type='checkbox'].select + label {
   font-size: 14px;
   color: var(--textColor);
   border-radius: var(--border-radius);
-  padding: 9px;
+  padding: 12px;
   background-color: var(--interactableColor);
+  cursor: pointer;
+  border: 2px solid #dddddd2e;
+  transition: 200ms;
+}
+
+input[type="checkbox"].select + label:hover {
+  box-shadow: inset 0px 0px 0px 1px #ddd;
+  border-color: #ddd;
 }
 
 ul {
