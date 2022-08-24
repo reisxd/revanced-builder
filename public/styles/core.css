@@ -124,6 +124,16 @@ button {
   padding: 10px 20px;
   background-color: var(--buttonColor);
   cursor: pointer;
+  transition: 200ms;
+  box-shadow: 0px 0px 0px 2px #ddd;
+}
+
+button:hover {
+	box-shadow: 0 0 0 3px #ddd;
+}
+
+button:focus, button:active {
+  box-shadow: 0 0 0 2px #ddd; 
 }
 
 .highlighted {
@@ -178,6 +188,12 @@ i.social-icon {
   line-height: 1em;
   color: var(--icon-foreground);
   background-color: var(--icon-background);
+  cursor: pointer;
+  transition: 200ms;
+}
+
+i.social-icon:hover {
+  box-shadow: 0 0 0 2px #ddd;
 }
 
 i.social-icon::before {
