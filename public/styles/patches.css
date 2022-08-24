@@ -27,7 +27,7 @@ input[type='checkbox'].select + label {
   transition: 200ms;
 }
 
-input[type="checkbox"].select + label:hover {
+input[type='checkbox'].select + label:hover {
   box-shadow: inset 0px 0px 0px 1px #ddd;
   border-color: #ddd;
 }

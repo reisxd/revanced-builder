@@ -44,7 +44,7 @@ input[type='radio'] + label {
   transition: 200ms;
 }
 
-input[type="radio"] + label:hover {
+input[type='radio'] + label:hover {
   box-shadow: inset 0px 0px 0px 1px #ddd;
   border-color: #ddd;
 }

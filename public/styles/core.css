@@ -72,7 +72,7 @@ div#container {
   height: 100%;
 }
 
-div#container>main {
+div#container > main {
   display: flex;
   flex-direction: column;
   min-width: 0;
@@ -235,13 +235,13 @@ dialog {
   0% {
     opacity: 0;
     -webkit-transform: translate3d(0, 100%, 0);
-    transform: translate3d(0, 100%, 0)
+    transform: translate3d(0, 100%, 0);
   }
 
   to {
     opacity: 1;
     -webkit-transform: translateZ(0);
-    transform: translateZ(0)
+    transform: translateZ(0);
   }
 }
 
@@ -254,7 +254,7 @@ dialog {
   padding-bottom: 25px;
   position: fixed;
   background: black;
-  animation: fadeInUp .25s;
+  animation: fadeInUp 0.25s;
   bottom: 81px;
   left: 22px;
   border-bottom: 0px;
@@ -270,6 +270,7 @@ dialog {
 
 #themecolor-picker {
   display: flex;
+  list-style: none;
 }
 
 #themecolor-picker span {
