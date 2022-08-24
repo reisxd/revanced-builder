@@ -7,7 +7,7 @@
     <link href="../styles/fontawesome.css" rel="stylesheet" type="text/css" />
     <link href="../styles/core.css" rel="stylesheet" type="text/css" />
     <link href="../styles/dependencies.css" rel="stylesheet" type="text/css" />
-    <script src="../index.js"></script>
+    <script src="../index.js" defer></script>
   </head>
 
   <body>
@@ -32,6 +32,38 @@
           class="social-icon fa-xl fa-solid fa-question-circle"
           onclick="openAbout();"
         ></i>
+        <div style="margin-left: 10px"></div>
+        <i
+          class="social-icon fa-xl fa-solid fa-palette"
+          onclick="openColorPicker();"
+        ></i>
+        <div class="theming">
+          <ul id="themecolor-picker">
+            <li>
+              <span style="background: #4873b3 none repeat scroll 0% 0%"></span>
+            </li>
+            <li>
+              <span
+                style="background: #df0000bf none repeat scroll 0% 0%"
+              ></span>
+            </li>
+            <li>
+              <span
+                style="background: #605dbbb3 none repeat scroll 0% 0%"
+              ></span>
+            </li>
+            <li>
+              <span
+                style="background: #00e60069 none repeat scroll 0% 0%"
+              ></span>
+            </li>
+            <li>
+              <span
+                style="background: #0067fdc7 none repeat scroll 0% 0%"
+              ></span>
+            </li>
+          </ul>
+        </div>
         <span class="right"></span>
       </footer>
     </div>
