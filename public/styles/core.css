@@ -15,7 +15,8 @@
   --buttonColor: #3d404f;
   --scrollbarColor: #3d404f;
   --icon-foreground: #686b76;
-  --icon-background: #1b1e29; /* --contrastColor */
+  --icon-background: #1b1e29;
+  /* --contrastColor */
   --border-radius: 10px;
 }
 
@@ -71,7 +72,7 @@ div#container {
   height: 100%;
 }
 
-div#container > main {
+div#container>main {
   display: flex;
   flex-direction: column;
   min-width: 0;
@@ -104,6 +105,7 @@ div#content--wrapper {
 ::-webkit-scrollbar {
   width: 18px;
 }
+
 /* div#content--wrapper */
 ::-webkit-scrollbar-thumb {
   border-radius: 10px;
@@ -129,11 +131,12 @@ button {
 }
 
 button:hover {
-	box-shadow: 0 0 0 3px #ddd;
+  box-shadow: 0 0 0 3px #ddd;
 }
 
-button:focus, button:active {
-  box-shadow: 0 0 0 2px #ddd; 
+button:focus,
+button:active {
+  box-shadow: 0 0 0 2px #ddd;
 }
 
 .highlighted {
@@ -145,6 +148,7 @@ button:focus, button:active {
 span.right {
   margin-left: auto;
 }
+
 span.left {
   margin-left: auto;
 }
@@ -176,9 +180,8 @@ i.social-icon:hover {
 button:active,
 li:active,
 i.social-icon:active {
-  filter: brightness(
-    85%
-  ); /* Usage of !important is only to override :hover's filter */
+  filter: brightness(85%);
+  /* Usage of !important is only to override :hover's filter */
 }
 
 i.social-icon {
@@ -224,4 +227,59 @@ dialog {
 .buttonContainer {
   display: flex;
   justify-content: flex-end;
+}
+
+/* Color Picker */
+/* fadeInUp animation credits: animate.css */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    -webkit-transform: translate3d(0, 100%, 0);
+    transform: translate3d(0, 100%, 0)
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0)
+  }
+}
+
+.theming {
+  border: 2px solid #ddd;
+  border-bottom-color: rgb(221, 221, 221);
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  padding: 25px;
+  padding-bottom: 25px;
+  position: fixed;
+  background: black;
+  animation: fadeInUp .25s;
+  bottom: 81px;
+  left: 22px;
+  border-bottom: 0px;
+  padding-bottom: 1px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  display: none;
+}
+
+.theming.show {
+  display: block;
+}
+
+#themecolor-picker {
+  display: flex;
+}
+
+#themecolor-picker span {
+  padding: 14px;
+  transition: 200ms;
+  margin-right: 8px;
+  display: inline-block;
+  border-radius: 5px;
+}
+
+#themecolor-picker span.active {
+  box-shadow: inset 0 0 0 2px #ddd;
 }
