@@ -17,7 +17,9 @@ module.exports = async function (pkg, ws) {
     // Force stop the app
     await actualExec(`su -c 'am force-stop ${pkg}'`);
     // Unmount
-    await actualExec(`su -mm -c 'stock_path="$( pm path ${pkg} | grep base | sed 's/package://g' )" && umount -l "$stock_path"'`);
+    await actualExec(
+      `su -mm -c 'stock_path="$( pm path ${pkg} | grep base | sed 's/package://g' )" && umount -l "$stock_path"'`
+    );
   } catch (error) {} // An error occured, probably because there is no existing ReVanced APK to be unmounted, ignore it and continue
 
   // Move APK to folder
@@ -50,7 +52,9 @@ module.exports = async function (pkg, ws) {
   // );
 
   // Run Mount script
-  await actualExec(`su -mm -c '"/data/adb/service.d/mount_revanced_${pkg}.sh"'`);
+  await actualExec(
+    `su -mm -c '"/data/adb/service.d/mount_revanced_${pkg}.sh"'`
+  );
   // Kill mounted process
   // await actualExec(`su -c 'monkey -p ${pkg} 1 && kill $(pidof -s ${pkg})'`);
 
