@@ -29,7 +29,15 @@ module.exports = async function (ws) {
         })
       );
     }
-    await getDeviceID();
+    const deviceIds = await getDeviceID();
+
+    if (deviceIds[1]) {
+      return ws.send(JSON.stringify({
+        event: 'multipleDevices'
+      }));
+    } else {
+      global.jarNames.deviceID = deviceIds[0];
+    }
   } catch (e) {
     if (e.stderr.includes('java')) {
       return ws.send(

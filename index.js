@@ -11,7 +11,9 @@ const {
   CheckFileAlreadyExists,
   SelectAppVersion,
   PatchApp,
-  CheckForUpdates
+  CheckForUpdates,
+  GetDevices,
+  SetDevice
 } = require('./wsEvents/index.js');
 const morgan = require('morgan');
 const { platform } = require('os');
@@ -115,6 +117,16 @@ wsServer.on('connection', (ws) => {
       }
       case 'updateFiles': {
         await UpdateFiles(message, ws);
+        break;
+      }
+
+      case 'getDevices': {
+        await GetDevices(message, ws);
+        break;
+      }
+
+      case 'setDevice': {
+        await SetDevice(message, ws);
         break;
       }
 

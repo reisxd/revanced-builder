@@ -172,6 +172,24 @@ window.addEventListener('keypress', (e) => {
   }
 });
 
+
+function setDevice () {
+  if (!document.querySelector('input[name="device"]:checked')) {
+    return alert("You didn't select an device!");
+  }
+
+  sendCommand({
+    event: 'setDevice',
+    selectedApp: document.querySelector('input[name="device"]:checked').value
+  });
+
+  location.href = '/patches';
+}
+
+function getDevices() {
+  sendCommand({ event: 'getDevices' });
+}
+
 ws.onmessage = (msg) => {
   const message = JSON.parse(msg.data);
   switch (message.event) {
@@ -356,6 +374,24 @@ ws.onmessage = (msg) => {
       <dialog>
       <span>Your current version of Builder is not up to date.<br>Do you want to update to ${message.builderVersion}?</span>
       <div class="buttonContainer"><button class="highlighted" onclick="window.open('https://github.com/reisxd/revanced-builder/releases/latest', '_blank'); document.getElementById('container').removeChild(document.getElementsByTagName('dialog')[0]);">Yes</button> <button onclick="document.getElementById('container').removeChild(document.getElementsByTagName('dialog')[0]);">No</button></div></dialog>`;
+    break;
+    }
+
+    case 'multipleDevices': {
+      location.href = '/devices';
+      break;
+    }
+
+    case 'devices': {
+      let i = 0;
+      for (const deviceId of message.deviceIds) {
+        document.getElementById('devices').innerHTML += `
+            <li>
+            <input type="radio" name="device" id="app-${i}" value="${deviceId}"/>
+            <label for="app-${i}">${deviceId}</label></li>`;
+        i++;
+      }
+      break;
     }
   }
 };
