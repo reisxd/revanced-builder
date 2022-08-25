@@ -5,28 +5,31 @@ const actualExec = promisify(exec);
 const os = require('os');
 
 module.exports = async function (message, ws) {
-    const deviceIds = await getDeviceID();
-    let devices = [];
+  const deviceIds = await getDeviceID();
+  const devices = [];
 
-    for (const device of deviceIds) {
-        try {
-            const getDeviceModel = await actualExec(`adb -s ${device} shell getprop ro.product.model`);
-            const model = getDeviceModel.stdout.replace(os.EOL, '');
+  for (const device of deviceIds) {
+    try {
+      const getDeviceModel = await actualExec(
+        `adb -s ${device} shell getprop ro.product.model`
+      );
+      const model = getDeviceModel.stdout.replace(os.EOL, '');
 
-            devices.push({
-                id: device,
-                model
-            });
-        } catch (e) {
-            devices.push({
-                id: device,
-                model: 'Could not get device model (Unauthorized?)'
-            });
-        }
+      devices.push({
+        id: device,
+        model
+      });
+    } catch (e) {
+      devices.push({
+        id: device,
+        model: 'Could not get device model (Unauthorized?)'
+      });
     }
-    return ws.send(JSON.stringify({
-        event: 'devices',
-        devices
-    }));
+  }
+  return ws.send(
+    JSON.stringify({
+      event: 'devices',
+      devices
+    })
+  );
 };
-  

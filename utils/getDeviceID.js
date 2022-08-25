@@ -11,8 +11,8 @@ module.exports = async function () {
     if (match === null) {
       return null;
     }
-    let deviceIds = [];
-    for (let deviceId of match) {
+    const deviceIds = [];
+    for (const deviceId of match) {
       deviceIds.push(deviceId.replace(os.EOL, '').replace('\t', ''));
     }
     return deviceIds;

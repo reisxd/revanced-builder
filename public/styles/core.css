@@ -287,6 +287,6 @@ dialog {
   box-shadow: inset 0 0 0 2px #ddd;
 }
 
-#themecolor-picker span[style*="#4873b3"] {
+#themecolor-picker span[style*='#4873b3'] {
   margin-left: 8px;
 }

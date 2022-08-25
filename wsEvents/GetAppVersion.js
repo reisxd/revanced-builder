@@ -33,15 +33,17 @@ module.exports = async function (message, ws) {
       );
     }
 
-    actualExec(`adb -s ${global.jarNames.deviceID} shell su -c exit`).catch(() => {
-      return ws.send(
-        JSON.stringify({
-          event: 'error',
-          error:
-            'The plugged in device is not rooted or Shell was denied root access. If you didn\'t intend on doing a rooted build, include all "Root required to exclude" patches'
-        })
-      );
-    });
+    actualExec(`adb -s ${global.jarNames.deviceID} shell su -c exit`).catch(
+      () => {
+        return ws.send(
+          JSON.stringify({
+            event: 'error',
+            error:
+              'The plugged in device is not rooted or Shell was denied root access. If you didn\'t intend on doing a rooted build, include all "Root required to exclude" patches'
+          })
+        );
+      }
+    );
 
     let pkgName;
     switch (global.jarNames.selectedApp) {

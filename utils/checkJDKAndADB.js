@@ -32,9 +32,11 @@ module.exports = async function (ws) {
     const deviceIds = await getDeviceID();
 
     if (deviceIds[1]) {
-      return ws.send(JSON.stringify({
-        event: 'multipleDevices'
-      }));
+      return ws.send(
+        JSON.stringify({
+          event: 'multipleDevices'
+        })
+      );
     } else {
       global.jarNames.deviceID = deviceIds[0];
     }

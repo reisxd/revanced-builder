@@ -172,7 +172,6 @@ window.addEventListener('keypress', (e) => {
   }
 });
 
-
 function setDevice () {
   if (!document.querySelector('input[name="device"]:checked')) {
     return alert("You didn't select an device!");
@@ -186,7 +185,7 @@ function setDevice () {
   location.href = '/patches';
 }
 
-function getDevices() {
+function getDevices () {
   sendCommand({ event: 'getDevices' });
 }
 
@@ -374,7 +373,7 @@ ws.onmessage = (msg) => {
       <dialog>
       <span>Your current version of Builder is not up to date.<br>Do you want to update to ${message.builderVersion}?</span>
       <div class="buttonContainer"><button class="highlighted" onclick="window.open('https://github.com/reisxd/revanced-builder/releases/latest', '_blank'); document.getElementById('container').removeChild(document.getElementsByTagName('dialog')[0]);">Yes</button> <button onclick="document.getElementById('container').removeChild(document.getElementsByTagName('dialog')[0]);">No</button></div></dialog>`;
-    break;
+      break;
     }
 
     case 'multipleDevices': {
