@@ -280,6 +280,7 @@ dialog {
   margin-right: 8px;
   display: inline-block;
   border-radius: 5px;
+  cursor: pointer;
 }
 
 #themecolor-picker span.active {
