@@ -251,14 +251,13 @@ dialog {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   padding: 25px;
-  padding-bottom: 25px;
   position: fixed;
   background: black;
   animation: fadeInUp 0.25s;
   bottom: 81px;
   left: 22px;
   border-bottom: 0px;
-  padding-bottom: 1px;
+  padding-bottom: 15px;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
   display: none;
