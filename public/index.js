@@ -384,11 +384,11 @@ ws.onmessage = (msg) => {
 
     case 'devices': {
       let i = 0;
-      for (const deviceId of message.deviceIds) {
+      for (const device of message.devices) {
         document.getElementById('devices').innerHTML += `
             <li>
-            <input type="radio" name="device" id="app-${i}" value="${deviceId}"/>
-            <label for="app-${i}">${deviceId}</label></li>`;
+            <input type="radio" name="device" id="app-${i}" value="${device.id}"/>
+            <label for="app-${i}">${device.id} (${device.model})</label></li>`;
         i++;
       }
       break;
