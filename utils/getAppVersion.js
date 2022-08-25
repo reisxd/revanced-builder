@@ -6,7 +6,7 @@ const actualExec = promisify(exec);
 module.exports = async function (pkgName, ws, shouldReturnMSG) {
   try {
     const { stdout, stderr } = await actualExec(
-      `adb shell dumpsys package ${pkgName}`,
+      `adb -s ${global.jarNames.deviceID} shell dumpsys package ${pkgName}`,
       { maxBuffer: 10240 * 1024 }
     );
     const dumpSysOut = stdout || stderr;

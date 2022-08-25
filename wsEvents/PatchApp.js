@@ -74,7 +74,7 @@ async function afterBuild (ws) {
       .replace('v', '')
       .split('-')[0];
     if (!microGVersion) {
-      await actualExec(`adb install ${global.jarNames.microG}`);
+      await actualExec(`adb -s ${global.jarNames.deviceID} install ${global.jarNames.microG}`);
       ws.send(
         JSON.stringify({
           event: 'patchLog',
@@ -82,7 +82,7 @@ async function afterBuild (ws) {
         })
       );
     } else if (microGVersion !== currentMicroGVersion) {
-      await actualExec(`adb install ${global.jarNames.microG}`);
+      await actualExec(`adb -s ${global.jarNames.deviceID} install ${global.jarNames.microG}`);
       ws.send(
         JSON.stringify({
           event: 'patchLog',
@@ -144,8 +144,8 @@ async function reinstallReVanced () {
     }
   }
 
-  await actualExec(`adb uninstall ${pkgNameToGetUninstalled}`);
-  await actualExec(`adb install revanced/${global.outputName}`);
+  await actualExec(`adb -s ${global.jarNames.deviceID} uninstall ${pkgNameToGetUninstalled}`);
+  await actualExec(`adb -s ${global.jarNames.deviceID} install revanced/${global.outputName}`);
 }
 
 function outputName () {

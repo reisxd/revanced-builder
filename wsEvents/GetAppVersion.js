@@ -33,7 +33,7 @@ module.exports = async function (message, ws) {
       );
     }
 
-    actualExec('adb shell su -c exit').catch(() => {
+    actualExec(`adb -s ${global.jarNames.deviceID} shell su -c exit`).catch(() => {
       return ws.send(
         JSON.stringify({
           event: 'error',
@@ -58,7 +58,7 @@ module.exports = async function (message, ws) {
 
     if (global.jarNames.selectedApp === 'music') {
       const deviceArch = await actualExec(
-        'adb shell getprop ro.product.cpu.abi'
+        `adb -s ${global.jarNames.deviceID} shell getprop ro.product.cpu.abi`
       );
       global.apkInfo = {
         version: appVersion,
