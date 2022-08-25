@@ -30,10 +30,12 @@ progress {
   margin-top: 20px;
   width: 100%;
   border-radius: 25px;
+  border: none;
 }
 
 progress::-moz-progress-bar {
   border-radius: 25px;
+  background-color: var(--accentColor);
 }
 
 progress::-webkit-progress-bar {
