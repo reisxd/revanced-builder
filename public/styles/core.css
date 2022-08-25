@@ -290,3 +290,7 @@ dialog {
 #themecolor-picker span[style*='#4873b3'] {
   margin-left: 8px;
 }
+
+.log * {
+  user-select: text;
+}
