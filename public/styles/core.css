@@ -270,7 +270,6 @@ dialog {
 
 #themecolor-picker {
   display: flex;
-  list-style: none;
   padding: 0;
 }
 
@@ -281,6 +280,8 @@ dialog {
   display: inline-block;
   border-radius: 5px;
   cursor: pointer;
+  height: 22px;
+  width: 22px;
 }
 
 #themecolor-picker span.active {
