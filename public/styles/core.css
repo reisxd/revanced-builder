@@ -271,6 +271,7 @@ dialog {
 #themecolor-picker {
   display: flex;
   list-style: none;
+  padding: 0;
 }
 
 #themecolor-picker span {
@@ -279,8 +280,13 @@ dialog {
   margin-right: 8px;
   display: inline-block;
   border-radius: 5px;
+  cursor: pointer;
 }
 
 #themecolor-picker span.active {
   box-shadow: inset 0 0 0 2px #ddd;
+}
+
+#themecolor-picker span[style*="#4873b3"] {
+  margin-left: 8px;
 }
