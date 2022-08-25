@@ -31,15 +31,17 @@ module.exports = async function (ws) {
     }
     const deviceIds = await getDeviceID();
 
-    if (deviceIds[1]) {
+    if (deviceIds && deviceIds[1]) {
       return ws.send(
         JSON.stringify({
           event: 'multipleDevices'
         })
       );
-    } else {
+    } else if (deviceIds && deviceIds[0]) {
       global.jarNames.deviceID = deviceIds[0];
-    }
+    } else global.jarNames.deviceID = null;
+
+    console.log(global.jarNames.deviceID);
   } catch (e) {
     if (e.stderr.includes('java')) {
       return ws.send(
