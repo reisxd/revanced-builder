@@ -179,7 +179,7 @@ function setDevice () {
 
   sendCommand({
     event: 'setDevice',
-    selectedApp: document.querySelector('input[name="device"]:checked').value
+    deviceId: document.querySelector('input[name="device"]:checked').value
   });
 
   location.href = '/patches';
