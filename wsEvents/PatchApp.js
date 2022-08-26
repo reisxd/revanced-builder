@@ -200,8 +200,19 @@ function outputName () {
   global.outputName = global.outputName.substring(1);
 }
 
+function reportSys(args, ws) {
+  ws.send(JSON.stringify({
+    event: 'error',
+    error: 'An error occured while starting the patching process. Please see the server console.'
+  }));
+  
+  console.log('[builder] Please report these informations to https://github.com/reisxd/revanced-builder/issues');
+  console.log(`OS: ${os.platform()}\nArguements: ${args}\n OS Version${os.version()}`);
+}
+
 module.exports = async function (message, ws) {
   const args = [
+    '-Xmx4G',
     '-jar',
     global.jarNames.cli,
     '-b',
@@ -265,6 +276,10 @@ module.exports = async function (message, ws) {
       await reinstallReVanced(ws);
       await afterBuild(ws);
     }
+
+    if (data.toString().includes('Unmatched')) {
+      reportSys(args, ws);
+    }
   });
 
   buildProcess.stderr.on('data', async (data) => {
@@ -282,6 +297,10 @@ module.exports = async function (message, ws) {
     if (data.toString().includes('INSTALL_FAILED_UPDATE_INCOMPATIBLE')) {
       await reinstallReVanced(ws);
       await afterBuild(ws);
+    }
+
+    if (data.toString().includes('Unmatched')) {
+      reportSys(args, ws);
     }
   });
 };
