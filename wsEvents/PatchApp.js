@@ -212,7 +212,6 @@ function reportSys(args, ws) {
 
 module.exports = async function (message, ws) {
   const args = [
-    '-Xmx2G',
     '-jar',
     global.jarNames.cli,
     '-b',
