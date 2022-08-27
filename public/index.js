@@ -193,7 +193,6 @@ ws.onmessage = (msg) => {
   const message = JSON.parse(msg.data);
   switch (message.event) {
     case 'patchList': {
-      console.log(message);
       for (let i = 0; i < message.patchList.length; i++) {
         const patch = message.patchList[i];
         document.getElementById('patchList').innerHTML += `<li>

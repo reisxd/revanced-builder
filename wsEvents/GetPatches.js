@@ -39,8 +39,8 @@ module.exports = async function (message, ws) {
     const { name, description, pkg, versions } = match.groups;
     const isRooted = rootedPatches.includes(name);
     const isCompatible = pkg === global.jarNames.selectedApp;
-    
-    if (isPatchDupe) continue;
+
+    if (isPatchDupe && name === 'client-spoof') continue;
     if (name === 'client-spoof') isPatchDupe = true;
 
     const versionsArr = versions.split(', ');
