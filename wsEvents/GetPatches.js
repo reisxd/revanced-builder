@@ -33,10 +33,15 @@ module.exports = async function (message, ws) {
     });
   }
 
+  let isPatchDupe = false;
+
   for (const match of matches) {
     const { name, description, pkg, versions } = match.groups;
     const isRooted = rootedPatches.includes(name);
     const isCompatible = pkg === global.jarNames.selectedApp;
+    
+    if (isPatchDupe) continue;
+    if (name === 'client-spoof') isPatchDupe = true;
 
     const versionsArr = versions.split(', ');
     global.versions = versionsArr.map((i) => i.trim());
