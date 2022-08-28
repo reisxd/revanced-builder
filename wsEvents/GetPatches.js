@@ -19,6 +19,11 @@ module.exports = async function (message, ws) {
   const matches = patchesText.matchAll(
     /:\s+(?<pkg>\S+)\s+(?<name>\S+)\s+(?<description>.+)\t+(?<versions>.+)/g
   );
+  const distinctMatches = Array.from(matches)
+    .filter((value, i, self) => self
+      .map((x) => x.groups.name)
+      .indexOf(value.groups.name) === i
+  );
 
   let hasRoot = true;
   if (os.platform() === 'android') {
@@ -33,7 +38,7 @@ module.exports = async function (message, ws) {
     });
   }
 
-  for (const match of Array.from(new Set(matches))) {
+  for (const match of distinctMatches) {
     const { name, description, pkg, versions } = match.groups;
     const isRooted = rootedPatches.includes(name);
     const isCompatible = pkg === global.jarNames.selectedApp;
