@@ -33,15 +33,10 @@ module.exports = async function (message, ws) {
     });
   }
 
-  let isPatchDupe = false;
-
-  for (const match of matches) {
+  for (const match of Array.from(new Set(matches))) {
     const { name, description, pkg, versions } = match.groups;
     const isRooted = rootedPatches.includes(name);
     const isCompatible = pkg === global.jarNames.selectedApp;
-
-    if (isPatchDupe && name === 'client-spoof') continue;
-    if (name === 'client-spoof') isPatchDupe = true;
 
     const versionsArr = versions.split(', ');
     global.versions = versionsArr.map((i) => i.trim());
