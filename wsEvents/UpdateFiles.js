@@ -41,6 +41,18 @@ async function UpdateFiles (message, ws) {
       repo: 'VancedMicroG'
     }
   ];
+  global.downloadFinished = true;
+
+  if (!global.downloadFinished) {
+    return ws.send(
+      JSON.stringify({
+        event: 'error',
+        error:
+          "Downloading process hasn't finished and you tried to download again."
+      })
+    );
+  }
+  global.downloadFinished = false;
 
   await downloadFiles(filesToDownload, ws);
   if (os.platform() === 'android') {
@@ -49,6 +61,7 @@ async function UpdateFiles (message, ws) {
     await checkJDkAndADB(ws);
   }
 
+  global.downloadFinished = true;
   return ws.send(
     JSON.stringify({
       event: 'finished'

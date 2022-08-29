@@ -1,7 +1,7 @@
 const { promisify } = require('util');
 const { exec } = require('child_process');
 const { getPatchList } = require('../utils/PatchListRememberer.js');
-const PatchesParser = require('../utils/PatchesParser.js');
+// const PatchesParser = require('../utils/PatchesParser.js');
 const os = require('os');
 const actualExec = promisify(exec);
 
@@ -20,10 +20,9 @@ module.exports = async function (message, ws) {
   const matches = patchesText.matchAll(
     /:\s+(?<pkg>\S+)\s+(?<name>\S+)\s+(?<description>.+)\t+(?<versions>.+)/g
   );
-  const distinctMatches = Array.from(matches)
-    .filter((value, i, self) => self
-      .map((x) => x.groups.name)
-      .indexOf(value.groups.name) === i
+  const distinctMatches = Array.from(matches).filter(
+    (value, i, self) =>
+      self.map((x) => x.groups.name).indexOf(value.groups.name) === i
   );
 
   let hasRoot = true;
@@ -49,7 +48,9 @@ module.exports = async function (message, ws) {
     const maxVersion = versionsArr.sort()[versionsArr.length - 1];
     let patchDesc;
     if (name === 'enable-debugging') {
-      patchDesc = 'WARNING: THIS PATCH WILL SLOW DOWN THE APP, PLEASE DON\'T ENABLE THIS PATCH UNLESS YOU WANT TO DEBUG THE APP.\n' + description.trim();
+      patchDesc =
+        "WARNING: THIS PATCH WILL SLOW DOWN THE APP, PLEASE DON'T ENABLE THIS PATCH UNLESS YOU WANT TO DEBUG THE APP.\n" +
+        description.trim();
     }
 
     if (isCompatible && (!isRooted || hasRoot)) {

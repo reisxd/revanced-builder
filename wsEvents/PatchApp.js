@@ -200,14 +200,21 @@ function outputName () {
   global.outputName = global.outputName.substring(1);
 }
 
-function reportSys(args, ws) {
-  ws.send(JSON.stringify({
-    event: 'error',
-    error: 'An error occured while starting the patching process. Please see the server console.'
-  }));
-  
-  console.log('[builder] Please report these informations to https://github.com/reisxd/revanced-builder/issues');
-  console.log(`OS: ${os.platform()}\nArguements: ${args}\n OS Version${os.version()}`);
+function reportSys (args, ws) {
+  ws.send(
+    JSON.stringify({
+      event: 'error',
+      error:
+        'An error occured while starting the patching process. Please see the server console.'
+    })
+  );
+
+  console.log(
+    '[builder] Please report these informations to https://github.com/reisxd/revanced-builder/issues'
+  );
+  console.log(
+    `OS: ${os.platform()}\nArguements: ${args}\n OS Version${os.version()}`
+  );
 }
 
 module.exports = async function (message, ws) {

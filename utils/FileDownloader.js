@@ -83,43 +83,49 @@ async function dloadFromURL (url, outputPath, websocket) {
   if (websocket) {
     ws = websocket;
   }
-  const request = await fetchURL(url, {
-    headers: {
-      'user-agent':
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36'
-    }
-  });
-  const writeStream = fs.createWriteStream(outputPath);
-  const downloadStream = request.body.pipe(writeStream);
 
-  ws.send(
-    JSON.stringify({
-      event: 'downloadingFile',
-      name: outputPath.split('/').pop(),
-      percentage: 0
-    })
-  );
+  try {
+    const request = await fetchURL(url, {
+      headers: {
+        'user-agent':
+          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36'
+      }
+    });
+    const writeStream = fs.createWriteStream(outputPath);
+    const downloadStream = request.body.pipe(writeStream);
 
-  const progress = new Progress(request, { throttle: 50 });
-  return new Promise((resolve, reject) => {
-    progress.on('progress', (p) => {
-      ws.send(
-        JSON.stringify({
-          event: 'downloadingFile',
-          name: outputPath.split('/').pop(),
-          percentage: Math.floor(p.progress * 100)
-        })
-      );
-    });
-    downloadStream.once('finish', () => {
-      resolve();
-    });
-    downloadStream.once('error', (err) => {
-      fs.unlink(outputPath, () => {
-        reject(new Error('Download failed.', err));
+    ws.send(
+      JSON.stringify({
+        event: 'downloadingFile',
+        name: outputPath.split('/').pop(),
+        percentage: 0
+      })
+    );
+
+    const progress = new Progress(request, { throttle: 50 });
+    return new Promise((resolve, reject) => {
+      progress.on('progress', (p) => {
+        ws.send(
+          JSON.stringify({
+            event: 'downloadingFile',
+            name: outputPath.split('/').pop(),
+            percentage: Math.floor(p.progress * 100)
+          })
+        );
+      });
+      downloadStream.once('finish', () => {
+        resolve();
+      });
+      downloadStream.once('error', (err) => {
+        fs.unlink(outputPath, () => {
+          reject(new Error('Download failed.', err));
+        });
       });
     });
-  });
+  } catch (e) {
+    global.downloadFinished = false;
+    throw e;
+  }
 }
 
 async function downloadFiles (repos, websocket) {
