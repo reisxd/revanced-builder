@@ -21,7 +21,7 @@ const exec = (cmd) =>
   require('util').promisify(require('child_process').exec(cmd));
 const opn = require('open');
 const pf = require('portfinder');
-
+const { argv } = require('process');
 const app = Express();
 const server = http.createServer(app);
 const wsServer = new WebSocketServer({ server });
@@ -46,17 +46,21 @@ const log = (msg, newline = true, tag = true) =>
 
 const listen = (PORT) => {
   server.listen(PORT, () => {
-    log('The webserver is now running!');
-    try {
-      log('Opening the app in the default browser...', false);
-      open(PORT);
-      log('Done. Check if a browser window has opened', true, false);
-    } catch (e) {
-      log(
-        `Failed. Open up http://localhost:${PORT} manually in your browser.`,
-        true,
-        false
-      );
+    if (argv.includes('--no-open')) {
+      log(`The webserver is now running at http://localhost:${PORT}`);
+    } else {
+      log('The webserver is now running!');
+      try {
+        log('Opening the app in the default browser...', false);
+        open(PORT);
+        log('Done. Check if a browser window has opened', true, false);
+      } catch (e) {
+        log(
+          `Failed. Open up http://localhost:${PORT} manually in your browser.`,
+          true,
+          false
+        );
+      }
     }
   });
 };
