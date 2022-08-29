@@ -76,7 +76,7 @@ function setPatches () {
     .map((x) => x.getAttribute('data-patch-name'));
 
     if (selectedPatchList.includes('enable-debugging') ) {
-      const confirmDebug = confirm('**Included the "Enable Debugging" Patch**\n***Are you sure?***\nBecause this patch will slow down your app and it\'s only for debugging purposes.');
+      const confirmDebug = confirm('Included the "Enable Debugging" Patch\nAre you sure?\nBecause this patch will slow down your app and it\'s only for debugging purposes.');
       if (!confirmDebug) return;
     }
 
