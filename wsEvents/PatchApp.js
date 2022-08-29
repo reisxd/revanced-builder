@@ -184,7 +184,7 @@ function outputName () {
     global.jarNames.cli
       .split('/')[2]
       .replace('revanced-cli-', '')
-      .replace('-all.jar', '');
+      .replace('.jar', '');
   const part6 =
     'patches_' +
     global.jarNames.patchesJar
