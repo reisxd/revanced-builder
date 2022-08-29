@@ -1,6 +1,7 @@
 const { promisify } = require('util');
 const { exec } = require('child_process');
 const { getPatchList } = require('../utils/PatchListRememberer.js');
+const PatchesParser = require('../utils/PatchesParser.js');
 const os = require('os');
 const actualExec = promisify(exec);
 
