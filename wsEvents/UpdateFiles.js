@@ -41,9 +41,8 @@ async function UpdateFiles (message, ws) {
       repo: 'VancedMicroG'
     }
   ];
-  global.downloadFinished = true;
 
-  if (!global.downloadFinished) {
+  if (typeof global.downloadFinished !== 'undefined' && !global.downloadFinished) {
     return ws.send(
       JSON.stringify({
         event: 'error',
@@ -52,6 +51,7 @@ async function UpdateFiles (message, ws) {
       })
     );
   }
+  
   global.downloadFinished = false;
 
   await downloadFiles(filesToDownload, ws);
