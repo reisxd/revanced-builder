@@ -22,30 +22,32 @@ async function getPage (pageUrl) {
 module.exports = async function (message, ws) {
   let versionsList;
 
-  if (global.jarNames.isRooted && os.platform() !== 'android') {
-    if (!global.jarNames.deviceID) {
-      return ws.send(
-        JSON.stringify({
-          event: 'error',
-          error:
-            "You either don't have a device plugged in or don't have ADB installed."
-        })
-      );
-    }
-
-    actualExec(`adb -s ${global.jarNames.deviceID} shell su -c exit`).catch(
-      () => {
+  if (global.jarNames.isRooted) {
+    let pkgName;
+    if (os.platform() !== 'android') {
+      if (!global.jarNames.deviceID) {
         return ws.send(
           JSON.stringify({
             event: 'error',
             error:
-              'The plugged in device is not rooted or Shell was denied root access. If you didn\'t intend on doing a rooted build, include all "Root required to exclude" patches'
+              "You either don't have a device plugged in or don't have ADB installed."
           })
         );
       }
-    );
 
-    let pkgName;
+      actualExec(`adb -s ${global.jarNames.deviceID} shell su -c exit`).catch(
+        () => {
+          return ws.send(
+            JSON.stringify({
+              event: 'error',
+              error:
+                'The plugged in device is not rooted or Shell was denied root access. If you didn\'t intend on doing a rooted build, include all "Root required to exclude" patches'
+            })
+          );
+        }
+      );
+    }
+
     switch (global.jarNames.selectedApp) {
       case 'youtube': {
         pkgName = 'com.google.android.youtube';
@@ -60,7 +62,9 @@ module.exports = async function (message, ws) {
 
     if (global.jarNames.selectedApp === 'music') {
       const deviceArch = await actualExec(
-        `adb -s ${global.jarNames.deviceID} shell getprop ro.product.cpu.abi`
+        os.platform() !== 'android'
+          ? `adb -s ${global.jarNames.deviceID} shell getprop ro.product.cpu.abi`
+          : `getprop ro.product.cpu.abi`
       );
       global.apkInfo = {
         version: appVersion,
