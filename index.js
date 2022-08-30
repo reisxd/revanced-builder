@@ -15,7 +15,6 @@ const {
   GetDevices,
   SetDevice
 } = require('./wsEvents/index.js');
-const morgan = require('morgan');
 const { platform } = require('os');
 const exec = (cmd) =>
   require('util').promisify(require('child_process').exec(cmd));
@@ -26,7 +25,6 @@ const app = Express();
 const server = http.createServer(app);
 const wsServer = new WebSocketServer({ server });
 
-app.use(morgan('dev'));
 app.use(Express.static(path.join(__dirname, 'public')));
 app.get('/revanced.apk', function (req, res) {
   const file = path.join(__dirname, 'revanced', global.outputName);
