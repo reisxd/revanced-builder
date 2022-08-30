@@ -5,7 +5,7 @@ module.exports = async function (message, ws) {
     await getDownloadLink({ owner: 'reisxd', repo: 'revanced-builder' })
   ).version;
   // Well, there's no other good way to do this, so...
-  const currentVersion = 'v3.3.6';
+  const currentVersion = 'v3.3.7';
 
   if (builderVersion !== currentVersion) {
     return ws.send(
