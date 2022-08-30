@@ -18,6 +18,9 @@ async function overWriteJarNames (fileName) {
   if (fileName.startsWith('VancedMicroG')) {
     global.jarNames.microG = `./revanced/${fileName}`;
   }
+  if (fileName.endsWith('.json')) {
+    global.jarNames.patchesList = `./revanced/${fileName}`;
+  }
 }
 
 // yes.

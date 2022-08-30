@@ -1,15 +1,9 @@
-const fetchURL = require('node-fetch');
+const fs = require('fs');
 
 module.exports = async (packageName, hasRoot) => {
-  const patchesRequest = await fetchURL(
-    'https://raw.githubusercontent.com/revanced/revanced-patches/main/patches.json',
-    {
-      headers: {
-        host: 'wwww.github.com'
-      }
-    }
-  );
-  const patchesJSON = await patchesRequest.json();
+  const patchListFile = fs.readFileSync(global.jarNames.patchesList);
+  let patchesJSON = patchListFile.toString();
+  patchesJSON = JSON.parse(patchesJSON);
 
   const rootedPatches = [
     'microg-support',
@@ -30,7 +24,6 @@ module.exports = async (packageName, hasRoot) => {
     for (const pkg of patch.compatiblePackages) {
       if (pkg.name.endsWith(packageName)) {
         isCompatible = true;
-        console.log(pkg.versions);
         if (pkg.versions.length !== 0) {
           compatibleVersion = pkg.versions[pkg.versions.length - 1];
           global.versions.push(compatibleVersion);
@@ -48,8 +41,9 @@ module.exports = async (packageName, hasRoot) => {
     patches.push({
       name: patch.name,
       description: patch.description,
-      maxVersion: compatibleVersion,
-      isRooted
+      maxVersion: compatibleVersion || ' ',
+      isRooted,
+      excluded: patch.excluded
     });
   }
 

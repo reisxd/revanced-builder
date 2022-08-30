@@ -43,8 +43,14 @@ function updateFiles () {
 }
 
 function toggle (bool) {
-  for (const checkbox of document.getElementsByClassName('select')) {
-    checkbox.checked = bool;
+  if (bool) {
+    for (const checkbox of document.getElementsByClassName('select')) {
+      if (checkbox.getAttribute('data-excluded') === '0') { checkbox.checked = bool; }
+    }
+  } else {
+    for (const checkbox of document.getElementsByClassName('select')) {
+      checkbox.checked = bool;
+    }
   }
 }
 
@@ -75,10 +81,12 @@ function setPatches () {
     .filter((x) => x.checked !== true)
     .map((x) => x.getAttribute('data-patch-name'));
 
-    if (selectedPatchList.includes('enable-debugging') ) {
-      const confirmDebug = confirm('**Included the "Enable Debugging" Patch**\n***Are you sure?***\nBecause this patch will slow down your app and it\'s only for debugging purposes.');
-      if (!confirmDebug) return;
-    }
+  if (selectedPatchList.includes('enable-debugging')) {
+    const confirmDebug = confirm(
+      '**Included the "Enable Debugging" Patch**\n***Are you sure?***\nBecause this patch will slow down your app and it\'s only for debugging purposes.'
+    );
+    if (!confirmDebug) return;
+  }
 
   sendCommand({
     event: 'selectPatches',
@@ -96,6 +104,30 @@ function setAppVersion (arch, version) {
         return alert("You didn't select an app version!");
       }
     }
+
+    if (
+      document
+        .querySelector('input[name="version"]:checked')
+        .getAttribute('data-recommended') !== '1'
+    ) {
+      const alertVersion = confirm(
+        "**Non Recommended Version Selected**\n***Are You Sure?***\nThis version isn't recommended, do you really want to use this version?"
+      );
+      if (!alertVersion) return;
+    }
+
+    if (
+      document
+        .querySelector('input[name="version"]:checked')
+        .getAttribute('data-beta') !== '0'
+    ) {
+      const alertBetaVersion = confirm(
+        '**Beta Version Selected**\n***Are You Sure?***\nThis version is beta and it might have issues, do you really want to use this version?'
+      );
+      if (!alertBetaVersion) return;
+    }
+
+    document.getElementById('continue').classList.add('disabled');
 
     sendCommand({
       event: 'selectAppVersion',
@@ -203,7 +235,7 @@ ws.onmessage = (msg) => {
         document.getElementById('patchList').innerHTML += `<li>
   <input class="select" id="select-patch-${i}" data-patch-name="${
           patch.name
-        }" type="checkbox">
+        }" data-excluded="${patch.excluded ? '1' : '0'}" type="checkbox">
   <label for="select-patch-${i}">
     <span style="float:right;"><strong>${
       patch.isRooted ? 'Needed for Non-Root Building' : ''
@@ -272,6 +304,8 @@ ws.onmessage = (msg) => {
             <li>
             <input type="radio" name="version" id="app-${i}" value="${
           version.version
+        }" data-beta="${version.beta ? '1' : '0'}" data-recommended="${
+          version.recommended ? '1' : '0'
         }"/>
             <label for="app-${i}">${version.version} ${
           version.beta ? ' (beta)' : ''
@@ -300,6 +334,9 @@ ws.onmessage = (msg) => {
             if (isDownloading && hasFinished) {
               location.href = '/patch';
             }
+
+            document.getElementById('continue').classList.add('disabled');
+
             setAppVersion(
               document.querySelector('input[name="arch"]:checked').value,
               version

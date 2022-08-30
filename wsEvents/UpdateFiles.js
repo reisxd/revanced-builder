@@ -9,6 +9,7 @@ global.jarNames = {
   patchesJar: './revanced/',
   integrations: './revanced/',
   microG: './revanced/',
+  patchesList: './revanced/',
   selectedApp: '',
   patches: '',
   isRooted: false,
@@ -42,7 +43,10 @@ async function UpdateFiles (message, ws) {
     }
   ];
 
-  if (typeof global.downloadFinished !== 'undefined' && !global.downloadFinished) {
+  if (
+    typeof global.downloadFinished !== 'undefined' &&
+    !global.downloadFinished
+  ) {
     return ws.send(
       JSON.stringify({
         event: 'error',
@@ -51,7 +55,7 @@ async function UpdateFiles (message, ws) {
       })
     );
   }
-  
+
   global.downloadFinished = false;
 
   await downloadFiles(filesToDownload, ws);
