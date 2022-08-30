@@ -45,7 +45,9 @@ function updateFiles () {
 function toggle (bool) {
   if (bool) {
     for (const checkbox of document.getElementsByClassName('select')) {
-      if (checkbox.getAttribute('data-excluded') === '0') { checkbox.checked = bool; }
+      if (checkbox.getAttribute('data-excluded') === '0') {
+        checkbox.checked = bool;
+      }
     }
   } else {
     for (const checkbox of document.getElementsByClassName('select')) {
@@ -106,6 +108,7 @@ function setAppVersion (arch, version) {
     }
 
     if (
+      document.querySelector('input[name="version"]:checked') &&
       document
         .querySelector('input[name="version"]:checked')
         .getAttribute('data-recommended') !== '1'
@@ -117,6 +120,7 @@ function setAppVersion (arch, version) {
     }
 
     if (
+      document.querySelector('input[name="version"]:checked') &&
       document
         .querySelector('input[name="version"]:checked')
         .getAttribute('data-beta') !== '0'

@@ -34,7 +34,7 @@ module.exports = async (packageName, hasRoot) => {
     if (!isCompatible) {
       continue;
     }
-    if (isRooted || !hasRoot) {
+    if (isRooted && !hasRoot) {
       continue;
     }
 
