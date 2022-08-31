@@ -7,6 +7,9 @@ SCR_NAME=$(basename $SCR_NAME_EXEC)
 SCR_NAME=${SCR_NAME%.*}
 RVB_DIR=$HOME/revanced-builder
 
+COLOR_OFF='\033[0m'
+COLOR_RED='\033[1;31m'
+
 help_info () {
   cat <<EOF
 Usage: $SCR_NAME [command] [options]
@@ -32,7 +35,7 @@ EOF
 }
 
 log () {
-  echo "[$SCR_NAME] $1"
+  echo -e "[$SCR_NAME] $1"
 }
 
 error () {
@@ -77,13 +80,13 @@ preflight () {
     log "Updating Termux and installing dependencies..."
     pkg update -y
     pkg install nodejs-lts openjdk-17 -y || {
-      error "
+      error "$COLOR_RED
 Failed to install Node.js and OpenJDK 17.
 Possible reasons (in the order of commonality):
 1. Termux was downloaded from Play Store. Termux in Play Store is deprecated, and has packaging bugs. Please install it from F-Droid.
 2. Mirrors are down at the moment. Try running \`termux-change-repo\`.
 3. Internet connection is unstable.
-4. Lack of free storage." n 2
+4. Lack of free storage.$COLOR_OFF" n 2
     }
   }
   
