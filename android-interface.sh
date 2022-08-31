@@ -125,11 +125,11 @@ reinstall_builder () {
       log "Execute \`$SCR_NAME_EXEC help\` for more info."
     fi
   fi
-  rm -r revanced-builder
-  mkdir -p revanced-builder
+  rm -r $RVB_DIR
+  mkdir -p $RVB_DIR
   if [ -f "$HOME/revanced.keystore" ]; then
     log "Restoring the keystore..."
-    mkdir -p revanced-builder/revanced
+    mkdir -p $RVB_DIR/revanced
     mv $HOME/revanced.keystore $RVB_DIR/revanced/revanced.keystore
   fi
   log "Reinstalling..."
@@ -147,11 +147,11 @@ update_builder () {
     mv $RVB_DIR/includedPatchesList.json $HOME/includedPatchesList.json
   fi
   log "Deleting revanced-builder..."
-  rm -r revanced-builder
+  rm -r $RVB_DIR
   log "Restoring the backup..."
-  mkdir -p revanced-builder
+  mkdir -p $RVB_DIR
   if [ -d "$HOME/revanced_backup" ]; then
-    mkdir -p revanced-builder/revanced
+    mkdir -p $RVB_DIR/revanced
     mv $HOME/revanced_backup/* $RVB_DIR/revanced
   fi
   if [ -f "$HOME/includedPatchesList.json" ]; then
