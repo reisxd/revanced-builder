@@ -35,7 +35,7 @@ EOF
 }
 
 log () {
-  echo "[$SCR_NAME] $1"
+  echo -e "[$SCR_NAME] $1"
 }
 
 error () {
