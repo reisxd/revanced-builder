@@ -368,7 +368,7 @@ ws.onmessage = (msg) => {
           ? 'warn'
           : message.log.includes('SEVERE')
           ? 'error'
-          : 'log';
+          : 'info';
 
         document.getElementsByClassName(
           'log'
