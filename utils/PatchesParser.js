@@ -1,42 +1,43 @@
-const fs = require('fs');
+const { readFileSync } = require('node:fs');
 
-module.exports = async (packageName, hasRoot) => {
-  const patchListFile = fs.readFileSync(global.jarNames.patchesList);
-  let patchesJSON = patchListFile.toString();
-  patchesJSON = JSON.parse(patchesJSON);
+/**
+ * @param {string} packageName
+ * @param {boolean} hasRoot
+ */
+module.exports = async function parsePatch(packageName, hasRoot) {
+  const patchesList = JSON.parse(
+    readFileSync(global.jarNames.patchesList, 'utf8')
+  );
 
   const rootedPatches = [
     'microg-support',
     'hide-cast-button',
     'music-microg-support'
   ];
-
   const patches = [];
 
   global.versions = [];
 
-  for (const patch of patchesJSON) {
+  for (const patch of patchesList) {
     const isRooted = rootedPatches.includes(patch.name);
 
     // Check if the patch is compatible:
     let isCompatible = false;
+    /** @type {string} */
     let compatibleVersion;
-    for (const pkg of patch.compatiblePackages) {
+
+    for (const pkg of patch.compatiblePackages)
       if (pkg.name.endsWith(packageName)) {
         isCompatible = true;
+
         if (pkg.versions.length !== 0) {
-          compatibleVersion = pkg.versions[pkg.versions.length - 1];
+          compatibleVersion = pkg.versions.at(-1);
+
           global.versions.push(compatibleVersion);
         }
       }
-    }
 
-    if (!isCompatible) {
-      continue;
-    }
-    if (isRooted && !hasRoot) {
-      continue;
-    }
+    if (!isCompatible || (isRooted && !hasRoot)) continue;
 
     patches.push({
       name: patch.name,

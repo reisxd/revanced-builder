@@ -1,65 +1,76 @@
-const fs = require('fs');
+const { existsSync, readFileSync, writeFileSync } = require('node:fs');
 
-function createRemembererFile () {
-  fs.writeFileSync(
-    './includedPatchesList.json',
-    JSON.stringify({
-      packages: [
-        {
-          name: 'youtube',
-          patches: []
-        },
-        {
-          name: 'music',
-          patches: []
-        },
-        {
-          name: 'android',
-          patches: []
-        },
-        {
-          name: 'frontpage',
-          patches: []
-        }
-      ]
-    })
+const defaultPatchesList = JSON.stringify(
+  {
+    packages: [
+      {
+        name: 'youtube',
+        patches: []
+      },
+      {
+        name: 'music',
+        patches: []
+      },
+      {
+        name: 'android',
+        patches: []
+      },
+      {
+        name: 'frontpage',
+        patches: []
+      }
+    ]
+  },
+  null,
+  2
+);
+
+function createRemembererFile() {
+  writeFileSync('includedPatchesList.json', defaultPatchesList);
+}
+
+/**
+ * @param {string} pkgName
+ * @returns {Record<string, any>}
+ */
+function getPatchesList(pkgName) {
+  const patchesList = JSON.parse(
+    readFileSync('includedPatchesList.json', 'utf8')
+  );
+
+  return patchesList.packages.find((package) => package.name === pkgName);
+}
+
+/**
+ * @param {string} pkgName
+ * @param {Record<string, any>} patches
+ */
+function writePatches(pkgName, patches) {
+  const patchesList = JSON.parse(
+    readFileSync('includedPatchesList.json', 'utf8')
+  );
+
+  const index = patchesList.packages.findIndex(
+    (package) => package.name === pkgName
+  );
+
+  patchesList.packages[index].patches = patches;
+
+  writeFileSync(
+    'includedPatchesList.json',
+    JSON.stringify(patchesList, null, 2)
   );
 }
 
-function getPatchesList (pkgName) {
-  let file = fs.readFileSync('./includedPatchesList.json');
-  file = file.toString();
-  file = JSON.parse(file);
-
-  for (const pack of file.packages) {
-    if (pack.name !== pkgName) continue;
-
-    return pack.patches;
-  }
-}
-
-function writePatches (pkgName, patches) {
-  let file = fs.readFileSync('./includedPatchesList.json');
-  file = file.toString();
-  file = JSON.parse(file);
-
-  for (const pack of file.packages) {
-    if (pack.name !== pkgName) continue;
-    const packageIndex = file.packages.indexOf(pack);
-
-    file.packages[packageIndex].patches = patches;
-
-    return fs.writeFileSync('./includedPatchesList.json', JSON.stringify(file));
-  }
-}
-
-function getPatchList (pkgName) {
-  if (!fs.existsSync('./includedPatchesList.json')) {
+/**
+ * @param {string} pkgName
+ */
+function getPatchList(pkgName) {
+  if (!existsSync('includedPatchesList.json')) {
     createRemembererFile();
+
     return [];
-  } else {
-    return getPatchesList(pkgName);
-  }
+  } else return getPatchesList(pkgName);
 }
 
 module.exports = {

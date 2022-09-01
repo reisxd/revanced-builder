@@ -1,8 +1,8 @@
-const fs = require('fs');
+const { existsSync, mkdirSync, rmSync } = require('node:fs');
+
 const { downloadFiles } = require('../utils/FileDownloader.js');
-const checkJDKandAapt2 = require('../utils/checkJDKandAapt2.js');
+const checkJDKAndAapt2 = require('../utils/checkJDKAndAapt2.js');
 const checkJDkAndADB = require('../utils/checkJDKAndADB.js');
-const os = require('os');
 
 global.jarNames = {
   cli: '',
@@ -16,13 +16,13 @@ global.jarNames = {
   deviceID: ''
 };
 
-async function UpdateFiles (message, ws) {
-  if (!fs.existsSync('./revanced')) {
-    fs.mkdirSync('./revanced');
-  }
-  if (fs.existsSync('./revanced-cache')) {
-    fs.rmSync('./revanced-cache', { recursive: true, force: true });
-  }
+/**
+ * @param {import('ws').WebSocket} ws
+ */
+module.exports = async function updateFiles(ws) {
+  if (!existsSync('revanced')) mkdirSync('./revanced');
+  if (existsSync('revanced-cache'))
+    rmSync('revanced-cache', { recursive: true, force: true });
 
   const filesToDownload = [
     {
@@ -47,30 +47,29 @@ async function UpdateFiles (message, ws) {
     typeof global.downloadFinished !== 'undefined' &&
     !global.downloadFinished
   ) {
-    return ws.send(
+    ws.send(
       JSON.stringify({
         event: 'error',
         error:
           "Downloading process hasn't finished and you tried to download again."
       })
     );
+
+    return;
   }
 
   global.downloadFinished = false;
 
   await downloadFiles(filesToDownload, ws);
-  if (os.platform() === 'android') {
-    await checkJDKandAapt2(ws);
-  } else {
-    await checkJDkAndADB(ws);
-  }
+
+  if (process.platform === 'android') await checkJDKAndAapt2(ws);
+  else await checkJDkAndADB(ws);
 
   global.downloadFinished = true;
-  return ws.send(
+
+  ws.send(
     JSON.stringify({
       event: 'finished'
     })
   );
-}
-
-module.exports = UpdateFiles;
+};

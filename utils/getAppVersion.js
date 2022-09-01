@@ -1,19 +1,26 @@
-const os = require('os');
-const { promisify } = require('util');
-const { exec } = require('child_process');
-const actualExec = promisify(exec);
+const { EOL } = require('node:os');
 
-module.exports = async function (pkgName, ws, shouldReturnMSG) {
+const exec = require('./promisifiedExec.js');
+
+/**
+ * @param {string} pkgName
+ * @param {import('ws').WebSocket} ws
+ * @param {boolean} shouldReturnMsg
+ */
+module.exports = async function getAppVersion(pkgName, ws, shouldReturnMsg) {
   try {
-    const { stdout, stderr } = await actualExec(
-      os.platform() !== 'android'
+    const { stdout, stderr } = await exec(
+      process.platform !== 'android'
         ? `adb -s ${global.jarNames.deviceID} shell dumpsys package ${pkgName}`
         : `su -c dumpsys package ${pkgName}`,
       { maxBuffer: 10240 * 1024 }
     );
     const dumpSysOut = stdout || stderr;
-    if (!dumpSysOut.match(/versionName=([^=]+)/)) {
-      if (shouldReturnMSG) {
+
+    const versionMatch = dumpSysOut.match(/versionName=([^=]+)/);
+
+    if (versionMatch === null) {
+      if (shouldReturnMsg)
         ws.send(
           JSON.stringify({
             event: 'error',
@@ -21,13 +28,11 @@ module.exports = async function (pkgName, ws, shouldReturnMSG) {
               "The app you selected is not installed on your device. It's needed for rooted ReVanced."
           })
         );
-      }
+
       return null;
     }
-    return dumpSysOut
-      .match(/versionName=([^=]+)/)[1]
-      .replace(`${os.EOL}    `, '')
-      .match(/[\d]+(\.\d+)+/g)[0];
+
+    return versionMatch[1].replace(`${EOL}    `, '').match(/\d+(\.\d+)+/g)[0];
   } catch (e) {
     return null;
   }
