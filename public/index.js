@@ -199,9 +199,8 @@ function toTitleCase (phrase) {
 }
 
 function exitApp () {
+  location.href = '/exitted';
   sendCommand({ event: 'exit' });
-  const tempW = window.open(location, '_self');
-  tempW.close();
   return false;
 }
 
