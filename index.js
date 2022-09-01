@@ -1,60 +1,78 @@
+const { createServer } = require('node:http');
+const { join } = require('node:path');
+
+const exec = require('./utils/promisifiedExec.js');
+
 const Express = require('express');
 const { WebSocketServer } = require('ws');
-const http = require('http');
-const path = require('path');
-const {
-  UpdateFiles,
-  SelectApp,
-  GetPatches,
-  SelectPatches,
-  GetAppVersion,
-  CheckFileAlreadyExists,
-  SelectAppVersion,
-  PatchApp,
-  CheckForUpdates,
-  GetDevices,
-  SetDevice
-} = require('./wsEvents/index.js');
-const { platform } = require('os');
-const exec = (cmd) =>
-  require('util').promisify(require('child_process').exec(cmd));
-const opn = require('open');
+const open_ = require('open');
 const pf = require('portfinder');
-const { argv } = require('process');
+
+// Lazy-loaded.
+/** @type {import('fkill').default} */
+let fkill;
+
+const {
+  updateFiles,
+  selectApp,
+  getPatches,
+  selectPatches,
+  getAppVersion,
+  checkFileAlreadyExists,
+  selectAppVersion,
+  patchApp,
+  checkForUpdates,
+  getDevices,
+  setDevice
+} = require('./wsEvents/index.js');
+
 const app = Express();
-const server = http.createServer(app);
+const server = createServer(app);
 const wsServer = new WebSocketServer({ server });
 
-app.use(Express.static(path.join(__dirname, 'public')));
-app.get('/revanced.apk', function (req, res) {
-  const file = path.join(__dirname, 'revanced', global.outputName);
+app.use(Express.static(join(__dirname, 'public')));
+app.get('/revanced.apk', (_, res) => {
+  const file = join(__dirname, 'revanced', global.outputName);
+
   res.download(file);
 });
 
-const open = async (PORT) => {
-  if (platform === 'android') {
-    await exec(`termux-open-url http://localhost:${PORT}`);
-  } else opn(`http://localhost:${PORT}`);
+/**
+ * @param {number} port
+ */
+const open = async (port) => {
+  if (process.platform === 'android')
+    await exec(`termux-open-url http://localhost:${port}`);
+  else await open_(`http://localhost:${port}`);
 };
 
-const log = (msg, newline = true, tag = true) =>
-  newline
-    ? console.log(`${tag ? '[builder] ' : ''}${msg}`)
-    : process.stdout.write(`${tag ? '[builder] ' : ''}${msg} `);
+/**
+ * @param {string} msg
+ */
+const log = (msg, newline = true, tag = true) => {
+  if (newline) console.log(`${tag ? '[builder] ' : ''}${msg}`);
+  else process.stdout.write(`${tag ? '[builder] ' : ''}${msg} `);
+};
 
-const listen = (PORT) => {
-  server.listen(PORT, () => {
-    if (argv.includes('--no-open')) {
-      log(`The webserver is now running at http://localhost:${PORT}`);
-    } else {
+/**
+ * @param {number} port
+ */
+const listen = (port) => {
+  server.listen(port, async () => {
+    if (process.argv.includes('--no-open'))
+      log(`The webserver is now running at http://localhost:${port}`);
+    else {
       log('The webserver is now running!');
+
       try {
         log('Opening the app in the default browser...', false);
-        open(PORT);
-        log('Done. Check if a browser window has opened', true, false);
-      } catch (e) {
+
+        await open(port);
+
+        log('Done, check if a browser window has opened', true, false);
+      } catch {
         log(
-          `Failed. Open up http://localhost:${PORT} manually in your browser.`,
+          `Failed. Open up http://localhost:${port} manually in your browser.`,
           true,
           false
         );
@@ -63,25 +81,32 @@ const listen = (PORT) => {
   });
 };
 
+/**
+ * @param {import('http').Server} svr
+ */
 const cleanExit = async (svr) => {
   log('Killing any dangling processes...', false);
-  const fkill = await import('fkill');
-  await fkill.default(['adb', 'java', 'aapt2'], {
+
+  fkill ??= (await import('fkill')).default;
+
+  await fkill(['adb', 'java', 'aapt2'], {
     forceAfterTimeout: 5000,
     tree: true,
     ignoreCase: true,
     silent: true
   });
+
   log('Done.', true, false);
   log('Stopping the server...', false);
+
   svr.close(() => log('Done', true, false));
-  setTimeout(() => process.exit(0), 2500);
+  setTimeout(() => process.exit(0), 2_500);
 };
 
 pf.getPortPromise()
-  .then((port) => {
-    log(`Listening at port ${port}`);
-    listen(port);
+  .then((freePort) => {
+    log(`Listening at port ${freePort}`);
+    listen(freePort);
   })
   .catch((err) => {
     log(`Unable to determine free ports.\nReason: ${err}`);
@@ -108,69 +133,47 @@ process.on('SIGTERM', () => cleanExit(server));
 // The websocket server
 wsServer.on('connection', (ws) => {
   ws.on('message', async (msg) => {
+    /** @type {Record<string, any>} */
     const message = JSON.parse(msg);
 
     // Theres no file handler, soo...
 
     switch (message.event) {
-      case 'checkForUpdates': {
-        await CheckForUpdates(message, ws);
+      case 'checkForUpdates':
+        await checkForUpdates(ws);
         break;
-      }
-      case 'updateFiles': {
-        await UpdateFiles(message, ws);
+      case 'updateFiles':
+        await updateFiles(ws);
         break;
-      }
-
-      case 'getDevices': {
-        await GetDevices(message, ws);
+      case 'getDevices':
+        await getDevices(ws);
         break;
-      }
-
-      case 'setDevice': {
-        await SetDevice(message, ws);
+      case 'setDevice':
+        setDevice(message);
         break;
-      }
-
-      case 'selectApp': {
-        await SelectApp(message, ws);
+      case 'selectApp':
+        selectApp(message);
         break;
-      }
-
-      case 'getPatches': {
-        await GetPatches(message, ws);
+      case 'getPatches':
+        await getPatches(ws);
         break;
-      }
-
-      case 'selectPatches': {
-        await SelectPatches(message, ws);
+      case 'selectPatches':
+        selectPatches(message);
         break;
-      }
-
-      case 'checkFileAlreadyExists': {
-        await CheckFileAlreadyExists(message, ws);
+      case 'checkFileAlreadyExists':
+        checkFileAlreadyExists(ws);
         break;
-      }
-
-      case 'getAppVersion': {
-        await GetAppVersion(message, ws);
+      case 'getAppVersion':
+        await getAppVersion(ws);
         break;
-      }
-
-      case 'selectAppVersion': {
-        await SelectAppVersion(message, ws);
+      case 'selectAppVersion':
+        await selectAppVersion(message, ws);
         break;
-      }
-
-      case 'patchApp': {
-        await PatchApp(message, ws);
+      case 'patchApp':
+        await patchApp(ws);
         break;
-      }
-
-      case 'exit': {
+      case 'exit':
         process.kill(process.pid, 'SIGTERM');
-        break;
-      }
     }
   });
 });

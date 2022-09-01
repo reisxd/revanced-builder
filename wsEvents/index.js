@@ -1,25 +1,25 @@
-const PatchApp = require('./PatchApp.js');
-const SelectApp = require('./SelectApp.js');
-const SelectAppVersion = require('./SelectAppVersion.js');
-const SelectPatches = require('./SelectPatches.js');
-const UpdateFiles = require('./UpdateFiles.js');
-const GetPatches = require('./GetPatches.js');
-const GetAppVersion = require('./GetAppVersion.js');
-const CheckFileAlreadyExists = require('./CheckFileAlreadyExists.js');
-const CheckForUpdates = require('./CheckForUpdates.js');
-const GetDevices = require('./GetDevices.js');
-const SetDevice = require('./SetDevice.js');
+const patchApp = require('./patchApp.js');
+const selectApp = require('./selectApp.js');
+const selectAppVersion = require('./selectAppVersion.js');
+const selectPatches = require('./selectPatches.js');
+const updateFiles = require('./updateFiles.js');
+const getPatches = require('./getPatches.js');
+const getAppVersion = require('./getAppVersion.js');
+const checkFileAlreadyExists = require('./checkFileAlreadyExists.js');
+const checkForUpdates = require('./checkForUpdates.js');
+const getDevices = require('./getDevices.js');
+const setDevice = require('./setDevice.js');
 
 module.exports = {
-  PatchApp,
-  SelectApp,
-  SelectAppVersion,
-  SelectPatches,
-  UpdateFiles,
-  GetPatches,
-  GetAppVersion,
-  CheckFileAlreadyExists,
-  CheckForUpdates,
-  GetDevices,
-  SetDevice
+  patchApp,
+  selectApp,
+  selectAppVersion,
+  selectPatches,
+  updateFiles,
+  getPatches,
+  getAppVersion,
+  checkFileAlreadyExists,
+  checkForUpdates,
+  getDevices,
+  setDevice
 };

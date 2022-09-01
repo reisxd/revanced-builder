@@ -1,21 +1,17 @@
-const os = require('os');
-const { promisify } = require('util');
-const { exec } = require('child_process');
-const actualExec = promisify(exec);
+const { EOL } = require('node:os');
 
-module.exports = async function () {
+const exec = require('./promisifiedExec.js');
+
+const adbDeviceIdRegex = new RegExp(`${EOL}(.*?)\t`, 'g');
+
+module.exports = async function getDeviceID() {
   try {
-    const { stdout } = await actualExec('adb devices');
-    const adbDeviceIdRegex = new RegExp(`${os.EOL}(.*?)\t`, 'g');
-    const match = stdout.match(adbDeviceIdRegex);
-    if (match === null) {
-      return null;
-    }
-    const deviceIds = [];
-    for (const deviceId of match) {
-      deviceIds.push(deviceId.replace(os.EOL, '').replace('\t', ''));
-    }
-    return deviceIds;
+    const { stdout } = await exec('adb devices');
+    const matches = stdout.match(adbDeviceIdRegex);
+
+    if (matches === null) return null;
+
+    return matches.map((match) => match.replace(EOL, '').replace('\t', ''));
   } catch (e) {
     return null;
   }

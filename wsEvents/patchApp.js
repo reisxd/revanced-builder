@@ -1,24 +1,26 @@
-const { promisify } = require('util');
-const { exec, spawn } = require('child_process');
-const os = require('os');
+const { spawn } = require('node:child_process');
+const { version } = require('node:os');
+const { rmSync, renameSync } = require('node:fs');
+const { join } = require('node:path');
+
+const exec = require('../utils/promisifiedExec.js');
+
 const mountReVanced = require('../utils/mountReVanced.js');
-const actualExec = promisify(exec);
-const fs = require('fs');
 const getAppVersion = require('../utils/getAppVersion.js');
 const { getDownloadLink } = require('../utils/FileDownloader.js');
 
-async function mount (ws) {
+/**
+ * @param {import('ws').WebSocket} ws
+ */
+async function mount(ws) {
   let pkg;
+
   switch (global.jarNames.selectedApp) {
-    case 'youtube': {
+    case 'youtube':
       pkg = 'com.google.android.youtube';
       break;
-    }
-
-    case 'music': {
+    case 'music':
       pkg = 'com.google.android.apps.youtube.music';
-      break;
-    }
   }
 
   ws.send(
@@ -27,20 +29,26 @@ async function mount (ws) {
       log: 'Trying to mount ReVanced...'
     })
   );
+
   await mountReVanced(pkg, ws);
 }
 
-async function afterBuild (ws) {
-  fs.rmSync('./revanced-cache', { recursive: true, force: true });
+/**
+ * @param {import('ws').WebSocket} ws
+ */
+async function afterBuild(ws) {
+  rmSync('revanced-cache', { recursive: true, force: true });
   outputName();
-  fs.renameSync('./revanced/revanced.apk', `./revanced/${global.outputName}`);
-  if (!global.jarNames.isRooted && os.platform() === 'android') {
-    await actualExec(
+  renameSync(
+    join('revanced', 'revanced.apk'),
+    join('revanced', global.outputName)
+  );
+
+  if (!global.jarNames.isRooted && process.platform === 'android') {
+    await exec(
       `cp revanced/${global.outputName} /storage/emulated/0/${global.outputName}`
     );
-    await actualExec(
-      `cp ${global.jarNames.microG} /storage/emulated/0/microg.apk`
-    );
+    await exec(`cp ${global.jarNames.microG} /storage/emulated/0/microg.apk`);
 
     ws.send(
       JSON.stringify({
@@ -48,16 +56,15 @@ async function afterBuild (ws) {
         log: `Copied files over to /storage/emulated/0/!\nPlease install ReVanced, its located in /storage/emulated/0/${global.outputName}\nand if you are building YT/YTM ReVanced without root, also install /storage/emulated/0/microg.apk.`
       })
     );
-  } else if (os.platform() === 'android') {
-    await mount(ws);
-  } else if (!global.jarNames.deviceID) {
+  } else if (process.platform === 'android') await mount(ws);
+  else if (!global.jarNames.deviceID)
     ws.send(
       JSON.stringify({
         event: 'patchLog',
         log: `ReVanced has been built!\nPlease transfer over revanced/${global.outputName} and if you are using YT/YTM, revanced/microg.apk and install them!`
       })
     );
-  } else if (
+  else if (
     (!global.jarNames.isRooted &&
       global.jarNames.deviceID &&
       global.jarNames.selectedApp === 'youtube') ||
@@ -73,10 +80,12 @@ async function afterBuild (ws) {
     ).version
       .replace('v', '')
       .split('-')[0];
+
     if (!microGVersion) {
-      await actualExec(
+      await exec(
         `adb -s ${global.jarNames.deviceID} install ${global.jarNames.microG}`
       );
+
       ws.send(
         JSON.stringify({
           event: 'patchLog',
@@ -84,81 +93,65 @@ async function afterBuild (ws) {
         })
       );
     } else if (microGVersion !== currentMicroGVersion) {
-      await actualExec(
+      await exec(
         `adb -s ${global.jarNames.deviceID} install ${global.jarNames.microG}`
       );
+
       ws.send(
         JSON.stringify({
           event: 'patchLog',
           log: 'MicroG has been updated.'
         })
       );
-    } else {
+    } else
       ws.send(
         JSON.stringify({
           event: 'patchLog',
           log: 'MicroG is already up to date.'
         })
       );
-    }
   }
 
-  ws.send(
-    JSON.stringify({
-      event: 'buildFinished'
-    })
-  );
+  ws.send(JSON.stringify({ event: 'buildFinished' }));
 }
 
-async function reinstallReVanced () {
+async function reinstallReVanced() {
   let pkgNameToGetUninstalled;
 
   switch (global.jarNames.selectedApp) {
-    case 'youtube': {
-      if (!global.jarNames.isRooted) {
+    case 'youtube':
+      if (!global.jarNames.isRooted)
         pkgNameToGetUninstalled = 'app.revanced.android.youtube';
-        break;
-      } else break;
-    }
-
-    case 'music': {
-      if (!global.jarNames.isRooted) {
+      break;
+    case 'music':
+      if (!global.jarNames.isRooted)
         pkgNameToGetUninstalled = 'app.revanced.android.apps.youtube.music';
-        break;
-      } else break;
-    }
-
-    case 'android': {
+      break;
+    case 'android':
       pkgNameToGetUninstalled = 'com.twitter.android';
       break;
-    }
-
-    case 'frontpage': {
+    case 'frontpage':
       pkgNameToGetUninstalled = 'com.reddit.frontpage';
       break;
-    }
-
-    case 'warnapp': {
+    case 'warnapp':
       pkgNameToGetUninstalled = 'de.dwd.warnapp';
       break;
-    }
-
-    case 'trill': {
+    case 'trill':
       pkgNameToGetUninstalled = 'com.ss.android.ugc.trill';
-    }
   }
 
-  await actualExec(
+  await exec(
     `adb -s ${global.jarNames.deviceID} uninstall ${pkgNameToGetUninstalled}`
   );
-  await actualExec(
+  await exec(
     `adb -s ${global.jarNames.deviceID} install revanced/${global.outputName}`
   );
 }
 
-function outputName () {
+function outputName() {
   const part1 = 'ReVanced';
   let part2;
+
   switch (global.jarNames.selectedApp) {
     case 'youtube':
       part2 = 'YouTube';
@@ -174,33 +167,36 @@ function outputName () {
       break;
     case 'warnapp':
       part2 = 'WarnWetter';
-      break;
   }
+
   // TODO: If the existing input APK is used from revanced/ without downloading, version and arch aren't set
   const part3 = global?.apkInfo?.version ? `v${global.apkInfo.version}` : '';
   const part4 = global?.apkInfo?.arch;
-  const part5 =
-    'cli_' +
-    global.jarNames.cli
-      .split('/')[2]
-      .replace('revanced-cli-', '')
-      .replace('.jar', '');
-  const part6 =
-    'patches_' +
-    global.jarNames.patchesJar
-      .split('/')[2]
-      .replace('revanced-patches-', '')
-      .replace('.jar', '');
+  const part5 = `cli_${global.jarNames.cli
+    .split('/')[2]
+    .replace('revanced-cli-', '')
+    .replace('.jar', '')}`;
+  const part6 = `patches_${global.jarNames.patchesJar
+    .split('/')[2]
+    .replace('revanced-patches-', '')
+    .replace('.jar', '')}`;
+
   // Filename: ReVanced-<AppName>-<AppVersion>-[Arch]-cli_<CLI_Version>-patches_<PatchesVersion>.apk
-  global.outputName = '';
-  for (const part of [part1, part2, part3, part4, part5, part6]) {
-    if (part) global.outputName += `-${part}`;
-  }
-  global.outputName += '.apk';
-  global.outputName = global.outputName.substring(1);
+  let outputName = '';
+
+  for (const part of [part1, part2, part3, part4, part5, part6])
+    if (part) outputName += `-${part}`;
+
+  outputName += '.apk';
+
+  global.outputName = outputName.substring(1);
 }
 
-function reportSys (args, ws) {
+/**
+ * @param {string[]} args
+ * @param {import('ws').WebSocket} ws
+ */
+function reportSys(args, ws) {
   ws.send(
     JSON.stringify({
       event: 'error',
@@ -213,11 +209,17 @@ function reportSys (args, ws) {
     '[builder] Please report these informations to https://github.com/reisxd/revanced-builder/issues'
   );
   console.log(
-    `OS: ${os.platform()}\nArguements: ${args}\n OS Version${os.version()}`
+    `OS: ${process.platform}\nArguements: ${args.join(
+      ', '
+    )}\n OS Version${version()}`
   );
 }
 
-module.exports = async function (message, ws) {
+/**
+ * @param {import('ws').WebSocket} ws
+ */
+module.exports = async function patchApp(ws) {
+  /** @type {string[]} */
   const args = [
     '-jar',
     global.jarNames.cli,
@@ -232,7 +234,7 @@ module.exports = async function (message, ws) {
     './revanced/revanced.apk'
   ];
 
-  if (os.platform() === 'android') {
+  if (process.platform === 'android') {
     args.push('--custom-aapt2-binary');
     args.push('revanced/aapt2');
   }
@@ -247,24 +249,18 @@ module.exports = async function (message, ws) {
     args.push(global.jarNames.deviceID);
   }
 
-  for (const patch of global.jarNames.patches.split(' ')) {
-    args.push(patch);
-  }
+  args.push(...global.jarNames.patches.split(' '));
 
   if (
     global.jarNames.selectedApp.endsWith('frontpage') ||
     global.jarNames.selectedApp.endsWith('trill')
-  ) {
+  )
     args.push('-r');
-  }
 
-  if (global.jarNames.isRooted && global.jarNames.deviceID) {
+  if (global.jarNames.isRooted && global.jarNames.deviceID)
     args.push('--mount');
-  }
 
-  const buildProcess = await spawn('java', args, {
-    maxBuffer: 5120 * 1024
-  });
+  const buildProcess = spawn('java', args);
 
   buildProcess.stdout.on('data', async (data) => {
     ws.send(
@@ -274,18 +270,14 @@ module.exports = async function (message, ws) {
       })
     );
 
-    if (data.toString().includes('Finished')) {
-      await afterBuild(ws);
-    }
+    if (data.toString().includes('Finished')) await afterBuild(ws);
 
     if (data.toString().includes('INSTALL_FAILED_UPDATE_INCOMPATIBLE')) {
       await reinstallReVanced(ws);
       await afterBuild(ws);
     }
 
-    if (data.toString().includes('Unmatched')) {
-      reportSys(args, ws);
-    }
+    if (data.toString().includes('Unmatched')) reportSys(args, ws);
   });
 
   buildProcess.stderr.on('data', async (data) => {
@@ -296,17 +288,13 @@ module.exports = async function (message, ws) {
       })
     );
 
-    if (data.toString().includes('Finished')) {
-      await afterBuild(ws);
-    }
+    if (data.toString().includes('Finished')) await afterBuild(ws);
 
     if (data.toString().includes('INSTALL_FAILED_UPDATE_INCOMPATIBLE')) {
       await reinstallReVanced(ws);
       await afterBuild(ws);
     }
 
-    if (data.toString().includes('Unmatched')) {
-      reportSys(args, ws);
-    }
+    if (data.toString().includes('Unmatched')) reportSys(args, ws);
   });
 };

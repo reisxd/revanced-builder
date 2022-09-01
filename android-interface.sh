@@ -10,7 +10,7 @@ RVB_DIR=$HOME/revanced-builder
 COLOR_OFF='\033[0m'
 COLOR_RED='\033[1;31m'
 
-help_info () {
+help_info() {
   cat <<EOF
 Usage: $SCR_NAME [command] [options]
 
@@ -34,17 +34,17 @@ Commands:
 EOF
 }
 
-log () {
+log() {
   echo -e "[$SCR_NAME] $1"
 }
 
-error () {
+error() {
   log "$1"
   [[ "$2" == y ]] && help_info
   exit ${3:-1}
 }
 
-dload_and_install () {
+dload_and_install() {
   log "Downloading revanced-builder..."
   curl -sLo revanced-builder.zip https://github.com/reisxd/revanced-builder/archive/refs/heads/main.zip
   log "Unzipping..."
@@ -57,8 +57,8 @@ dload_and_install () {
   [[ -z "$1" ]] && log "Done. Execute \`$SCR_NAME_EXEC run\` to launch the builder."
 }
 
-preflight () {
-  setup_storage () {
+preflight() {
+  setup_storage() {
     if [[ ! -d $HOME/storage ]]; then
       log "You will now get a permission dialog to allow access to storage."
       log "This is needed in order to move the built APK (+ MicroG) to Internal Storage."
@@ -69,7 +69,7 @@ preflight () {
     fi
   }
 
-  install_dependencies () {
+  install_dependencies() {
     local JAVA_NF NODE_NF
     which java >/dev/null || JAVA_NF=1
     which node >/dev/null || NODE_NF=1
@@ -104,19 +104,19 @@ Possible reasons (in the order of commonality):
   fi
 }
 
-run_builder () {
+run_builder() {
   preflight
   echo
   if [[ $1 == "--delete-cache" ]]; then
     # Is this even called a cache?
-    log "Deleteting builder cache..."
+    log "Deleting builder cache..."
     rm -rf $RVB_DIR/revanced
   fi
   cd $RVB_DIR
   node .
 }
 
-reinstall_builder () {
+reinstall_builder() {
   log "Deleting revanced-builder..."
   if [[ $1 != "--delete-keystore" ]]; then
     if [ -f "$RVB_DIR/revanced/revanced.keystore" ]; then
@@ -137,7 +137,7 @@ reinstall_builder () {
   dload_and_install
 }
 
-update_builder () {
+update_builder() {
   log "Backing up some stuff..."
   if [ -d "$RVB_DIR/revanced" ]; then
     mkdir -p $HOME/revanced_backup
@@ -162,7 +162,7 @@ update_builder () {
   dload_and_install
 }
 
-main () {
+main() {
   if [[ -z "$@" ]]; then
     run_builder
   elif [[ $# -gt 2 ]]; then

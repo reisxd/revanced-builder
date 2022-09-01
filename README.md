@@ -6,7 +6,7 @@ This project will allow you to download the APK of any of the [officially suppor
 
 You'll need at least [Zulu JDK 17](https://www.azul.com/downloads/?version=java-17-lts&package=jdk) and [ADB](https://developer.android.com/studio/command-line/adb) (optional, required only for rooted phones).
 
-If you plan to use it from source, you'll also require [NodeJS >=13](https://nodejs.org/).
+If you plan to use it from source, you'll also require [Node.js >= 16](https://nodejs.org/).
 
 ## How to use
 

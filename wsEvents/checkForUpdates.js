@@ -1,18 +1,20 @@
 const { getDownloadLink } = require('../utils/FileDownloader.js');
 
-module.exports = async function (message, ws) {
+const currentVersion = 'v3.3.7';
+
+/**
+ * @param {import('ws').WebSocket} ws
+ */
+module.exports = async function checkForUpdates(ws) {
   const builderVersion = (
     await getDownloadLink({ owner: 'reisxd', repo: 'revanced-builder' })
   ).version;
-  // Well, there's no other good way to do this, so...
-  const currentVersion = 'v3.3.7';
 
-  if (builderVersion !== currentVersion) {
-    return ws.send(
+  if (builderVersion !== currentVersion)
+    ws.send(
       JSON.stringify({
         event: 'notUpToDate',
         builderVersion
       })
     );
-  }
 };
