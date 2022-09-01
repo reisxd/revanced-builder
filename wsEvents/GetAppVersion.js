@@ -64,7 +64,7 @@ module.exports = async function (message, ws) {
       const deviceArch = await actualExec(
         os.platform() !== 'android'
           ? `adb -s ${global.jarNames.deviceID} shell getprop ro.product.cpu.abi`
-          : `getprop ro.product.cpu.abi`
+          : 'getprop ro.product.cpu.abi'
       );
       global.apkInfo = {
         version: appVersion,
