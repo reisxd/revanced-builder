@@ -38,7 +38,7 @@ function getPatchesList(pkgName) {
     readFileSync('includedPatchesList.json', 'utf8')
   );
 
-  return patchesList.packages.find((package) => package.name === pkgName);
+  return patchesList.packages.find((package) => package.name === pkgName).patches;
 }
 
 /**
