@@ -276,23 +276,19 @@ ws.onmessage = (msg) => {
       {
         isDownloading = true;
 
-        const logElement = document.getElementsByClassName('log')[0];
+        let logElement = document.getElementsByClassName('log')[0];
 
         if (!logElement) {
           document.getElementById('content').innerHTML =
             '<span class="log"></span>';
           document.getElementsByTagName('main')[0].innerHTML +=
             '<progress value="0"></progress>';
+          logElement = document.getElementsByClassName('log')[0];
         }
 
         const downloadMessage = `<span class="log-line"><strong>[builder]</strong> Downloading ${message.name}...</span><br/>`;
 
-        if (currentFile === message.name) {
-          if (!alreadyAddedLog) {
-            logElement.innerHTML += downloadMessage;
-          }
-        } else {
-          alreadyAddedLog = true;
+        if (currentFile !== message.name) {
           currentFile = message.name;
           logElement.innerHTML += downloadMessage;
         }
