@@ -280,7 +280,7 @@ ws.onmessage = (msg) => {
 
         const logElement = document.getElementsByClassName('log')[0];
 
-        if (logElement === null) {
+        if (!logElement) {
           document.getElementById('content').innerHTML =
             '<span class="log"></span>';
           document.getElementsByTagName('main')[0].innerHTML +=
@@ -289,12 +289,7 @@ ws.onmessage = (msg) => {
 
         const downloadMessage = `<span class="log-line"><strong>[builder]</strong> Downloading ${message.name}...</span><br/>`;
 
-        if (currentFile === message.name) {
-          if (!alreadyAddedLog) {
-            logElement.innerHTML += downloadMessage;
-            alreadyAddedLog = true;
-          }
-        } else {
+        if (currentFile !== message.name) {
           currentFile = message.name;
           logElement.innerHTML += downloadMessage;
         }

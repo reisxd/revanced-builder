@@ -65,10 +65,12 @@ async function afterBuild(ws) {
       })
     );
   else if (
-    (!global.jarNames.isRooted &&
+      !global.jarNames.isRooted &&
       global.jarNames.deviceID &&
-      global.jarNames.selectedApp === 'youtube') ||
-    global.jarNames.selectedApp === 'music'
+      (
+        global.jarNames.selectedApp === 'youtube' ||
+        global.jarNames.selectedApp === 'music'
+      )
   ) {
     const microGVersion = await getAppVersion(
       'com.mgoogle.android.gms',
