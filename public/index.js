@@ -290,9 +290,9 @@ ws.onmessage = (msg) => {
         if (currentFile === message.name) {
           if (!alreadyAddedLog) {
             logElement.innerHTML += downloadMessage;
-            alreadyAddedLog = true;
           }
         } else {
+          alreadyAddedLog = true;
           currentFile = message.name;
           logElement.innerHTML += downloadMessage;
         }
