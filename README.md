@@ -11,3 +11,7 @@ If you plan to use it from source, you'll also require [Node.js >= 16](https://n
 ## How to use
 
 If you are on a PC, download the latest executable from [here](https://github.com/reisxd/revanced-builder/releases/latest) or if you are on a Android device, please see [this](https://github.com/reisxd/revanced-builder/wiki/How-to-use-revanced-builder-on-Android).
+
+## For developers
+
+For developers, see [this](https://github.com/reisxd/revanced-builder/blob/main/DEVELOPERS.md)
