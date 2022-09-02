@@ -3,9 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
-    <title>Exitted</title>
+    <title>Exited</title>
     <link href="../styles/fontawesome.css" rel="stylesheet" type="text/css" />
     <link href="../styles/core.css" rel="stylesheet" type="text/css" />
+    <script src="../index.js"></script> 
   </head>
 
   <body>
@@ -18,4 +19,9 @@
       </main>
     </div>
   </body>
+  <script>
+    ws.onopen = () => {
+      sendCommand({ event: 'exit' });
+    }
+  </script>
 </html>

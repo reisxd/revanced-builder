@@ -206,8 +206,6 @@ function toTitleCase(phrase) {
 
 function exitApp() {
   location.href = '/exited';
-
-  sendCommand({ event: 'exit' });
 }
 
 window.addEventListener('keypress', (e) => {
