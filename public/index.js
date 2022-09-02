@@ -287,7 +287,12 @@ ws.onmessage = (msg) => {
 
         const downloadMessage = `<span class="log-line"><strong>[builder]</strong> Downloading ${message.name}...</span><br/>`;
 
-        if (currentFile !== message.name) {
+        if (currentFile === message.name) {
+          if (!alreadyAddedLog) {
+            logElement.innerHTML += downloadMessage;
+            alreadyAddedLog = true;
+          }
+        } else {
           currentFile = message.name;
           logElement.innerHTML += downloadMessage;
         }
