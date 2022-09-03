@@ -169,8 +169,8 @@ run_self_update() {
 
   # Download new version
   log "Downloading latest version..."
-  if ! wget --quiet --output-document="$SCR_NAME_EXEC.tmp" https://raw.githubusercontent.com/reisxd/revanced-builder/main/android-interface.sh ; then
-    log "Failed: Error while trying to wget new version!"
+  if ! curl -sLo $SCR_NAME_EXEC.tmp https://raw.githubusercontent.com/reisxd/revanced-builder/main/android-interface.sh ; then
+    log "Failed: Error while trying to download new version!"
     log "File requested: https://raw.githubusercontent.com/reisxd/revanced-builder/main/android-interface.sh"
     exit 1
   fi
