@@ -15,22 +15,26 @@ help_info() {
 Usage: $SCR_NAME [command] [options]
 
 Commands:
-  run                 Launches the revanced-builder.
-                      Running $SCR_NAME_EXEC without arguments will
-                      assume this command (i.e. will run the
-                      builder).
-    --delete-cache    Deletes revanced/ before building.
+  run                          Launches the revanced-builder.
+                               Running $SCR_NAME_EXEC without arguments will
+                               assume this command (i.e. will run the
+                               builder).
+    --delete-cache
+    --dc                       Deletes revanced/ before running builder.
+    --delete-cache-no-keystore
+    --dcnk                     Deletes revanced/ before running builder, but
+                               preserving keystore file.
 
-  reinstall           Delete everything and start from scratch.
-    --delete-keystore Delete the signature file also. This will
-                      make ReVanced use a different signature,
-                      which will not allow you to install an
-                      updated build over the previously installed
-                      one (you'll need to uninstall that first).
+  reinstall                    Delete everything and start from scratch.
+    --delete-keystore          Delete the signature file also. This will
+                               make ReVanced use a different signature,
+                               which will not allow you to install an
+                               updated build over the previously installed
+                               one (you'll need to uninstall that first).
 
-  update              Update the builder to the latest version.
+  update                       Update the builder to the latest version.
 
-  help                Show this help info.
+  help                         Show this help info.
 EOF
 }
 
@@ -107,10 +111,17 @@ Possible reasons (in the order of commonality):
 run_builder() {
   preflight
   echo
-  if [[ $1 == "--delete-cache" ]]; then
+  if [[ $1 == "--delete-cache" || $1 == "--dc" ]]; then
     # Is this even called a cache?
     log "Deleting builder cache..."
     rm -rf $RVB_DIR/revanced
+  fi
+  if [[ $1 == "--delete-cache-no-keystore" || $1 == "--dcnk" ]]; then
+    log "Deleting builder cache preserving keystore..."
+    mv $RVB_DIR/revanced/revanced.keystore $HOME/revanced.keystore
+    rm -rf $RVB_DIR/revanced
+    mkdir -p $RVB_DIR/revanced
+    mv $HOME/revanced.keystore $RVB_DIR/revanced/revanced.keystore
   fi
   cd $RVB_DIR
   node .
