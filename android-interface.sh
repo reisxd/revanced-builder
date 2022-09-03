@@ -159,7 +159,45 @@ update_builder() {
   fi
   log "Updating revanced-builder..."
   cd $RVB_DIR
-  dload_and_install
+  dload_and_install n
+  cd $HOME
+  run_self_update
+}
+
+run_self_update() {
+  log "Performing self-update..."
+
+  # Download new version
+  log "Downloading latest version..."
+  if ! curl -sLo $SCR_NAME_EXEC.tmp https://raw.githubusercontent.com/reisxd/revanced-builder/main/android-interface.sh ; then
+    log "Failed: Error while trying to download new version!"
+    log "File requested: https://raw.githubusercontent.com/reisxd/revanced-builder/main/android-interface.sh"
+    exit 1
+  fi
+  log "Done."
+
+  # Copy over modes from old version
+  OCTAL_MODE=$(stat -c '%a' $SCR_NAME_EXEC)
+  if ! chmod $OCTAL_MODE "$SCR_NAME_EXEC.tmp" ; then
+    log "Failed: Error while trying to set mode on $SCR_NAME_EXEC.tmp."
+    exit 1
+  fi
+
+  # Spawn update script
+  cat > updateScript.sh << EOF
+#!/bin/bash
+
+# Overwrite old file with new
+if mv "$0.tmp" "$0"; then
+  echo -e "[$SCR_NAME] Done. Execute '$0 run' to launch the builder."
+  rm \$0
+else
+  echo "[$SCR_NAME] Failed!"
+fi
+EOF
+
+  log "Inserting update process..."
+  exec /bin/bash updateScript.sh
 }
 
 main() {
