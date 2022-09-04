@@ -1,7 +1,7 @@
 const { readdirSync, createWriteStream, unlink } = require('node:fs');
 
 const { load } = require('cheerio');
-const fetch = require('./fetch.js');
+const fetch = require('node-fetch');
 const Progress = require('node-fetch-progress');
 
 /** @type {import('ws').WebSocket} */

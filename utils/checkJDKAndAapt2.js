@@ -8,6 +8,7 @@ const { dloadFromURL } = require('./FileDownloader.js');
  * @param {import('ws').WebSocket} ws
  */
 module.exports = async function checkJDKAndAapt2(ws) {
+  global.jarNames.devices = [];
   try {
     await exec('java -v');
   } catch (e) {

@@ -1,6 +1,6 @@
 const exec = require('../utils/promisifiedExec.js');
 
-const fetch = require('../utils/fetch.js');
+const fetch = require('node-fetch');
 const { load } = require('cheerio');
 const semver = require('semver');
 

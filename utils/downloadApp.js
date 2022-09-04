@@ -1,4 +1,4 @@
-const fetch = require('./fetch.js');
+const fetch = require('node-fetch');
 const { load } = require('cheerio');
 const { dloadFromURL } = require('./FileDownloader.js');
 
