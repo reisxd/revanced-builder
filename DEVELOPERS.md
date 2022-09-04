@@ -20,4 +20,4 @@ git clone https://github.com/reisxd/revanced-builder.git
 cd revanced-builder
 npm i
 npx pkg -t linux-x64,macos-x64,win-x64 -C GZip .
-``` 
+```

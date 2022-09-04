@@ -6,8 +6,6 @@ const { join } = require('node:path');
 const exec = require('../utils/promisifiedExec.js');
 
 const mountReVanced = require('../utils/mountReVanced.js');
-const getAppVersion = require('../utils/getAppVersion.js');
-const { getDownloadLink } = require('../utils/FileDownloader.js');
 
 /**
  * @param {import('ws').WebSocket} ws
@@ -57,64 +55,17 @@ async function afterBuild(ws) {
       })
     );
   } else if (process.platform === 'android') await mount(ws);
-  else if (!global.jarNames.deviceID)
+  else if (!global.jarNames.devices[0])
     ws.send(
       JSON.stringify({
         event: 'patchLog',
         log: `ReVanced has been built!\nPlease transfer over revanced/${global.outputName} and if you are using YT/YTM, revanced/microg.apk and install them!`
       })
     );
-  else if (
-      !global.jarNames.isRooted &&
-      global.jarNames.deviceID &&
-      (
-        global.jarNames.selectedApp === 'youtube' ||
-        global.jarNames.selectedApp === 'music'
-      )
-  ) {
-    const microGVersion = await getAppVersion(
-      'com.mgoogle.android.gms',
-      null,
-      false
-    );
-    const currentMicroGVersion = (
-      await getDownloadLink({ owner: 'TeamVanced', repo: 'VancedMicroG' })
-    ).version
-      .replace('v', '')
-      .split('-')[0];
 
-    if (!microGVersion) {
-      await exec(
-        `adb -s ${global.jarNames.deviceID} install ${global.jarNames.microG}`
-      );
-
-      ws.send(
-        JSON.stringify({
-          event: 'patchLog',
-          log: 'MicroG has been installed.'
-        })
-      );
-    } else if (microGVersion !== currentMicroGVersion) {
-      await exec(
-        `adb -s ${global.jarNames.deviceID} install ${global.jarNames.microG}`
-      );
-
-      ws.send(
-        JSON.stringify({
-          event: 'patchLog',
-          log: 'MicroG has been updated.'
-        })
-      );
-    } else
-      ws.send(
-        JSON.stringify({
-          event: 'patchLog',
-          log: 'MicroG is already up to date.'
-        })
-      );
-  }
-
-  ws.send(JSON.stringify({ event: 'buildFinished' }));
+  if (global.jarNames.devices[0]) {
+    ws.send(JSON.stringify({ event: 'buildFinished', install: true }));
+  } else ws.send(JSON.stringify({ event: 'buildFinished' }));
 }
 
 async function reinstallReVanced() {
@@ -246,11 +197,6 @@ module.exports = async function patchApp(ws) {
     args.push(global.jarNames.integrations);
   }
 
-  if (global.jarNames.deviceID) {
-    args.push('-d');
-    args.push(global.jarNames.deviceID);
-  }
-
   args.push(...global.jarNames.patches.split(' '));
 
   if (
@@ -258,9 +204,6 @@ module.exports = async function patchApp(ws) {
     global.jarNames.selectedApp.endsWith('trill')
   )
     args.push('-r');
-
-  if (global.jarNames.isRooted && global.jarNames.deviceID)
-    args.push('--mount');
 
   const buildProcess = spawn('java', args);
 

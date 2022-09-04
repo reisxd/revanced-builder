@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
-    <title>Device Selector</title>
+    <title>Installing</title>
     <link href="../styles/fontawesome.css" rel="stylesheet" type="text/css" />
     <link href="../styles/core.css" rel="stylesheet" type="text/css" />
-    <link href="../styles/patches.css" rel="stylesheet" type="text/css" />
+    <link href="../styles/dependencies.css" rel="stylesheet" type="text/css" />
     <script src="../index.js"></script>
     <script src="../colors.js" defer></script>
   </head>
@@ -15,16 +15,11 @@
     <div id="container">
       <main>
         <header>
-          <h1>Select the device(s) you want to install ReVanced to</h1>
-          <span
-            >ReVanced Builder has detected that you have more than one device
-            plugged in.<br />Please select the device(s) that you want to
-            install ReVanced.</span
-          >
+          <h1>Installing...</h1>
         </header>
         <div id="content--wrapper">
           <div id="content">
-            <ul id="devices"></ul>
+            <span class="log"></span>
           </div>
         </div>
       </main>
@@ -58,14 +53,10 @@
           </div>
         </div>
         <span class="right"></span>
-        <button id="back" onclick="history.back()">Back</button>
-        <button class="highlighted" id="continue" onclick="setDevice()">
-          Continue
-        </button>
       </footer>
     </div>
   </body>
   <script>
-    ws.onopen = () => getDevices();
+    ws.onopen = () => installReVanced();
   </script>
 </html>

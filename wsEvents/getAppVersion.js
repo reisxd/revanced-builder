@@ -1,13 +1,12 @@
-const { EOL } = require('node:os');
-
 const exec = require('../utils/promisifiedExec.js');
 
 const fetch = require('../utils/fetch.js');
 const { load } = require('cheerio');
 const semver = require('semver');
 
-const getAppVersion_ = require('../utils/getAppVersion.js');
+const { getAppVersion: getAppVersion_ } = require('../utils/getAppVersion.js');
 const downloadApp = require('../utils/downloadApp.js');
+const getDeviceArch = require('../utils/getDeviceArch.js');
 
 const APKMIRROR_UPLOAD_BASE = 'https://www.apkmirror.com/uploads/?appcategory=';
 
@@ -36,7 +35,7 @@ module.exports = async function getAppVersion(ws) {
 
   if (global.jarNames.isRooted) {
     if (process.platform !== 'android') {
-      if (!global.jarNames.deviceID) {
+      if (!global.jarNames.devices[0]) {
         ws.send(
           JSON.stringify({
             event: 'error',
@@ -49,13 +48,15 @@ module.exports = async function getAppVersion(ws) {
       }
 
       try {
-        await exec(`adb -s ${global.jarNames.deviceID} shell su -c exit`);
+        for (const deviceId of global.jarNames.devices) {
+          await exec(`adb -s ${deviceId} shell su -c exit`);
+        }
       } catch {
         ws.send(
           JSON.stringify({
             event: 'error',
             error:
-              'The plugged in device is not rooted or Shell was denied root access. If you didn\'t intend on doing a rooted build, include all "Root required to exclude" patches'
+              'The plugged in device is not rooted or Shell was denied root access. If you didn\'t intend on doing a rooted build, include all "Needed for non-root building" patches'
           })
         );
 
@@ -77,15 +78,11 @@ module.exports = async function getAppVersion(ws) {
     const appVersion = await getAppVersion_(pkgName, ws, true);
 
     if (global.jarNames.selectedApp === 'music') {
-      const deviceArch = await exec(
-        process.platform !== 'android'
-          ? `adb -s ${global.jarNames.deviceID} shell getprop ro.product.cpu.abi`
-          : 'getprop ro.product.cpu.abi'
-      );
+      const arch = await getDeviceArch(ws);
 
       global.apkInfo = {
         version: appVersion,
-        arch: deviceArch.stdout.replace(EOL, '')
+        arch
       };
 
       return downloadApp(ws);
@@ -159,7 +156,7 @@ module.exports = async function getAppVersion(ws) {
       event: 'appVersions',
       versionList,
       selectedApp: global.jarNames.selectedApp,
-      foundDevice: global.jarNames.deviceID
+      foundDevice: global.jarNames.devices[0]
         ? true
         : process.platform === 'android'
     })

@@ -217,13 +217,21 @@ window.addEventListener('keypress', (e) => {
 });
 
 function setDevice() {
-  const deviceChecked = document.querySelector('input[name="device"]:checked');
+  const deviceElementList = Array.from(document.querySelectorAll('.select'));
 
-  if (deviceChecked === null) return alert("You didn't select an device!");
+  let selectedDeviceList = [];
+
+  for (const deviceElement of deviceElementList)
+    (deviceElement.checked ? selectedDeviceList : []).push(deviceElement);
+
+  if (selectedDeviceList.length === 0)
+    return alert("You haven't selected any devices.");
+
+  selectedDeviceList = selectedDeviceList.map((x) => x.getAttribute('value'));
 
   sendCommand({
     event: 'setDevice',
-    deviceId: deviceChecked.value
+    devices: selectedDeviceList
   });
 
   location.href = '/patches';
@@ -231,6 +239,10 @@ function setDevice() {
 
 function getDevices() {
   sendCommand({ event: 'getDevices' });
+}
+
+function installReVanced() {
+  sendCommand({ event: 'installReVanced' });
 }
 
 ws.onmessage = (msg) => {
@@ -401,8 +413,9 @@ ws.onmessage = (msg) => {
       break;
     case 'buildFinished':
       {
+        if (message.install) location.href = '/installer';
         document.getElementsByTagName('header')[0].innerHTML =
-          '<h1>ReVanced has been built.</h1>';
+          '<h1>Finished.</h1>';
 
         const firstFooterElement = document.getElementsByTagName('footer')[0];
 
@@ -410,7 +423,7 @@ ws.onmessage = (msg) => {
           firstFooterElement.innerHTML +=
             '<button class="highlighted" onclick="window.open(\'/revanced.apk\', \'_blank\')">Download</button>';
 
-        document.getElementsByTagName('footer')[0].innerHTML +=
+        firstFooterElement.innerHTML +=
           '<button class="highlighted" onclick="location.href = \'/\'">Build Again</button><button onclick="exitApp();">Quit</button>';
       }
       break;
@@ -433,9 +446,12 @@ ws.onmessage = (msg) => {
         const device = message.devices[i];
 
         document.getElementById('devices').innerHTML += `
-            <li>
-            <input type="radio" name="device" id="app-${i}" value="${device.id}"/>
-            <label for="app-${i}">${device.id} (${device.model})</label></li>`;
+        <li>
+        <input class="select" id="app-${i}" value="${device.id}" type="checkbox">
+        <label for="app-${i}">
+          <span><strong>${device.id} (${device.model})</strong></span>
+        </label>
+      </li>`;
       }
     }
   }

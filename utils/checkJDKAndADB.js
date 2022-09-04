@@ -46,8 +46,8 @@ module.exports = async function checkJDKAndADB(ws) {
         );
 
         return;
-      } else if (deviceIds[0]) global.jarNames.deviceID = deviceIds[0];
-    } else global.jarNames.deviceID = null;
+      } else if (deviceIds[0]) global.jarNames.devices = deviceIds;
+    } else global.jarNames.devices = [];
   } catch (err) {
     if (err.stderr.includes('java'))
       ws.send(

@@ -23,7 +23,8 @@ const {
   patchApp,
   checkForUpdates,
   getDevices,
-  setDevice
+  setDevice,
+  installReVanced
 } = require('./wsEvents/index.js');
 
 const app = Express();
@@ -171,6 +172,9 @@ wsServer.on('connection', (ws) => {
         break;
       case 'patchApp':
         await patchApp(ws);
+        break;
+      case 'installReVanced':
+        await installReVanced(ws);
         break;
       case 'exit':
         process.kill(process.pid, 'SIGTERM');

@@ -9,6 +9,7 @@ const checkFileAlreadyExists = require('./checkFileAlreadyExists.js');
 const checkForUpdates = require('./checkForUpdates.js');
 const getDevices = require('./getDevices.js');
 const setDevice = require('./setDevice.js');
+const installReVanced = require('./installReVanced.js');
 
 module.exports = {
   patchApp,
@@ -21,5 +22,6 @@ module.exports = {
   checkFileAlreadyExists,
   checkForUpdates,
   getDevices,
-  setDevice
+  setDevice,
+  installReVanced
 };
