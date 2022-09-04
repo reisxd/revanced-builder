@@ -3,6 +3,7 @@ const { EOL } = require('node:os');
 const exec = require('../utils/promisifiedExec.js');
 
 const downloadApp = require('../utils/downloadApp.js');
+const getDeviceArch = require('../utils/getDeviceArch.js');
 
 /**
  * @param {Record<string, any>} message
@@ -12,15 +13,10 @@ module.exports = async function selectAppVersion(message, ws) {
   let arch = message.arch;
 
   if (
-    (global.jarNames.selectedApp === 'music' && global.jarNames.deviceID) ||
+    (global.jarNames.selectedApp === 'music' && global.jarNames.devices[0]) ||
     process.platform === 'android'
   ) {
-    const deviceArch = await exec(
-      global.jarNames.deviceID
-        ? 'adb shell getprop ro.product.cpu.abi'
-        : 'getprop ro.product.cpu.abi'
-    );
-    arch = deviceArch.stdout.replace(EOL, '');
+    arch = await getDeviceArch(ws);
   }
 
   global.apkInfo = {
