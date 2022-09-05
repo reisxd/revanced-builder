@@ -1,9 +1,22 @@
 const { writeFileSync } = require('node:fs');
 
 const exec = require('./promisifiedExec.js');
+const { spawn } = require('node:child_process');
+
+async function promisifiedSpawn(command, args) {
+  return new Promise((resolve, reject) => {
+    const proc = spawn(command, args);
+    proc.on('close', (code) => {
+      resolve(code);
+    });
+    proc.on('error', (err) => {
+      reject(err);
+    });
+  });
+}
 
 async function runCommand(command, deviceId) {
-  return await exec(`adb -s ${deviceId} shell ${command}`);
+  return await promisifiedSpawn('adb' ['-s', deviceId, 'shell', command]);
 }
 
 /**
