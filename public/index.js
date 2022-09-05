@@ -158,7 +158,7 @@ function getAppVersions(isRooted) {
     <span>Versions marked as beta might have bugs or can be unstable, unless marked as recommended<span>
     ${
       isRooted
-        ? "<span><strong>You are building rooted ReVanced</strong>, you'll need to download the version matching with your YouTube version.<br>(You'll also need YouTube installed)<br>If you didn't intend on doing a rooted build, include all \"Root required to exclude\" patches<span>"
+        ? "<span><strong>You are building rooted ReVanced</strong>, ReVanced Builder will automatically download the correct version for you.<br>If you didn't intend on doing a rooted build, include all \"Root required to exclude\" patches<span>"
         : ''
     }
     `;
