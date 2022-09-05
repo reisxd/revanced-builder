@@ -16,7 +16,7 @@ async function promisifiedSpawn(command, args) {
 }
 
 async function runCommand(command, deviceId) {
-  return await promisifiedSpawn('adb' ['-s', deviceId, 'shell', command]);
+  return await promisifiedSpawn('adb', ['-s', deviceId, 'shell', command]);
 }
 
 /**
