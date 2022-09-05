@@ -1,0 +1,44 @@
+name: "[Alpha] Build RVBA Bootstraps"
+
+on: workflow_dispatch
+
+jobs:
+  build-bootstraps:
+    strategy:
+      matrix:
+        arch: [aarch64, arm]
+    steps:
+      - name: Clone termux-packages
+        uses: actions/checkout@v3
+        with:
+          repository: 'termux/termux-packages'
+      - name: Patch generate script
+        run: |
+          PKGS_TO_REMOVE='bzip2 proot diffutils findutils gawk grep less procps psmisc sed tar termux-keyring nano util-linux xz-utils ed debianutils dos2unix inetutils lsof net-tools patch'
+          for pkg in $PKGS_TO_REMOVE; do
+            sed -i "s@pull_package $pkg@echo \"$pkg, take a huge L\"@g" ./scripts/generate-bootstraps.sh
+          done
+      - name: Build bootstrap for ${{ matrix.arch }}
+        run: |
+          ./scripts/run-docker.sh ./scripts/generate-bootstraps.sh --architectures ${{ matrix.arch }} --add nodejs-lts,openjdk-17 --android10
+      - name: Shrinking bootstrap as much as possible
+        run: |
+          ZIP=$(find -type f -name 'bootstrap-${{ matrix.arch }}.zip')
+          mkdir tmp && cd tmp
+          unzip $ZIP
+          RM_PATHS="etc/cups etc/fonts include share/man share/doc share/bash-completion share/examples share/fonts share/fontconfig share/cups share/X11 opt/openjdk/legal opt/openjdk/demo opt/openjdk/man"
+          rm -rf "$RM_PATHS"
+          zip -r bootstrap-${{ matrix.arch }}-shrunk.zip *
+          mv bootstrap-${{ matrix.arch }}-shrunk.zip $(dirname $ZIP)
+          cd ..
+          rm -rf tmp
+      - name: Upload bootstrap-${{ matrix.arch }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: bootstrap-${{ matrix.arch }}
+          path: termux-packages/**/bootstrap-${{ matrix.arch }}.zip
+      - name: Upload bootstrap-${{ matrix.arch }}-shrunk
+        uses: actions/upload-artifact@v3
+        with:
+          name: bootstrap-${{ matrix.arch }}-shrunk
+          path: termux-packages/**/bootstrap-${{ matrix.arch }}-shrunk.zip
