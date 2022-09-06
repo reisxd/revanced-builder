@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
-    <title>App Selector</title>
+    <title>Revanced Builder by Reis</title>
     <link href="styles/fontawesome.css" rel="stylesheet" type="text/css" />
     <link href="styles/core.css" rel="stylesheet" type="text/css" />
-    <link href="styles/apps.css" rel="stylesheet" type="text/css" />
+    <link href="styles/home.css" rel="stylesheet" type="text/css" />
     <script src="index.js"></script>
     <script src="colors.js" defer></script>
   </head>
@@ -14,99 +14,64 @@
   <body>
     <div id="container">
       <main>
-        <header>
-          <h1>Select the app you want to patch</h1>
-        </header>
         <div id="content--wrapper">
           <div id="content">
-            <ul>
-              <li>
-                <input
-                  type="radio"
-                  name="app"
-                  id="app-1"
-                  value="youtube"
-                /><label for="app-1">YouTube</label>
-              </li>
-              <li>
-                <input type="radio" name="app" id="app-2" value="music" /><label
-                  for="app-2"
-                  >YouTube Music</label
-                >
-              </li>
-              <li>
-                <input
-                  type="radio"
-                  name="app"
-                  id="app-3"
-                  value="android"
-                /><label for="app-3">Twitter</label>
-              </li>
-              <li>
-                <input
-                  type="radio"
-                  name="app"
-                  id="app-4"
-                  value="frontpage"
-                /><label for="app-4">Reddit</label>
-              </li>
-              <li>
-                <input
-                  type="radio"
-                  name="app"
-                  id="app-5"
-                  value="warnapp"
-                /><label for="app-5">WarnWetter</label>
-              </li>
-              <li>
-                <input type="radio" name="app" id="app-6" value="trill" /><label
-                  for="app-6"
-                  >TikTok</label
-                >
-              </li>
-            </ul>
+            <h1>
+              Welcome to <span class="accent-fun">Revanced </span>Builder!
+            </h1>
+            <p>A simple tool to patch revanced supported applications</p>
+            <button
+              class="highlighted"
+              id="continue"
+              onclick="window.location = '/apps/'"
+            >
+              Start Patching ➜
+            </button>
+            <div class="actions">
+              <i
+                class="social-icon fa-brands fa-xl fa-github"
+                onclick="openGitHub();"
+              ></i>
+              <div style="margin-left: 10px"></div>
+              <i
+                class="social-icon fa-xl fa-solid fa-question-circle"
+                onclick="openAbout();"
+              ></i>
+              <div style="margin-left: 10px"></div>
+              <i
+                class="social-icon fa-xl fa-solid fa-palette"
+                onclick="openColorPicker();"
+              ></i>
+              <div class="theming">
+                <div id="themecolor-picker">
+                  <span
+                    style="background: #4873b3 none repeat scroll 0% 0%"
+                  ></span>
+                  <span
+                    style="background: #df0000bf none repeat scroll 0% 0%"
+                  ></span>
+                  <span
+                    style="background: #605dbbb3 none repeat scroll 0% 0%"
+                  ></span>
+                  <span
+                    style="background: #00e60069 none repeat scroll 0% 0%"
+                  ></span>
+                  <span
+                    style="background: #0067fdc7 none repeat scroll 0% 0%"
+                  ></span>
+                  <span
+                    onclick="this.style.setProperty('background-color', prompt('Set Custom Color (eg. #000 or yellow or anything that works with css)', document.documentElement.style.getPropertyValue('--accentColor')));"
+                    style="
+                      background: var(--accentColor) none repeat scroll 0% 0%;
+                    "
+                    >🎨</span
+                  >
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </main>
-      <footer>
-        <i
-          class="social-icon fa-brands fa-xl fa-github"
-          onclick="openGitHub();"
-        ></i>
-        <div style="margin-left: 10px"></div>
-        <i
-          class="social-icon fa-xl fa-solid fa-question-circle"
-          onclick="openAbout();"
-        ></i>
-        <div style="margin-left: 10px"></div>
-        <i
-          class="social-icon fa-xl fa-solid fa-palette"
-          onclick="openColorPicker();"
-        ></i>
-        <div class="theming">
-          <div id="themecolor-picker">
-            <span style="background: #4873b3 none repeat scroll 0% 0%"></span>
-            <span style="background: #df0000bf none repeat scroll 0% 0%"></span>
-            <span style="background: #605dbbb3 none repeat scroll 0% 0%"></span>
-            <span style="background: #00e60069 none repeat scroll 0% 0%"></span>
-            <span style="background: #0067fdc7 none repeat scroll 0% 0%"></span>
-            <span
-              onclick="this.style.setProperty('background-color', prompt('Set Custom Color (eg. #000 or yellow or anything that works with css)', document.documentElement.style.getPropertyValue('--accentColor')));"
-              style="background: var(--accentColor) none repeat scroll 0% 0%"
-              >🎨</span
-            >
-          </div>
-        </div>
-        <span class="right"></span>
-        <button class="highlighted" id="continue" onclick="setApp()">
-          Continue
-        </button>
-      </footer>
     </div>
-    <script>
-      ws.onopen = () => {
-        checkForUpdates();
-      };
-    </script>
   </body>
 </html>
