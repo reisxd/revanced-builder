@@ -1,9 +1,11 @@
 p {
   color: white;
 }
+
 #content--wrapper {
   background-color: transparent !important;
 }
+
 #content {
   text-align: center;
   display: flex;
@@ -20,6 +22,7 @@ p {
   display: flex;
   padding: 12px;
 }
+
 .theming.show {
   border-bottom: 2px solid #ddd;
   border-radius: 10px;
@@ -34,7 +37,9 @@ p {
   justify-content: center;
   align-items: center;
 }
+
 .accent-fun {
   color: var(--accentColor);
   font-weight: bold;
+  filter: brightness(160%);
 }
