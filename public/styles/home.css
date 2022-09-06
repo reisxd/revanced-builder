@@ -1,0 +1,40 @@
+p {
+  color: white;
+}
+#content--wrapper {
+  background-color: transparent !important;
+}
+#content {
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.social-icon {
+  padding-right: 15px;
+}
+
+.actions {
+  display: flex;
+  padding: 12px;
+}
+.theming.show {
+  border-bottom: 2px solid #ddd;
+  border-radius: 10px;
+  padding: 30px;
+  width: 280px;
+  height: 82px;
+  top: 50%;
+  left: 50%;
+  margin-top: -41px;
+  margin-left: -140px;
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+}
+.accent-fun {
+  color: var(--accentColor);
+  font-weight: bold;
+}
