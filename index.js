@@ -30,6 +30,7 @@ const {
 const app = Express();
 const server = createServer(app);
 const wsServer = new WebSocketServer({ server });
+const wsClients = [];
 
 app.use(Express.static(join(__dirname, 'public')));
 app.get('/revanced.apk', (_, res) => {
@@ -127,12 +128,24 @@ process.on('unhandledRejection', (reason) => {
   log(
     'Please report this bug here: https://github.com/reisxd/revanced-builder/issues.'
   );
+
+  for (const wsClient of wsClients) {
+    wsClient.send(
+      JSON.stringify(
+        {
+          event: 'error',
+          error: encodeURIComponent(`An error occured:\n${reason.stack}\nPlease report this bug here: https://github.com/reisxd/revanced-builder/issues.`)
+        }
+      )
+    );
+  }
 });
 
 process.on('SIGTERM', () => cleanExit(server));
 
 // The websocket server
 wsServer.on('connection', (ws) => {
+  wsClients.push(ws);
   ws.on('message', async (msg) => {
     /** @type {Record<string, any>} */
     const message = JSON.parse(msg);

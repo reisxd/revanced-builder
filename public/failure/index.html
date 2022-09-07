@@ -54,6 +54,7 @@
         </div>
         <span class="right"></span>
         <button onclick="history.back();">Back</button>
+        <button onclick="exitApp();">Exit</button>
         <button class="highlighted" onclick="location.href='/'">Restart</button>
       </footer>
     </div>
@@ -64,6 +65,6 @@
       'log-error'
     )[0].innerHTML += `<strong>[builder]</strong> ${new URLSearchParams(
       window.location.search
-    ).get('error')}<br>`;
+    ).get('error').replace(/\n/g, '<br>')}<br>`;
   </script>
 </html>
