@@ -18,3 +18,5 @@ module.exports = async function checkForUpdates(ws) {
       })
     );
 };
+
+module.exports.currentVersion = currentVersion;
