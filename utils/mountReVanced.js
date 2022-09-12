@@ -7,12 +7,13 @@ const exec = require('./promisifiedExec.js');
  * @param {import('ws').WebSocket} ws
  */
 module.exports = async function mountReVanced(pkg, ws) {
-  // Copy ReVanced APK to temp.
-  await exec(
-    `su -c 'cp "revanced/${global.outputName}" "/data/local/tmp/revanced.delete"'`
-  );
   // Create folder
   await exec('su -c \'mkdir -p "/data/adb/revanced/"\'');
+
+  // Copy ReVanced APK to the folder **directly**
+  await exec(
+    `su -c 'cp "revanced/${global.outputName}" "/data/adb/revanced/"'`
+  );
 
   // Unmount the already existing ReVanced APK, so it can be updated
   try {
@@ -27,19 +28,21 @@ module.exports = async function mountReVanced(pkg, ws) {
 
   // Move APK to folder
   await exec(
-    `su -c 'base_path="/data/adb/revanced/${pkg}.apk" && mv -f "/data/local/tmp/revanced.delete" "$base_path" && chmod 644 "$base_path" && chown system:system "$base_path" && chcon u:object_r:apk_data_file:s0 "$base_path"'`
+    `su -c 'base_path="/data/adb/revanced/${pkg}.apk" && mv -f "/data/adb/revanced/${global.outputName}" "$base_path" && chmod 644 "$base_path" && chown system:system "$base_path" && chcon u:object_r:apk_data_file:s0 "$base_path"'`
   );
 
   // Create mount script
   writeFileSync(
     'mount.sh',
     `#!/system/bin/sh
+    MAGISKTMP="$(magisk --path)" || MAGISKTMP=/sbin
+    MIRROR="$MAGISKTMP/.magisk/mirror"
     while [ "$(getprop sys.boot_completed | tr -d '\r')" != "1" ]; do sleep 1; done
 
     base_path="/data/adb/revanced/${pkg}.apk"
     stock_path=$(pm path ${pkg} | grep base | sed 's/package://g')
     chcon u:object_r:apk_data_file:s0 $base_path
-    mount -o bind $base_path $stock_path`
+    mount -o bind $MIRROR$base_path $stock_path`
   );
 
   // Move Mount script to folder
@@ -71,7 +74,7 @@ module.exports = async function mountReVanced(pkg, ws) {
   ws.send(
     JSON.stringify({
       event: 'patchLog',
-      log: 'ReVanced should be now mounted! Please restart the device and check if the app has been mounted.'
+      log: 'ReVanced should be now mounted! Please open the app and check if it has been mounted.'
     })
   );
 };
