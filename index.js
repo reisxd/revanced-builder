@@ -43,6 +43,7 @@ async function exitProcess () {
   console.log('Press any key to exit...');
   process.stdin.setRawMode(true);
   process.stdin.resume();
+  await actualExec('adb kill-server');
   await new Promise(() => process.stdin.on('data', () => process.exit()));
 }
 
