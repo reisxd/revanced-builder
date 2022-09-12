@@ -91,14 +91,18 @@ const cleanExit = async (svr) => {
 
   fkill ??= (await import('fkill')).default;
 
-  await fkill(['adb', 'java', 'aapt2'], {
-    forceAfterTimeout: 5000,
-    tree: true,
-    ignoreCase: true,
-    silent: true
-  });
+  try {
+    await fkill(['adb', 'java', 'aapt2'], {
+      forceAfterTimeout: 5000,
+      silent: true
+    });
+    log('Done.', true, false);
+  } catch(error) {
+    log('Failed.', true, false);
+    log('If there are certain processes still running, you can kill them manually');
+    log(error?.stack, true, false);
+  }
 
-  log('Done.', true, false);
   log('Stopping the server...', false);
 
   svr.close(() => log('Done', true, false));
