@@ -231,7 +231,7 @@ function setDevice() {
 
   sendCommand({
     event: 'setDevice',
-    devices: selectedDeviceList
+    devices: selectedDeviceList ?? []
   });
 
   location.href = '/patches';
