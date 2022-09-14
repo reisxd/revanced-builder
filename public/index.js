@@ -111,7 +111,10 @@ function setAppVersion(arch, version) {
       return alert("You didn't select an app version!");
 
     if (versionChecked !== null) {
-      if (versionChecked.hasAttribute('data-recommended') && versionChecked.getAttribute('data-recommended') !== '1') {
+      if (
+        versionChecked.hasAttribute('data-recommended') &&
+        versionChecked.getAttribute('data-recommended') !== '1'
+      ) {
         const alertVersion = confirm(
           "**Non-recommended version selected**\n***Are you sure?***\nThis version isn't recommended, do you really want to use this version?"
         );
@@ -325,16 +328,20 @@ ws.onmessage = (msg) => {
 
         for (let i = 0; i < len; i++) {
           const version = message.versionList[i];
-          const noRec = version.recommended == "NOREC";
+          const noRec = version.recommended == 'NOREC';
 
           versionsElement.innerHTML += `
             <li>
             <input type="radio" name="version" id="app-${i}" value="${
             version.version
-          }" data-beta="${version.beta ? '1' : '0'}" ${!noRec ? 'data-recommended=' + versions.recommended ? 1 : 0 : ''}/>
+          }" data-beta="${version.beta ? '1' : '0'}" ${
+            !noRec ? ('data-recommended=' + version.recommended ? 1 : 0) : ''
+          }/>
             <label for="app-${i}">${version.version} ${
             version.beta ? ' (beta)' : ''
-          } ${!noRec ? version.recommended ? ' (recommended)' : '' : ''}</label></li>`;
+          } ${
+            !noRec ? (version.recommended ? ' (recommended)' : '') : ''
+          }</label></li>`;
         }
 
         if (message.selectedApp === 'music' && !message.foundDevice)

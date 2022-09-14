@@ -97,9 +97,11 @@ const cleanExit = async (svr) => {
       silent: true
     });
     log('Done.', true, false);
-  } catch(error) {
+  } catch (error) {
     log('Failed.', true, false);
-    log('If there are certain processes still running, you can kill them manually');
+    log(
+      'If there are certain processes still running, you can kill them manually'
+    );
     log(error?.stack, true, false);
   }
 
@@ -135,12 +137,12 @@ process.on('unhandledRejection', (reason) => {
 
   for (const wsClient of wsClients) {
     wsClient.send(
-      JSON.stringify(
-        {
-          event: 'error',
-          error: encodeURIComponent(`An error occured:\n${reason.stack}\nPlease report this bug here: https://github.com/reisxd/revanced-builder/issues.`)
-        }
-      )
+      JSON.stringify({
+        event: 'error',
+        error: encodeURIComponent(
+          `An error occured:\n${reason.stack}\nPlease report this bug here: https://github.com/reisxd/revanced-builder/issues.`
+        )
+      })
     );
   }
 });

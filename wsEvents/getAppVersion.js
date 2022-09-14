@@ -142,8 +142,10 @@ module.exports = async function getAppVersion(ws) {
 
     versionList.push({
       version: splitVersion[0], // remove beta suffix if there is one.
-      recommended: 
-        global.versions !== "NOREC" ? global.versions.includes(splitVersion[0]) : "NOREC",
+      recommended:
+        global.versions !== 'NOREC'
+          ? global.versions.includes(splitVersion[0])
+          : 'NOREC',
       beta: !!splitVersion[1]
     });
   }

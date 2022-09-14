@@ -65,6 +65,8 @@
       'log-error'
     )[0].innerHTML += `<strong>[builder]</strong> ${new URLSearchParams(
       window.location.search
-    ).get('error').replace(/\n/g, '<br>')}<br>`;
+    )
+      .get('error')
+      .replace(/\n/g, '<br>')}<br>`;
   </script>
 </html>

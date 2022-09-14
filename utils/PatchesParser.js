@@ -36,9 +36,9 @@ module.exports = async function parsePatch(packageName, hasRoot) {
           global.versions.push(compatibleVersion);
         }
       }
-    
+
     if (global.versions.length === 0) {
-      global.versions = "NOREC";
+      global.versions = 'NOREC';
     }
 
     if (!isCompatible || (isRooted && !hasRoot)) continue;
