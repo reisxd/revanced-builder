@@ -334,7 +334,7 @@ ws.onmessage = (msg) => {
           }" data-beta="${version.beta ? '1' : '0'}" ${!noRec ? 'data-recommended=' + versions.recommended ? 1 : 0 : ''}/>
             <label for="app-${i}">${version.version} ${
             version.beta ? ' (beta)' : ''
-          } ${version.recommended ? ' (recommended)' : ''}</label></li>`;
+          } ${!noRec ? version.recommended ? ' (recommended)' : '' : ''}</label></li>`;
         }
 
         if (message.selectedApp === 'music' && !message.foundDevice)
