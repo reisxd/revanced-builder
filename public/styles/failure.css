@@ -6,6 +6,7 @@ span.log-error {
   line-height: 0.8em;
   width: 100%;
   height: 100%;
+  user-select: text;
 }
 span.log:after {
   content: '｜';
