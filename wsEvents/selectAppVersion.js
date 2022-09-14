@@ -1,7 +1,3 @@
-const { EOL } = require('node:os');
-
-const exec = require('../utils/promisifiedExec.js');
-
 const downloadApp = require('../utils/downloadApp.js');
 const getDeviceArch = require('../utils/getDeviceArch.js');
 
