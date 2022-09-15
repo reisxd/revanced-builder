@@ -184,7 +184,7 @@ wsServer.on('connection', (ws) => {
         checkFileAlreadyExists(ws);
         break;
       case 'getAppVersion':
-        await getAppVersion(ws);
+        await getAppVersion(ws, message);
         break;
       case 'selectAppVersion':
         await selectAppVersion(message, ws);

@@ -5,7 +5,7 @@ const { load } = require('cheerio');
 const semver = require('semver');
 
 const { getAppVersion: getAppVersion_ } = require('../utils/getAppVersion.js');
-const downloadApp = require('../utils/downloadApp.js');
+const { downloadApp: downloadApp_ } = require('../utils/downloadApp.js');
 const getDeviceArch = require('../utils/getDeviceArch.js');
 
 const APKMIRROR_UPLOAD_BASE = 'https://www.apkmirror.com/uploads/?appcategory=';
@@ -27,10 +27,26 @@ async function getPage(url) {
   return fetch(url).then((res) => res.text());
 }
 
+async function downloadApp(ws, message) {
+  if (message.useVer) return downloadApp_(ws);
+  else if (message.checkVer) {
+    const appVersion = await getAppVersion_(pkgName, ws, true);
+
+    if (global.versions.includes(appVersion)) return downloadApp_(ws);
+    
+    return ws.send(JSON.stringify({
+      event: 'askRootVersion'
+    }));
+  } else return ws.send(JSON.stringify({
+    event: 'error',
+    error: 'You did not choose to use the non recommended version. Please downgrade.'
+  }));
+}
+
 /**
  * @param {import('ws').WebSocket} ws
  */
-module.exports = async function getAppVersion(ws) {
+module.exports = async function getAppVersion(ws, message) {
   let versionsList;
 
   if (global.jarNames.isRooted) {

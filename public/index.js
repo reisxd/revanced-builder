@@ -174,7 +174,7 @@ function getAppVersions(isRooted) {
   backButton.innerHTML = 'Back';
   backButton.onclick = () => history.back();
 
-  sendCommand({ event: 'getAppVersion' });
+  sendCommand({ event: 'getAppVersion', checkVer: true });
 }
 
 function buildReVanced() {
@@ -459,6 +459,13 @@ ws.onmessage = (msg) => {
         </label>
       </li>`;
       }
+      break;
+    }
+    case 'askRootVersion': {
+      const confirmVer = confirm(`**Non Recommended Version**\nYour device has an non recommended version, do you want to patch it?`);
+
+      if (confirmVer) return sendCommand({ event: 'getAppVersion', useVer: true });
+      else return sendCommand({ event: 'getAppVersion' });
     }
   }
 };
