@@ -1,5 +1,5 @@
 {
-  "name": "revanced-builder-nodejs",
+  "name": "revanced-builder",
   "version": "1.0.0",
   "description": "",
   "bin": "index.js",
