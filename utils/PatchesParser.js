@@ -37,10 +37,6 @@ module.exports = async function parsePatch(packageName, hasRoot) {
         }
       }
 
-    if (global.versions.length === 0) {
-      global.versions = 'NOREC';
-    }
-
     if (!isCompatible || (isRooted && !hasRoot)) continue;
 
     patches.push({
@@ -50,6 +46,10 @@ module.exports = async function parsePatch(packageName, hasRoot) {
       isRooted,
       excluded: patch.excluded || patch.deprecated
     });
+  }
+
+  if (global.versions.length === 0) {
+    global.versions = 'NOREC';
   }
 
   return patches;
