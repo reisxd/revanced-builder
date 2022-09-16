@@ -28,12 +28,10 @@ async function getPage(url) {
 }
 
 async function downloadApp(ws, message) {
-  if (message.useVer) return downloadApp_(ws);
+  if (message.useVer) return await downloadApp_(ws);
   else if (message.checkVer) {
-    const appVersion = await getAppVersion_(pkgName, ws, true);
+    if (global.versions.includes(global.apkInfo.version)) return await downloadApp_(ws);
 
-    if (global.versions.includes(appVersion)) return downloadApp_(ws);
-    
     return ws.send(JSON.stringify({
       event: 'askRootVersion'
     }));
@@ -101,14 +99,14 @@ module.exports = async function getAppVersion(ws, message) {
         arch
       };
 
-      return downloadApp(ws);
+      return downloadApp(ws, message);
     } else {
       global.apkInfo = {
         version: appVersion,
         arch: null
       };
 
-      return downloadApp(ws);
+      return downloadApp(ws, message);
     }
   }
 

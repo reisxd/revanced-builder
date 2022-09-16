@@ -5,7 +5,7 @@ const { dloadFromURL } = require('./FileDownloader.js');
 /**
  * @param {import('ws').WebSocket} ws
  */
-module.exports = async function downloadApp(ws) {
+async function downloadApp(ws) {
   const { version, arch } = global.apkInfo;
   const apkMirrorVersionArg = version.replace(/\./g, '-');
 
@@ -101,3 +101,7 @@ module.exports = async function downloadApp(ws) {
     })
   );
 };
+
+module.exports = {
+  downloadApp
+}

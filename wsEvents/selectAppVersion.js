@@ -1,4 +1,4 @@
-const downloadApp = require('../utils/downloadApp.js');
+const { downloadApp } = require('../utils/downloadApp.js');
 const getDeviceArch = require('../utils/getDeviceArch.js');
 
 /**
