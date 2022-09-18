@@ -13,6 +13,8 @@ RUN git clone --depth=1 --no-tags git://github.com/reisxd/revanced-builder
 
 WORKDIR /app/revanced-builder
 
+RUN npm install --omit=dev
+
 EXPOSE 8000
 
 CMD ["node", ".", "--no-open"]
