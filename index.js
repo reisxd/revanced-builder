@@ -34,7 +34,7 @@ const wsClients = [];
 
 app.use(Express.static(join(__dirname, 'public')));
 app.get('/revanced.apk', (_, res) => {
-  const file = join(__dirname, 'revanced', global.outputName);
+  const file = join(process.cwd(), 'revanced', global.outputName);
 
   res.download(file);
 });
