@@ -30,15 +30,22 @@ async function getPage(url) {
 async function downloadApp(ws, message) {
   if (message.useVer) return await downloadApp_(ws);
   else if (message.checkVer) {
-    if (global.versions.includes(global.apkInfo.version)) return await downloadApp_(ws);
+    if (global.versions.includes(global.apkInfo.version))
+      return await downloadApp_(ws);
 
-    return ws.send(JSON.stringify({
-      event: 'askRootVersion'
-    }));
-  } else return ws.send(JSON.stringify({
-    event: 'error',
-    error: 'You did not choose to use the non recommended version. Please downgrade.'
-  }));
+    return ws.send(
+      JSON.stringify({
+        event: 'askRootVersion'
+      })
+    );
+  } else
+    return ws.send(
+      JSON.stringify({
+        event: 'error',
+        error:
+          'You did not choose to use the non recommended version. Please downgrade.'
+      })
+    );
 }
 
 /**

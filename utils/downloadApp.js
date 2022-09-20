@@ -100,8 +100,8 @@ async function downloadApp(ws) {
       event: 'finished'
     })
   );
-};
+}
 
 module.exports = {
   downloadApp
-}
+};
