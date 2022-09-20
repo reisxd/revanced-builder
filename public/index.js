@@ -282,7 +282,7 @@ ws.onmessage = (msg) => {
         document.getElementById('search').addEventListener('keyup', () => {
           const searchBox = document.getElementById('search');
           const searchText = searchBox.value.toLowerCase();
-          if (searchText.lenght === 0) return;
+          if (searchText.length === 0) return;
 
           for (const e of document.getElementsByTagName('li'))
             e.style.display = 'none';
