@@ -53,4 +53,5 @@ li {
   border: 2px solid #dddddd2e;
   font-size: 14px;
   margin-top: 5px;
+  user-select: auto;
 }
