@@ -16,9 +16,6 @@ function sendCommand(args) {
   ws.send(JSON.stringify(args));
 }
 
-const colorNow = localStorage.getItem('theme') ?? '#4873b3';
-document.documentElement.style.setProperty('--accentColor', colorNow);
-
 function setApp() {
   const appChecked = document.querySelector('input[name="app"]:checked');
 
@@ -191,10 +188,6 @@ function openAbout() {
 
 function openGitHub() {
   window.open('https://github.com/reisxd/revanced-builder', '_blank');
-}
-
-function openColorPicker() {
-  document.querySelector('.theming').classList.toggle('show');
 }
 
 /**
