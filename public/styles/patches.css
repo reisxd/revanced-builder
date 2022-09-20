@@ -43,3 +43,14 @@ li {
   display: flex;
   margin-bottom: 15px;
 }
+
+.searchBox {
+  width: 100%;
+  color: var(--textColor);
+  border-radius: var(--border-radius);
+  padding: 12px;
+  background-color: var(--interactableColor);
+  border: 2px solid #dddddd2e;
+  font-size: 14px;
+  margin-top: 5px;
+}
