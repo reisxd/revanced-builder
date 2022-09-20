@@ -1,8 +1,7 @@
 /* eslint-disable no-unused-vars */
 
-const WS_URI = `${window?.location?.protocol === 'https:' ? 'wss' : 'ws'}://${
-  window?.location?.host ?? 'localhost:8080'
-}`;
+const WS_URI = `${window?.location?.protocol === 'https:' ? 'wss' : 'ws'}://${window?.location?.host ?? 'localhost:8080'
+  }`;
 const ws = new WebSocket(WS_URI);
 
 let currentFile;
@@ -159,10 +158,9 @@ function getAppVersions(isRooted) {
   document.getElementsByTagName('header')[0].innerHTML = `
     <h1>Select the version you want to download</h1>
     <span>Versions marked as beta might have bugs or can be unstable, unless marked as recommended<span>
-    ${
-      isRooted
-        ? '<span><strong>You are building rooted ReVanced</strong>, ReVanced Builder will automatically download the correct version for you.<br>If you didn\'t intend on doing a rooted build, include all "Root required to exclude" patches<span>'
-        : ''
+    ${isRooted
+      ? '<span><strong>You are building rooted ReVanced</strong>, ReVanced Builder will automatically download the correct version for you.<br>If you didn\'t intend on doing a rooted build, include all "Root required to exclude" patches<span>'
+      : ''
     }
     `;
 
@@ -263,20 +261,31 @@ ws.onmessage = (msg) => {
           const patch = message.patchList[i];
 
           patchListElement.innerHTML += `<li>
-  <input class="select" id="select-patch-${i}" data-patch-name="${
-            patch.name
-          }" data-excluded="${patch.excluded ? '1' : '0'}" type="checkbox">
+  <input class="select" id="select-patch-${i}" data-patch-name="${patch.name
+            }" data-excluded="${patch.excluded ? '1' : '0'}" type="checkbox">
   <label for="select-patch-${i}">
-    <span style="float:right;"><strong>${
-      patch.isRooted ? 'Needed for Non-Root Building' : ''
-    }</strong></span>
-    <span><strong>${toTitleCase(patch.name)}</strong>&nbsp;&nbsp;(${
-            patch.maxVersion !== ' ' ? patch.maxVersion : 'ALL'
-          })</span>
+    <span style="float:right;"><strong>${patch.isRooted ? 'Needed for Non-Root Building' : ''
+            }</strong></span>
+    <span><strong class="patchName">${toTitleCase(patch.name)}</strong>&nbsp;&nbsp;(${patch.maxVersion !== ' ' ? patch.maxVersion : 'ALL'
+            })</span>
     <span class="patch-description">${patch.description}</span>
   </label>
 </li>`;
         }
+        document.getElementById('search').addEventListener('keyup', () => {
+          const searchBox = document.getElementById('search');
+          const searchText = searchBox.value.toLowerCase();
+          if (searchText.lenght === 0) return;
+
+          for (const e of document.getElementsByTagName('li'))
+            e.style.display = 'none'
+
+          for (const e of document.getElementsByClassName('patchName')) {
+            if (e.innerText.toLowerCase().startsWith(searchText)) {
+              e.parentNode.parentNode.parentNode.style.display = 'flex';
+            }
+          }
+        });
 
         for (const patch of document.getElementsByClassName('select'))
           if (
@@ -332,16 +341,12 @@ ws.onmessage = (msg) => {
 
           versionsElement.innerHTML += `
             <li>
-            <input type="radio" name="version" id="app-${i}" value="${
-            version.version
-          }" data-beta="${version.beta ? '1' : '0'}" ${
-            !noRec ? ('data-recommended=' + version.recommended ? 1 : 0) : ''
-          }/>
-            <label for="app-${i}">${version.version} ${
-            version.beta ? ' (beta)' : ''
-          } ${
-            !noRec ? (version.recommended ? ' (recommended)' : '') : ''
-          }</label></li>`;
+            <input type="radio" name="version" id="app-${i}" value="${version.version
+            }" data-beta="${version.beta ? '1' : '0'}" ${!noRec ? ('data-recommended=' + version.recommended ? 1 : 0) : ''
+            }/>
+            <label for="app-${i}">${version.version} ${version.beta ? ' (beta)' : ''
+            } ${!noRec ? (version.recommended ? ' (recommended)' : '') : ''
+            }</label></li>`;
         }
 
         if (message.selectedApp === 'music' && !message.foundDevice)
@@ -379,8 +384,8 @@ ws.onmessage = (msg) => {
         const logLevel = message.log.includes('WARNING')
           ? 'warn'
           : message.log.includes('SEVERE')
-          ? 'error'
-          : 'info';
+            ? 'error'
+            : 'info';
 
         document.getElementsByClassName(
           'log'
@@ -395,13 +400,11 @@ ws.onmessage = (msg) => {
         // TODO: on a root install, if the file already exists and the user selects yes it skips checking if a device is plugged in
         document.getElementsByTagName('header')[0].innerHTML = `
             <h1>Use already downloaded APK?</h1>
-            <span>The APK already exists in the revanced folder.${
-              message.isRooted ? ' ' : '<br>'
-            }Do you want to use it?${
-          message.isRooted
+            <span>The APK already exists in the revanced folder.${message.isRooted ? ' ' : '<br>'
+          }Do you want to use it?${message.isRooted
             ? '<br>(Saying no is recommended for rooted building)<br>If you didn\'t intend on doing a rooted build, include all "Root required to exclude" patches'
             : ''
-        }</span>`;
+          }</span>`;
 
         const continueButton = document.getElementById('continue');
         const backButton = document.getElementById('back');
