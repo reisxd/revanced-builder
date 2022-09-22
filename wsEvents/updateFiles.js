@@ -13,7 +13,11 @@ global.jarNames = {
   selectedApp: '',
   patches: '',
   isRooted: false,
-  deviceID: ''
+  deviceID: '',
+  patch: {
+    resources: false,
+    integrations: false
+  }
 };
 
 /**

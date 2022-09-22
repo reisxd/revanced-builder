@@ -192,7 +192,7 @@ module.exports = async function patchApp(ws) {
     args.push('revanced/aapt2');
   }
 
-  if (global.jarNames.selectedApp === 'youtube') {
+  if (global.jarNames.patch.integrations) {
     args.push('-m');
     args.push(global.jarNames.integrations);
   }
@@ -200,8 +200,7 @@ module.exports = async function patchApp(ws) {
   args.push(...global.jarNames.patches.split(' '));
 
   if (
-    global.jarNames.selectedApp.endsWith('frontpage') ||
-    global.jarNames.selectedApp.endsWith('trill')
+    !global.jarNames.patch.resources
   )
     args.push('-r');
 
