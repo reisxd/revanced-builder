@@ -1,15 +1,17 @@
 const { existsSync, mkdirSync, rmSync } = require('node:fs');
+const { join: joinPath } = require('node:path');
 
 const { downloadFiles } = require('../utils/FileDownloader.js');
 const checkJDKAndAapt2 = require('../utils/checkJDKAndAapt2.js');
 const checkJDkAndADB = require('../utils/checkJDKAndADB.js');
 
+global.revancedDir = joinPath(process.cwd(), "revanced");
 global.jarNames = {
   cli: '',
-  patchesJar: './revanced/',
-  integrations: './revanced/',
-  microG: './revanced/',
-  patchesList: './revanced/',
+  patchesJar: global.revancedDir,
+  integrations: global.revancedDir,
+  microG: global.revancedDir,
+  patchesList: global.revancedDir,
   selectedApp: '',
   patches: '',
   isRooted: false,
@@ -24,7 +26,7 @@ global.jarNames = {
  * @param {import('ws').WebSocket} ws
  */
 module.exports = async function updateFiles(ws) {
-  if (!existsSync('revanced')) mkdirSync('./revanced');
+  if (!existsSync(global.revancedDir)) mkdirSync(global.revancedDir);
   if (existsSync('revanced-cache'))
     rmSync('revanced-cache', { recursive: true, force: true });
 

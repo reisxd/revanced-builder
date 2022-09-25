@@ -1,4 +1,5 @@
 const { readdirSync, createWriteStream, unlink } = require('node:fs');
+const { join: joinPath } = require('node:path');
 
 const { load } = require('cheerio');
 const fetch = require('node-fetch');
@@ -11,20 +12,21 @@ let ws;
  * @param {string} fileName
  */
 async function overWriteJarNames(fileName) {
+  const filePath = joinPath(global.revancedDir, fileName);
   if (fileName.includes('revanced-cli'))
-    global.jarNames.cli = `./revanced/${fileName}`;
+    global.jarNames.cli = filePath;
 
   if (fileName.includes('revanced-patches') && fileName.endsWith('.jar'))
-    global.jarNames.patchesJar = `./revanced/${fileName}`;
+    global.jarNames.patchesJar = filePath;
 
   if (fileName.endsWith('.apk') && !fileName.startsWith('VancedMicroG'))
-    global.jarNames.integrations = `./revanced/${fileName}`;
+    global.jarNames.integrations = filePath;
 
   if (fileName.startsWith('VancedMicroG'))
-    global.jarNames.microG = `./revanced/${fileName}`;
+    global.jarNames.microG = filePath;
 
   if (fileName.endsWith('.json'))
-    global.jarNames.patchesList = `./revanced/${fileName}`;
+    global.jarNames.patchesList = filePath;
 }
 
 /**
@@ -78,7 +80,7 @@ async function getDownloadLink(json) {
  */
 async function downloadFile(assets) {
   for (const asset of assets.assets) {
-    const dir = readdirSync('revanced');
+    const dir = readdirSync(global.revancedDir);
 
     const fileExt = asset.browser_download_url
       .split('/')
@@ -91,7 +93,7 @@ async function downloadFile(assets) {
 
     if (dir.includes(fileName)) continue;
 
-    await dloadFromURL(asset.browser_download_url, `revanced/${fileName}`);
+    await dloadFromURL(asset.browser_download_url, joinPath(global.revancedDir, fileName));
   }
 }
 

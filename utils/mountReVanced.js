@@ -1,4 +1,5 @@
 const { writeFileSync } = require('node:fs');
+const { join: joinPath } = require('node:path');
 
 const exec = require('./promisifiedExec.js');
 
@@ -12,7 +13,7 @@ module.exports = async function mountReVanced(pkg, ws) {
 
   // Copy ReVanced APK to the folder **directly**
   await exec(
-    `su -c 'cp "revanced/${global.outputName}" "/data/adb/revanced/"'`
+    `su -c 'cp "${joinPath(global.revancedDir, global.outputName)}" "/data/adb/revanced/"'`
   );
 
   // Unmount the already existing ReVanced APK, so it can be updated

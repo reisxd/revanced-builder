@@ -1,3 +1,5 @@
+const { join: joinPath } = require('node:path');
+
 const fetch = require('node-fetch');
 const { load } = require('cheerio');
 const { dloadFromURL } = require('./FileDownloader.js');
@@ -91,7 +93,7 @@ async function downloadApp(ws) {
 
   await dloadFromURL(
     `https://www.apkmirror.com${apkLink}`,
-    `./revanced/${global.jarNames.selectedApp}.apk`,
+    `${joinPath(global.revancedDir, global.jarNames.selectedApp)}.apk`,
     ws
   );
 

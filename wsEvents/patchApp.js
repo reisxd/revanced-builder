@@ -38,13 +38,13 @@ async function afterBuild(ws) {
   rmSync('revanced-cache', { recursive: true, force: true });
   outputName();
   renameSync(
-    join('revanced', 'revanced.apk'),
-    join('revanced', global.outputName)
+    join(global.revancedDir, 'revanced.apk'),
+    join(global.revancedDir, global.outputName)
   );
 
   if (!global.jarNames.isRooted && process.platform === 'android') {
     await exec(
-      `cp revanced/${global.outputName} /storage/emulated/0/${global.outputName}`
+      `cp ${join(global.revancedDir, global.outputName)} /storage/emulated/0/${global.outputName}`
     );
     await exec(`cp ${global.jarNames.microG} /storage/emulated/0/microg.apk`);
 
@@ -97,7 +97,7 @@ async function reinstallReVanced() {
     `adb -s ${global.jarNames.deviceID} uninstall ${pkgNameToGetUninstalled}`
   );
   await exec(
-    `adb -s ${global.jarNames.deviceID} install revanced/${global.outputName}`
+    `adb -s ${global.jarNames.deviceID} install ${join(global.revancedDir, global.outputName)}`
   );
 }
 
@@ -182,14 +182,14 @@ module.exports = async function patchApp(ws) {
     './revanced-cache',
     '--experimental',
     '-a',
-    `./revanced/${global.jarNames.selectedApp}.apk`,
+    `${join(global.revancedDir, global.jarNames.selectedApp)}.apk`,
     '-o',
-    './revanced/revanced.apk'
+    join(global.revancedDir, 'revanced.apk')
   ];
 
   if (process.platform === 'android') {
     args.push('--custom-aapt2-binary');
-    args.push('revanced/aapt2');
+    args.push(join(global.revancedDir, 'aapt2'));
   }
 
   if (global.jarNames.patch.integrations) {

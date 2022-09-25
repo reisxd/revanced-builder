@@ -1,3 +1,5 @@
+const { join: joinPath } = require('node:path');
+
 const exec = require('../utils/promisifiedExec.js');
 
 const { getAppVersion_ } = require('../utils/getAppVersion.js');
@@ -14,7 +16,7 @@ module.exports = async function installReVanced(ws) {
         })
       );
       try {
-        await exec(`adb -s ${deviceId} install revanced/${global.outputName}`);
+        await exec(`adb -s ${deviceId} install ${joinPath(global.revancedDir, global.outputName)}`);
 
         ws.send(
           JSON.stringify({
