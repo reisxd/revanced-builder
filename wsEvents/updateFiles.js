@@ -17,7 +17,6 @@ global.jarNames = {
   isRooted: false,
   deviceID: '',
   patch: {
-    resources: false,
     integrations: false
   }
 };
