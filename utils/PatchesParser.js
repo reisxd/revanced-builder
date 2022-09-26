@@ -19,7 +19,6 @@ module.exports = async function parsePatch(packageName, hasRoot) {
   global.versions = [];
 
   global.jarNames.patch = {
-    resources: false,
     integrations: false
   };
 
@@ -45,14 +44,6 @@ module.exports = async function parsePatch(packageName, hasRoot) {
     if (!isCompatible || (isRooted && !hasRoot)) continue;
 
     for (const dependencyName of patch.dependencies) {
-      if (dependencyName.includes('resource')) {
-        global.jarNames.patch.resources = true;
-      } else {
-        if (!global.jarNames.patch.resources) {
-          global.jarNames.patch.resources = false;
-        }
-      }
-
       if (dependencyName.includes('integrations')) {
         global.jarNames.patch.integrations = true;
       } else {
