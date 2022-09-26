@@ -199,11 +199,6 @@ module.exports = async function patchApp(ws) {
 
   args.push(...global.jarNames.patches.split(' '));
 
-  if (
-    !global.jarNames.patch.resources
-  )
-    args.push('-r');
-
   const buildProcess = spawn('java', args);
 
   buildProcess.stdout.on('data', async (data) => {
