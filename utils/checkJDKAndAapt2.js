@@ -42,7 +42,7 @@ module.exports = async function checkJDKAndAapt2(ws) {
     }
 
     await exec(
-      `rm -rf ${joinPath(global.revancedDir, 'arm64-v8a')} ${joinPath(global.revancedDir, 'armeabi-v7a')} ${joinPath(global.revancedDir, 'x86')} ${joinPath(global.revancedDir, aapt2.zip)}`
+      `rm -rf ${joinPath(global.revancedDir, 'arm64-v8a')} ${joinPath(global.revancedDir, 'armeabi-v7a')} ${joinPath(global.revancedDir, 'x86')} ${joinPath(global.revancedDir, 'aapt2.zip')}`
     );
   }
 };
