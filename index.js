@@ -8,9 +8,7 @@ const { WebSocketServer } = require('ws');
 const open_ = require('open');
 const pf = require('portfinder');
 
-// Lazy-loaded.
-/** @type {import('fkill').default} */
-let fkill;
+const fkill = require('fkill');
 
 const {
   updateFiles,
@@ -88,8 +86,6 @@ const listen = (port) => {
  */
 const cleanExit = async (svr) => {
   log('Killing any dangling processes...', false);
-
-  fkill ??= (await import('fkill')).default;
 
   try {
     await fkill(['adb', 'java', 'aapt2'], {
