@@ -92,13 +92,13 @@ module.exports = async function getAppVersion(ws, message) {
       case 'youtube':
         pkgName = 'com.google.android.youtube';
         break;
-      case 'music':
+      case 'youtube.music':
         pkgName = 'com.google.android.apps.youtube.music';
     }
 
     const appVersion = await getAppVersion_(pkgName, ws, true);
 
-    if (global.jarNames.selectedApp === 'music') {
+    if (global.jarNames.selectedApp === 'youtube.music') {
       const arch = await getDeviceArch(ws);
 
       global.apkInfo = {
@@ -121,7 +121,7 @@ module.exports = async function getAppVersion(ws, message) {
     case 'youtube':
       versionsList = await getPage(`${APKMIRROR_UPLOAD_BASE}youtube`);
       break;
-    case 'music':
+    case 'youtube.music':
       versionsList = await getPage(`${APKMIRROR_UPLOAD_BASE}youtube-music`);
       break;
     case 'android':

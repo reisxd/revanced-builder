@@ -9,7 +9,7 @@ module.exports = async function selectAppVersion(message, ws) {
   let arch = message.arch;
 
   if (
-    (global.jarNames.selectedApp === 'music' && global.jarNames.devices[0]) ||
+    (global.jarNames.selectedApp === 'youtube.music' && global.jarNames.devices[0]) ||
     process.platform === 'android'
   ) {
     arch = await getDeviceArch(ws);

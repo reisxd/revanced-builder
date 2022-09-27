@@ -1,4 +1,4 @@
-const { existsSync, readFileSync, writeFileSync } = require('node:fs');
+const { existsSync, readFileSync, writeFileSync, rmSync } = require('node:fs');
 
 const defaultPatchesList = JSON.stringify(
   {
@@ -8,7 +8,7 @@ const defaultPatchesList = JSON.stringify(
         patches: []
       },
       {
-        name: 'music',
+        name: 'youtube.music',
         patches: []
       },
       {
@@ -46,6 +46,11 @@ function getPatchesList(pkgName) {
     readFileSync('includedPatchesList.json', 'utf8')
   );
 
+  if (patchesList.packages.find((package) => package.name === 'music')) {
+    rmSync('includedPatchesList.json');
+    return [];
+  }
+  
   return patchesList.packages.find((package) => package.name === pkgName)
     .patches;
 }

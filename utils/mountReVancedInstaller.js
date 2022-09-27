@@ -32,7 +32,7 @@ module.exports = async function mountReVancedInstaller(deviceId) {
     case 'youtube':
       pkg = 'com.google.android.youtube';
       break;
-    case 'music':
+    case 'youtube.music':
       pkg = 'com.google.android.apps.youtube.music';
   }
 

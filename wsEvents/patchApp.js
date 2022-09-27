@@ -17,7 +17,7 @@ async function mount(ws) {
     case 'youtube':
       pkg = 'com.google.android.youtube';
       break;
-    case 'music':
+    case 'youtube.music':
       pkg = 'com.google.android.apps.youtube.music';
   }
 
@@ -76,7 +76,7 @@ async function reinstallReVanced() {
       if (!global.jarNames.isRooted)
         pkgNameToGetUninstalled = 'app.revanced.android.youtube';
       break;
-    case 'music':
+    case 'youtube.music':
       if (!global.jarNames.isRooted)
         pkgNameToGetUninstalled = 'app.revanced.android.apps.youtube.music';
       break;
@@ -109,7 +109,7 @@ function outputName() {
     case 'youtube':
       part2 = 'YouTube';
       break;
-    case 'music':
+    case 'youtube.music':
       part2 = 'YouTube_Music';
       break;
     case 'frontpage':

@@ -69,7 +69,7 @@ module.exports = async function installReVanced(ws) {
     !global.jarNames.isRooted &&
     global.jarNames.devices[0] &&
     (global.jarNames.selectedApp === 'youtube' ||
-      global.jarNames.selectedApp === 'music')
+      global.jarNames.selectedApp === 'youtube.music')
   ) {
     const currentMicroGVersion = (
       await getDownloadLink({ owner: 'TeamVanced', repo: 'VancedMicroG' })

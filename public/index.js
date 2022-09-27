@@ -352,7 +352,7 @@ ws.onmessage = (msg) => {
           }</label></li>`;
         }
 
-        if (message.selectedApp === 'music' && !message.foundDevice)
+        if (message.selectedApp === 'youtube.music' && !message.foundDevice)
           document.getElementById('continue').onclick = () => {
             const version = document.querySelector(
               'input[name="version"]:checked'

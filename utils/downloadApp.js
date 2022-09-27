@@ -19,7 +19,7 @@ async function downloadApp(ws) {
         `https://www.apkmirror.com/apk/google-inc/youtube/youtube-${apkMirrorVersionArg}-release/`
       );
       break;
-    case 'music':
+    case 'youtube.music':
       versionDownload = await fetch(
         `https://www.apkmirror.com/apk/google-inc/youtube-music/youtube-music-${apkMirrorVersionArg}-release/`
       );
@@ -61,7 +61,7 @@ async function downloadApp(ws) {
   const $ = load(versionDownloadList);
 
   const dlLink =
-    arch && global.jarNames.selectedApp === 'music'
+    arch && global.jarNames.selectedApp === 'youtube.music'
       ? $(`div:contains("${arch}")`)
           .parent()
           .children('div[class^="table-cell rowheight"]')
