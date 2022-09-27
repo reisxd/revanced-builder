@@ -46,13 +46,14 @@ function getPatchesList(pkgName) {
     readFileSync('includedPatchesList.json', 'utf8')
   );
 
-  if (patchesList.packages.find((package) => package.name === 'music')) {
+  const package = patchesList.packages.find((package) => package.name === pkgName);
+
+  if (!package) {
     rmSync('includedPatchesList.json');
     return [];
+  } else {
+    return package.patches;
   }
-  
-  return patchesList.packages.find((package) => package.name === pkgName)
-    .patches;
 }
 
 /**
