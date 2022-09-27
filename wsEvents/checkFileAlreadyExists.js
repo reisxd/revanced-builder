@@ -7,7 +7,9 @@ const { existsSync } = require('node:fs');
 module.exports = function checkFileAlreadyExists(ws) {
   ws.send(
     JSON.stringify({
-      event: existsSync(join(global.revancedDir, `${global.jarNames.selectedApp}.apk`))
+      event: existsSync(
+        join(global.revancedDir, `${global.jarNames.selectedApp}.apk`)
+      )
         ? 'fileExists'
         : 'fileDoesntExist',
       isRooted: global.jarNames.isRooted

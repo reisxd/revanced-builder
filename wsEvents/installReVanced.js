@@ -16,7 +16,12 @@ module.exports = async function installReVanced(ws) {
         })
       );
       try {
-        await exec(`adb -s ${deviceId} install ${joinPath(global.revancedDir, global.outputName)}`);
+        await exec(
+          `adb -s ${deviceId} install ${joinPath(
+            global.revancedDir,
+            global.outputName
+          )}`
+        );
 
         ws.send(
           JSON.stringify({

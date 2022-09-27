@@ -46,7 +46,9 @@ function getPatchesList(pkgName) {
     readFileSync('includedPatchesList.json', 'utf8')
   );
 
-  const package = patchesList.packages.find((package) => package.name === pkgName);
+  const package = patchesList.packages.find(
+    (package) => package.name === pkgName
+  );
 
   if (!package) {
     rmSync('includedPatchesList.json');

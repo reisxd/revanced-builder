@@ -5,7 +5,7 @@ const { downloadFiles } = require('../utils/FileDownloader.js');
 const checkJDKAndAapt2 = require('../utils/checkJDKAndAapt2.js');
 const checkJDkAndADB = require('../utils/checkJDKAndADB.js');
 
-global.revancedDir = joinPath(process.cwd(), "revanced");
+global.revancedDir = joinPath(process.cwd(), 'revanced');
 global.jarNames = {
   cli: '',
   patchesJar: global.revancedDir,

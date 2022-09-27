@@ -29,20 +29,40 @@ module.exports = async function checkJDKAndAapt2(ws) {
       'revanced/aapt2.zip',
       ws
     );
-    await exec(`unzip ${joinPath(global.revancedDir, 'aapt2.zip')} -d ${global.revancedDir}`);
+    await exec(
+      `unzip ${joinPath(global.revancedDir, 'aapt2.zip')} -d ${
+        global.revancedDir
+      }`
+    );
 
     switch (process.arch) {
       case 'arm64':
-        await exec(`cp ${joinPath(global.revancedDir, 'arm64-v8a/aapt2')} ${joinPath(global.revancedDir, 'aapt2')}`);
+        await exec(
+          `cp ${joinPath(global.revancedDir, 'arm64-v8a/aapt2')} ${joinPath(
+            global.revancedDir,
+            'aapt2'
+          )}`
+        );
         await exec(`chmod +x ${joinPath(global.revancedDir, 'aapt2')}`);
         break;
       case 'arm':
-        await exec(`cp ${joinPath(global.revancedDir, 'armeabi-v7a/aapt2')} ${joinPath(global.revancedDir, 'aapt2')}`);
-        await exec(`chmod +x ${joinPath(global.revancedDir, aapt2)}`);
+        await exec(
+          `cp ${joinPath(global.revancedDir, 'armeabi-v7a/aapt2')} ${joinPath(
+            global.revancedDir,
+            'aapt2'
+          )}`
+        );
+        await exec(`chmod +x ${joinPath(global.revancedDir, 'aapt2')}`);
     }
 
     await exec(
-      `rm -rf ${joinPath(global.revancedDir, 'arm64-v8a')} ${joinPath(global.revancedDir, 'armeabi-v7a')} ${joinPath(global.revancedDir, 'x86')} ${joinPath(global.revancedDir, 'aapt2.zip')}`
+      `rm -rf ${joinPath(global.revancedDir, 'arm64-v8a')} ${joinPath(
+        global.revancedDir,
+        'armeabi-v7a'
+      )} ${joinPath(global.revancedDir, 'x86')} ${joinPath(
+        global.revancedDir,
+        'aapt2.zip'
+      )}`
     );
   }
 };

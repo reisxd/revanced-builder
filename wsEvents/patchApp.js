@@ -44,7 +44,9 @@ async function afterBuild(ws) {
 
   if (!global.jarNames.isRooted && process.platform === 'android') {
     await exec(
-      `cp ${join(global.revancedDir, global.outputName)} /storage/emulated/0/${global.outputName}`
+      `cp ${join(global.revancedDir, global.outputName)} /storage/emulated/0/${
+        global.outputName
+      }`
     );
     await exec(`cp ${global.jarNames.microG} /storage/emulated/0/microg.apk`);
 
@@ -97,7 +99,10 @@ async function reinstallReVanced() {
     `adb -s ${global.jarNames.deviceID} uninstall ${pkgNameToGetUninstalled}`
   );
   await exec(
-    `adb -s ${global.jarNames.deviceID} install ${join(global.revancedDir, global.outputName)}`
+    `adb -s ${global.jarNames.deviceID} install ${join(
+      global.revancedDir,
+      global.outputName
+    )}`
   );
 }
 

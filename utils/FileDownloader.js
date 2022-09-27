@@ -13,8 +13,7 @@ let ws;
  */
 async function overWriteJarNames(fileName) {
   const filePath = joinPath(global.revancedDir, fileName);
-  if (fileName.includes('revanced-cli'))
-    global.jarNames.cli = filePath;
+  if (fileName.includes('revanced-cli')) global.jarNames.cli = filePath;
 
   if (fileName.includes('revanced-patches') && fileName.endsWith('.jar'))
     global.jarNames.patchesJar = filePath;
@@ -22,11 +21,9 @@ async function overWriteJarNames(fileName) {
   if (fileName.endsWith('.apk') && !fileName.startsWith('VancedMicroG'))
     global.jarNames.integrations = filePath;
 
-  if (fileName.startsWith('VancedMicroG'))
-    global.jarNames.microG = filePath;
+  if (fileName.startsWith('VancedMicroG')) global.jarNames.microG = filePath;
 
-  if (fileName.endsWith('.json'))
-    global.jarNames.patchesList = filePath;
+  if (fileName.endsWith('.json')) global.jarNames.patchesList = filePath;
 }
 
 /**
@@ -93,7 +90,10 @@ async function downloadFile(assets) {
 
     if (dir.includes(fileName)) continue;
 
-    await dloadFromURL(asset.browser_download_url, joinPath(global.revancedDir, fileName));
+    await dloadFromURL(
+      asset.browser_download_url,
+      joinPath(global.revancedDir, fileName)
+    );
   }
 }
 

@@ -76,6 +76,14 @@ async function downloadApp(ws) {
           .first()
           .attr('href');
 
+  if (!dlLink) {
+    return ws.send(
+      JSON.stringify({
+        event: 'error',
+        error: `The version ${version} does not have an APK available, please use an older version.`
+      })
+    );
+  }
   const downloadLinkPage = await fetch(
     `https://www.apkmirror.com${dlLink}`
   ).then((res) => res.text());
