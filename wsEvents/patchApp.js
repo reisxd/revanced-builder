@@ -126,11 +126,13 @@ function outputName() {
   const part3 = global?.apkInfo?.version ? `v${global.apkInfo.version}` : '';
   const part4 = global?.apkInfo?.arch;
   const part5 = `cli_${global.jarNames.cli
-    .split('/')[2]
+    .split('/')
+    .at(-1)
     .replace('revanced-cli-', '')
     .replace('.jar', '')}`;
   const part6 = `patches_${global.jarNames.patchesJar
-    .split('/')[2]
+    .split('/')
+    .at(-1)
     .replace('revanced-patches-', '')
     .replace('.jar', '')}`;
 
