@@ -1,7 +1,7 @@
 const { spawn } = require('node:child_process');
 const { version } = require('node:os');
 const { rmSync, renameSync } = require('node:fs');
-const { join } = require('node:path');
+const { join, sep: separator } = require('node:path');
 
 const exec = require('../utils/promisifiedExec.js');
 
@@ -131,12 +131,12 @@ function outputName() {
   const part3 = global?.apkInfo?.version ? `v${global.apkInfo.version}` : '';
   const part4 = global?.apkInfo?.arch;
   const part5 = `cli_${global.jarNames.cli
-    .split('/')
+    .split(separator)
     .at(-1)
     .replace('revanced-cli-', '')
     .replace('.jar', '')}`;
   const part6 = `patches_${global.jarNames.patchesJar
-    .split('/')
+    .split(separator)
     .at(-1)
     .replace('revanced-patches-', '')
     .replace('.jar', '')}`;
