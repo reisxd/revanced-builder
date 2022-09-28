@@ -38,10 +38,10 @@ module.exports = async function mountReVancedInstaller(deviceId) {
 
   // Copy ReVanced APK to temp.
   await exec(
-    `adb -s ${deviceId} push ${joinPath(
+    `adb -s ${deviceId} push "${joinPath(
       global.revancedDir,
       global.outputName
-    )} /data/local/tmp/revanced.delete`.trim()
+    )}" /data/local/tmp/revanced.delete`.trim()
   );
   // Create folder
   await runCommand('su -c \'mkdir -p "/data/adb/revanced/"\'', deviceId);
