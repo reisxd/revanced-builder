@@ -1,10 +1,27 @@
+@font-face {
+  font-family: "Inziu Iosevka SC Regular";
+  src: url("https://github.com/chrissimpkins/codeface/blob/master/cjk-fonts/inziu-iosevka-SC/Inziu-Iosevka-SC-Regular.ttf?raw=true") format("truetype");
+  unicode-range: U+4E00-9FFF; /* CJK characters codepoint range */
+}
+
+@font-face {
+  font-family: "Inziu Iosevka SC Bold";
+  src: url("https://github.com/chrissimpkins/codeface/blob/master/cjk-fonts/inziu-iosevka-SC/Inziu-Iosevka-SC-Bold.ttf?raw=true") format("truetype");
+  unicode-range: U+4E00-9FFF; /* CJK characters codepoint range */
+}
+
 span.log .log-line {
-  font-family: 'Fira Code', monospace;
+  font-family: 'Inziu Iosevka SC Regular', 'Fira Code', monospace;
   font-weight: 300;
   font-size: 0.8em;
   line-height: 0.8em;
   width: 100%;
   height: 100%;
+}
+
+span.log .log-line strong {
+  font-family: 'Inziu Iosevka SC Bold', 'Fira Code', monospace;
+  font-weight: bold;
 }
 
 span.log .log-line.error {
