@@ -1,12 +1,14 @@
 @font-face {
-  font-family: "Inziu Iosevka SC Regular";
-  src: url("https://github.com/chrissimpkins/codeface/blob/master/cjk-fonts/inziu-iosevka-SC/Inziu-Iosevka-SC-Regular.ttf?raw=true") format("truetype");
+  font-family: 'Inziu Iosevka SC Regular';
+  src: url('https://github.com/chrissimpkins/codeface/blob/master/cjk-fonts/inziu-iosevka-SC/Inziu-Iosevka-SC-Regular.ttf?raw=true')
+    format('truetype');
   unicode-range: U+4E00-9FFF; /* CJK characters codepoint range */
 }
 
 @font-face {
-  font-family: "Inziu Iosevka SC Bold";
-  src: url("https://github.com/chrissimpkins/codeface/blob/master/cjk-fonts/inziu-iosevka-SC/Inziu-Iosevka-SC-Bold.ttf?raw=true") format("truetype");
+  font-family: 'Inziu Iosevka SC Bold';
+  src: url('https://github.com/chrissimpkins/codeface/blob/master/cjk-fonts/inziu-iosevka-SC/Inziu-Iosevka-SC-Bold.ttf?raw=true')
+    format('truetype');
   unicode-range: U+4E00-9FFF; /* CJK characters codepoint range */
 }
 
