@@ -29,6 +29,14 @@ async function getAppVersion_(pkgName, ws, shouldReturnMsg, deviceId) {
 
     return versionMatch[1].replace(`${EOL}    `, '').match(/\d+(\.\d+)+/g)[0];
   } catch (e) {
+    if (shouldReturnMsg)
+      ws.send(
+        JSON.stringify({
+          event: 'error',
+          error:
+            "The app you selected is not installed on your device. It's needed for rooted ReVanced."
+        })
+      );
     return null;
   }
 }
