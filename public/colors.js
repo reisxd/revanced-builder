@@ -3,6 +3,7 @@ const accentColors = document.querySelectorAll('.theming span');
 const colorNow = localStorage.getItem('theme') ?? '#4873b3';
 document.documentElement.style.setProperty('--accentColor', colorNow);
 
+/* eslint-disable no-unused-vars */
 function openColorPicker() {
   document.querySelector('.theming').classList.toggle('show');
 }

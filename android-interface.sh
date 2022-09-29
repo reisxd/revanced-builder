@@ -3,6 +3,7 @@
 shopt -s extglob
 
 SCR_NAME_EXEC=$0
+SCR_NAME_EXEC_FP=$(realpath $0)
 SCR_NAME=$(basename $SCR_NAME_EXEC)
 SCR_NAME=${SCR_NAME%.*}
 RVB_DIR=$HOME/revanced-builder
@@ -172,7 +173,6 @@ update_builder() {
   log "Updating revanced-builder..."
   cd $RVB_DIR
   dload_and_install n
-  cd $HOME
   run_self_update
 }
 
@@ -181,18 +181,16 @@ run_self_update() {
 
   # Download new version
   log "Downloading latest version..."
-  if ! curl -sLo $SCR_NAME_EXEC.tmp https://raw.githubusercontent.com/reisxd/revanced-builder/main/android-interface.sh ; then
+  if ! curl -sLo $SCR_NAME_EXEC_FP.tmp https://raw.githubusercontent.com/reisxd/revanced-builder/main/android-interface.sh ; then
     log "Failed: Error while trying to download new version!"
-    log "File requested: https://raw.githubusercontent.com/reisxd/revanced-builder/main/android-interface.sh"
-    exit 1
+    error "File requested: https://raw.githubusercontent.com/reisxd/revanced-builder/main/android-interface.sh" n
   fi
   log "Done."
 
   # Copy over modes from old version
-  OCTAL_MODE=$(stat -c '%a' $SCR_NAME_EXEC)
-  if ! chmod $OCTAL_MODE "$SCR_NAME_EXEC.tmp" ; then
-    log "Failed: Error while trying to set mode on $SCR_NAME_EXEC.tmp."
-    exit 1
+  OCTAL_MODE=$(stat -c '%a' $SCR_NAME_EXEC_FP)
+  if ! chmod $OCTAL_MODE "$SCR_NAME_EXEC_FP.tmp" ; then
+    error "Failed: Error while trying to set mode on $SCR_NAME_EXEC.tmp." n
   fi
 
   # Spawn update script
@@ -200,8 +198,8 @@ run_self_update() {
 #!/bin/bash
 
 # Overwrite old file with new
-if mv "$0.tmp" "$0"; then
-  echo -e "[$SCR_NAME] Done. Execute '$0 run' to launch the builder."
+if mv "$SCR_NAME_EXEC_FP.tmp" "$SCR_NAME_EXEC_FP"; then
+  echo -e "[$SCR_NAME] Done. Execute '$SCR_NAME_EXEC run' to launch the builder."
   rm \$0
 else
   echo "[$SCR_NAME] Failed!"
