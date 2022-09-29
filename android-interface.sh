@@ -183,16 +183,14 @@ run_self_update() {
   log "Downloading latest version..."
   if ! curl -sLo $SCR_NAME_EXEC_FP.tmp https://raw.githubusercontent.com/reisxd/revanced-builder/main/android-interface.sh ; then
     log "Failed: Error while trying to download new version!"
-    log "File requested: https://raw.githubusercontent.com/reisxd/revanced-builder/main/android-interface.sh"
-    exit 1
+    error "File requested: https://raw.githubusercontent.com/reisxd/revanced-builder/main/android-interface.sh" n
   fi
   log "Done."
 
   # Copy over modes from old version
   OCTAL_MODE=$(stat -c '%a' $SCR_NAME_EXEC_FP)
   if ! chmod $OCTAL_MODE "$SCR_NAME_EXEC_FP.tmp" ; then
-    log "Failed: Error while trying to set mode on $SCR_NAME_EXEC.tmp."
-    exit 1
+    error "Failed: Error while trying to set mode on $SCR_NAME_EXEC.tmp." n
   fi
 
   # Spawn update script
