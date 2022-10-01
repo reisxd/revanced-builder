@@ -155,7 +155,8 @@ module.exports = async function getAppVersion(ws, message) {
     if (
       (global.jarNames.selectedApp === 'android' &&
         !versionName.includes('release')) ||
-      versionName.includes('(Wear OS)')
+      versionName.includes('(Wear OS)') ||
+      versionName.includes('CAR_RELEASE')
     )
       continue;
 
