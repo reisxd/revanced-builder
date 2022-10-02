@@ -21,7 +21,7 @@ jobs:
       - name: Set env
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
       - name: Install npm dependencies
-        run: npm install --production
+        run: npm install --omit=dev
       - name: Install pkg
         run: sudo npm install -g pkg
       - name: Build
