@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'Source Sans HW Regular';
-  src: url('fonts/Source Sans HW Regular.otf') format('opentype');
+  src: url('/styles/fonts/Source Sans HW Regular.otf') format('opentype');
 }
 
 @font-face {
   font-family: 'Source Sans HW Bold';
-  src: url('fonts/Source Sans HW Bold.otf') format('opentype');
+  src: url('/styles/fonts/Source Sans HW Bold.otf') format('opentype');
 }
 
 span.log .log-line {
