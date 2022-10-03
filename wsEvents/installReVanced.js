@@ -17,10 +17,10 @@ module.exports = async function installReVanced(ws) {
       );
       try {
         await exec(
-          `adb -s ${deviceId} install ${joinPath(
+          `adb -s ${deviceId} install "${joinPath(
             global.revancedDir,
             global.outputName
-          )}`
+          )}"`
         );
 
         ws.send(
@@ -92,7 +92,7 @@ module.exports = async function installReVanced(ws) {
 
       if (!microGVersion || microGVersion !== currentMicroGVersion) {
         try {
-          await exec(`adb -s ${deviceId} install ${global.jarNames.microG}`);
+          await exec(`adb -s ${deviceId} install "${global.jarNames.microG}"`);
 
           ws.send(
             JSON.stringify({
