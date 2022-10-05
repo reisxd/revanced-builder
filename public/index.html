@@ -8,6 +8,7 @@
     <link href="styles/core.css" rel="stylesheet" type="text/css" />
     <link href="styles/home.css" rel="stylesheet" type="text/css" />
     <script src="colors.js" defer></script>
+    <script src="index.js"></script>
   </head>
 
   <body>
@@ -28,15 +29,44 @@
             >
               Start Patching ➜
             </button>
+            <div class="status">
+              <table>
+                <tr>
+                  <td style="padding-right: 21px; text-align: left">
+                    <h2>Status</h2>
+                  </td>
+                  <td style="text-align: end">
+                    Latest: <span id="builderVersion">Loading..</span
+                    ><br />Installed: <span id="currentVersion">Loading..</span>
+                  </td>
+                </tr>
+              </table>
+            </div>
+            <div class="updater">
+              <span class="latest"
+                >Your current version of builder is up-to-date.</span
+              >
+              <div class="outdated">
+                <span
+                  >Your current version of builder is outdated and no longer
+                  supported.</span
+                ><br /><button
+                  class="highlighted"
+                  onclick="window.open('https://github.com/reisxd/revanced-builder/releases/latest', '_blank')"
+                >
+                  Update now!
+                </button>
+              </div>
+            </div>
             <div class="actions">
               <i
                 class="social-icon fa-brands fa-xl fa-github"
-                onclick="window.location = 'https://github.com/reisxd/revanced-builder'"
+                onclick="openGitHub();"
               ></i>
               <div style="margin-left: 10px"></div>
               <i
                 class="social-icon fa-xl fa-solid fa-question-circle"
-                onclick="window.location = '/about/'"
+                onclick="openAbout();"
               ></i>
               <div style="margin-left: 10px"></div>
               <i
@@ -74,5 +104,10 @@
         </div>
       </main>
     </div>
+    <script>
+      ws.onopen = () => {
+        checkForUpdates();
+      };
+    </script>
   </body>
 </html>
