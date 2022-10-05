@@ -445,10 +445,24 @@ ws.onmessage = (msg) => {
       location.href = `/failure?error=${message.error}`;
       break;
     case 'notUpToDate':
-      document.getElementById('container').innerHTML += `
-      <dialog>
-      <span>Your current version of Builder is not up to date.<br>Do you want to update to ${message.builderVersion}?</span>
-      <div class="buttonContainer"><button class="highlighted" onclick="window.open('https://github.com/reisxd/revanced-builder/releases/latest', '_blank'); document.getElementById('container').removeChild(document.getElementsByTagName('dialog')[0]);">Yes</button> <button onclick="document.getElementById('container').removeChild(document.getElementsByTagName('dialog')[0]);">No</button></div></dialog>`;
+      document.getElementById(
+        'builderVersion'
+      ).innerHTML = `${message.builderVersion}`;
+      document.getElementById(
+        'currentVersion'
+      ).innerHTML = `${message.currentVersion}`;
+      document.querySelector('.updater .latest').style.display = 'none';
+      document.querySelector('.updater .outdated').style.display = 'block';
+      document.querySelector('.updater').style.display = 'block';
+      break;
+    case 'upToDate':
+      document.getElementById(
+        'builderVersion'
+      ).innerHTML = `${message.currentVersion}`;
+      document.getElementById(
+        'currentVersion'
+      ).innerHTML = `${message.currentVersion}`;
+      document.querySelector('.updater').style.display = 'block';
       break;
     case 'multipleDevices':
       location.href = '/devices';

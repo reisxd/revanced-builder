@@ -14,9 +14,18 @@ module.exports = async function checkForUpdates(ws) {
     ws.send(
       JSON.stringify({
         event: 'notUpToDate',
-        builderVersion
+        builderVersion,
+        currentVersion
       })
     );
+  else {
+    ws.send(
+      JSON.stringify({
+        event: 'upToDate',
+        currentVersion
+      })
+    );
+  }
 };
 
 module.exports.currentVersion = currentVersion;
