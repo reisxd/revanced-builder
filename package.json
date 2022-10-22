@@ -26,7 +26,7 @@
     "open": "^8.4.0",
     "portfinder": "^1.0.32",
     "semver": "^7.3.7",
-    "ws": "^8.8.1"
+    "ws": "^8.9.0"
   },
   "devDependencies": {
     "eslint": "^8.23.0",
