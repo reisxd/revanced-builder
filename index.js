@@ -144,6 +144,7 @@ process.on('unhandledRejection', (reason) => {
 });
 
 process.on('SIGTERM', () => cleanExit(server));
+process.on('SIGINT', () => cleanExit(server));
 
 // The websocket server
 wsServer.on('connection', (ws) => {
