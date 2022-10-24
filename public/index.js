@@ -273,26 +273,19 @@ ws.onmessage = (msg) => {
 </li>`;
         }
         document.getElementById('search').addEventListener('keyup', () => {
-          const searchBox = document.getElementById('search');
-          const searchText = searchBox.value.toLowerCase();
+          const searchText = document.getElementById('search').value.toLowerCase();
 
-          for (const e of document.getElementsByTagName('li'))
-            e.style.display = 'none';
+          Array.from(document.getElementsByTagName('li'))
+            .forEach(x => x.style.display = "none");
 
-          for (const e of document.getElementsByClassName('patchName')) {
-            if (e.innerText.toLowerCase().startsWith(searchText)) {
-              e.parentNode.parentNode.parentNode.style.display = 'flex';
-            }
-          }
+          Array.from(document.getElementsByClassName('patchName'))
+            .filter(x => x.innerText.toLowerCase().includes(searchText))
+            .forEach(x => x.parentNode.parentNode.style.display = "flex");
         });
 
-        for (const patch of document.getElementsByClassName('select'))
-          if (
-            message.rememberedPatchList.includes(
-              patch.getAttribute('data-patch-name')
-            )
-          )
-            patch.checked = true;
+        Array.from(document.getElementsByClassName('select'))
+          .filter(patch => message.rememberedPatchList.includes(patch.getAttribute('data-patch-name')))
+          .forEach(patch => patch.checked = true);
       }
       break;
     case 'downloadingFile':
