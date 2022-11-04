@@ -27,6 +27,10 @@
   content: '\f53f';
 }
 
+.fa-gear:before {
+  content: '\f013';
+}
+
 .fa-brands {
   font-family: 'Font Awesome 6 Brands';
   font-size: 400;

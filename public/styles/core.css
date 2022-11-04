@@ -214,68 +214,6 @@ i.social-icon::before {
   filter: brightness(50%) !important;
 }
 
-/* Color Picker */
-/* fadeInUp animation credits: animate.css */
-@keyframes fadeInUp {
-  0% {
-    opacity: 0;
-    -webkit-transform: translate3d(0, 100%, 0);
-    transform: translate3d(0, 100%, 0);
-  }
-
-  to {
-    opacity: 1;
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
-  }
-}
-
-.theming {
-  border: 2px solid #ddd;
-  border-bottom-color: rgb(221, 221, 221);
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  padding: 25px;
-  position: fixed;
-  background: black;
-  animation: fadeInUp 0.25s;
-  bottom: 81px;
-  left: 22px;
-  border-bottom: 0px;
-  padding-bottom: 15px;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-  display: none;
-}
-
-.theming.show {
-  display: block;
-}
-
-#themecolor-picker {
-  display: flex;
-  padding: 0;
-}
-
-#themecolor-picker span {
-  padding: 14px;
-  transition: 200ms;
-  margin-right: 8px;
-  display: inline-block;
-  border-radius: 5px;
-  cursor: pointer;
-  height: 22px;
-  width: 22px;
-}
-
-#themecolor-picker span.active {
-  box-shadow: inset 0 0 0 2px #ddd;
-}
-
-#themecolor-picker span[style*='#4873b3'] {
-  margin-left: 8px;
-}
-
 .log * {
   user-select: text;
 }

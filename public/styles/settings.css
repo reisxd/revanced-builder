@@ -1,0 +1,49 @@
+.opt {
+  display: flex;
+  align-items: center;
+}
+
+.opt i:hover {
+  box-shadow: 0 0;
+}
+
+@media screen and (min-width: 1000px) {
+  #content {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+}
+
+.option {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid var(--textColor);
+}
+
+p {
+  color: var(--textColor);
+}
+
+#themecolor-picker {
+  display: flex;
+  padding: 0;
+}
+
+#themecolor-picker span {
+  padding: 14px;
+  transition: 200ms;
+  margin-right: 8px;
+  display: inline-block;
+  border-radius: 5px;
+  cursor: pointer;
+  height: 22px;
+  width: 22px;
+}
+
+#themecolor-picker span.active {
+  box-shadow: inset 0 0 0 2px #ddd;
+}
+
+#themecolor-picker span[style*='#4873b3'] {
+  margin-left: 8px;
+}
