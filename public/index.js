@@ -190,6 +190,10 @@ function openGitHub() {
   window.open('https://github.com/reisxd/revanced-builder', '_blank');
 }
 
+function openSettings() {
+  location.href = '/settings';
+}
+
 /**
  * @param {string} phrase
  */
@@ -273,19 +277,26 @@ ws.onmessage = (msg) => {
 </li>`;
         }
         document.getElementById('search').addEventListener('keyup', () => {
-          const searchText = document.getElementById('search').value.toLowerCase();
+          const searchText = document
+            .getElementById('search')
+            .value.toLowerCase();
 
-          Array.from(document.getElementsByTagName('li'))
-            .forEach(x => x.style.display = "none");
+          Array.from(document.getElementsByTagName('li')).forEach(
+            (x) => (x.style.display = 'none')
+          );
 
           Array.from(document.getElementsByClassName('patchName'))
-            .filter(x => x.innerText.toLowerCase().includes(searchText))
-            .forEach(x => x.parentNode.parentNode.style.display = "flex");
+            .filter((x) => x.innerText.toLowerCase().includes(searchText))
+            .forEach((x) => (x.parentNode.parentNode.style.display = 'flex'));
         });
 
         Array.from(document.getElementsByClassName('select'))
-          .filter(patch => message.rememberedPatchList.includes(patch.getAttribute('data-patch-name')))
-          .forEach(patch => patch.checked = true);
+          .filter((patch) =>
+            message.rememberedPatchList.includes(
+              patch.getAttribute('data-patch-name')
+            )
+          )
+          .forEach((patch) => (patch.checked = true));
       }
       break;
     case 'downloadingFile':
@@ -318,6 +329,9 @@ ws.onmessage = (msg) => {
       hasFinished = true;
 
       document.getElementById('continue').classList.remove('disabled');
+      if (localStorage.getItem('auto-next')) {
+        document.getElementById('continue').click();
+      }
       document.getElementsByClassName('log')[0].innerHTML +=
         '<span class="log-line"><strong>[builder]</strong> Finished downloading files.</span><br/>';
       break;
