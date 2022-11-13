@@ -287,7 +287,7 @@ ws.onmessage = (msg) => {
 
           Array.from(document.getElementsByClassName('patchName'))
             .filter((x) => x.innerText.toLowerCase().includes(searchText))
-            .forEach((x) => (x.parentNode.parentNode.style.display = 'flex'));
+            .forEach((x) => (x.parentNode.parentNode.parentNode.style.display = 'flex'));
         });
 
         Array.from(document.getElementsByClassName('select'))
