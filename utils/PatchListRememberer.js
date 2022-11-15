@@ -30,6 +30,10 @@ const defaultPatchesList = JSON.stringify(
       {
         name: 'task',
         patches: []
+      },
+      {
+        name: 'app',
+        patches: []
       }
     ]
   },

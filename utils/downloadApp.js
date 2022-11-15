@@ -49,6 +49,11 @@ async function downloadApp(ws) {
         `https://www.apkmirror.com/apk/appest-inc/ticktick-to-do-list-with-reminder-day-planner/ticktick-to-do-list-with-reminder-day-planner-${apkMirrorVersionArg}-release/`
       );
       break;
+    case 'app':
+      versionDownload = await fetch(
+        `https://www.apkmirror.com/apk/twitch-interactive-inc/twitch/twitch-${apkMirrorVersionArg}-release/`
+      );
+      break;
   }
 
   if (!versionDownload.ok) {
