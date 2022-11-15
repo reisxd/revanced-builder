@@ -133,6 +133,9 @@ function outputName() {
     case 'warnapp':
       part2 = 'WarnWetter';
       break;
+    case 'trill':
+      part2 = 'TikTok';
+      break;
     case 'task':
       part2 = 'TickTick';
       break;
