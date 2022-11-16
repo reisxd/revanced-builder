@@ -143,6 +143,9 @@ module.exports = async function getAppVersion(ws, message) {
     case 'task':
       versionsList = await getPage(`${APKMIRROR_UPLOAD_BASE}ticktick-to-do-list-with-reminder-day-planner`);
       break;
+    case 'app':
+      versionsList = await getPage(`${APKMIRROR_UPLOAD_BASE}twitch`);
+      break;
   }
 
   /** @type {{ version: string; recommended: boolean; beta: boolean }[]} */
@@ -159,7 +162,9 @@ module.exports = async function getAppVersion(ws, message) {
       .replace('Reddit ', '')
       .replace('WarnWetter ', '')
       .replace('TikTok ', '')
-      .replace('TickTick:To-do list & Tasks ', '');
+      .replace('TickTick:To-do list & Tasks ', '')
+      .replace('Twitch: Live Game Streaming ', '')
+      .replace('_',' ');
 
     if (
       (global.jarNames.selectedApp === 'android' &&

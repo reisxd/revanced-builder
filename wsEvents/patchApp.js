@@ -97,6 +97,9 @@ async function reinstallReVanced() {
     case 'task':
       pkgNameToGetUninstalled = 'com.ticktick.task';
       break;
+    case 'app':
+      pkgNameToGetUninstalled = 'tv.twitch.android.app';
+      break;
   }
 
   await exec(
@@ -130,8 +133,14 @@ function outputName() {
     case 'warnapp':
       part2 = 'WarnWetter';
       break;
+    case 'trill':
+      part2 = 'TikTok';
+      break;
     case 'task':
       part2 = 'TickTick';
+      break;
+    case 'app':
+      part2 = 'Twitch';
       break;
   }
 
