@@ -51,6 +51,7 @@ span {
 
 p {
   color: var(--textColor);
+  font-family: 'Roboto', sans-serif;
 }
 
 /* Fonts and styles for headers */
