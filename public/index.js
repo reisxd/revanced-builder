@@ -186,18 +186,6 @@ function getAlreadyExists() {
   sendCommand({ event: 'checkFileAlreadyExists' });
 }
 
-function openAbout() {
-  window.open('/about', '_blank');
-}
-
-function openGitHub() {
-  window.open('https://github.com/reisxd/revanced-builder', '_blank');
-}
-
-function openSettings() {
-  location.href = '/settings';
-}
-
 /**
  * @param {string} phrase
  */
