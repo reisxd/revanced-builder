@@ -1,7 +1,7 @@
 const exec = require('../utils/promisifiedExec.js');
 
 const fetch = require('node-fetch');
-const { load, version } = require('cheerio');
+const { load } = require('cheerio');
 const semver = require('semver');
 
 const { getAppVersion: getAppVersion_ } = require('../utils/getAppVersion.js');
@@ -14,9 +14,7 @@ const APKMIRROR_UPLOAD_BASE = 'https://www.apkmirror.com/uploads/?appcategory=';
  * @param {string} ver
  */
 const sanitizeVersion = (ver) => {
-
-  while(ver.match(/\./g).length > 2)
-    ver = ver.replace(/.([^.]*)$/, '$1')
+  while (ver.match(/\./g).length > 2) ver = ver.replace(/.([^.]*)$/, '$1');
 
   return ver
     .replace(/\.0(\d)/gi, '.$1') // because apparently x.0y.z (ex. 5.09.51) isn't a valid version
@@ -141,7 +139,9 @@ module.exports = async function getAppVersion(ws, message) {
       versionsList = await getPage(`${APKMIRROR_UPLOAD_BASE}tik-tok`);
       break;
     case 'task':
-      versionsList = await getPage(`${APKMIRROR_UPLOAD_BASE}ticktick-to-do-list-with-reminder-day-planner`);
+      versionsList = await getPage(
+        `${APKMIRROR_UPLOAD_BASE}ticktick-to-do-list-with-reminder-day-planner`
+      );
       break;
     case 'app':
       versionsList = await getPage(`${APKMIRROR_UPLOAD_BASE}twitch`);
@@ -164,7 +164,7 @@ module.exports = async function getAppVersion(ws, message) {
       .replace('TikTok ', '')
       .replace('TickTick:To-do list & Tasks ', '')
       .replace('Twitch: Live Game Streaming ', '')
-      .replace('_',' ');
+      .replace('_', ' ');
 
     if (
       (global.jarNames.selectedApp === 'android' &&

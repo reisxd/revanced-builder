@@ -1,88 +1,17 @@
-/* Disable the link highlighting and underlines */
+.mobile {
+  display: none;
+}
+
+@media only screen and (max-width: 900px) {
+  .desktop {
+    display: none;
+  }
+
+  .mobile {
+    display: block;
+  }
+}
 
 a {
-  text-decoration: underline;
-  color: white;
-}
-
-/* Make unordered list lists actually look good */
-
-ul {
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-/* Roles in the credits */
-
-li {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  background-color: var(--contrastColor);
-  border-radius: 8px;
-  padding: 10px;
-  margin-bottom: 10px;
-}
-
-li h4 {
-  text-align: center;
-  margin-bottom: 5px;
-}
-
-/* This page is special, we need to revert the content wrapper's background */
-
-div#content--wrapper {
-  background: transparent;
-}
-
-/* Member Image and name styling */
-
-.member {
-  display: grid;
-  margin: 5px;
-  grid-template-columns: max-content;
-  grid-template-rows: 36px 1.3em;
-  gap: 0px 0px;
-  grid-template-areas:
-    'image'
-    'name';
-}
-
-.member-image {
-  display: inline-block;
-  margin: 0 auto;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background-color: var(--interactableColor);
-  grid-area: image;
-  background-size: 100%;
-  background-repeat: no-repeat;
-}
-
-.member-name {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  grid-area: name;
-  font-size: 10px;
-}
-
-.members {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-/* Credits Images */
-
-.sn {
-  background-image: url('https://github.com/baiorett.png');
-}
-
-.afn {
-  background-image: url('https://github.com/afnzmn.png');
+  color: #ddd;
 }

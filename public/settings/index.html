@@ -42,7 +42,7 @@
                   style="background: #0067fdc7 none repeat scroll 0% 0%"
                 ></span>
                 <span
-                  onclick="this.style.setProperty('background-color', prompt('Set Custom Color (eg. #000 or yellow or anything that works with css)', document.documentElement.style.getPropertyValue('--accentColor')));"
+                  onclick="this.style.setProperty('background-color', prompt('Set Custom Color (eg. #004083 or crimson or anything that works with css)', document.documentElement.style.getPropertyValue('--accentColor')));"
                   style="
                     background: var(--accentColor) none repeat scroll 0% 0%;
                   "
@@ -55,27 +55,45 @@
               <h3>Automatically proceed to next page</h3>
 
               <p>
-                This helps save time by proceeding automatically to the next page on
-                downloading pages. <br />Caution: It may break your back button.
+                This helps save time by proceeding automatically to the next
+                page on downloading pages. <br />Caution: It may break your back
+                button.
               </p>
-              <button id="enable">Enable</button>
-              <button id="disable">Disable</button>
+              <label class="switch"
+                ><input
+                  class="check"
+                  id="autoBtn"
+                  type="checkbox"
+                  autocomplete="off" /><span class="slider"></span
+              ></label>
+            </div>
+            <div class="option">
+              <h3>Pure Black Theme</h3>
+              <p>
+                The pure black theme uses a black background and helps reduce
+                battery usage on AMOLED devices or maybe you can just turn it on
+                when the dark theme is not enough.
+              </p>
+              <label class="switch"
+                ><input
+                  class="check"
+                  id="blackBtn"
+                  type="checkbox"
+                  autocomplete="off" /><span class="slider"></span
+              ></label>
             </div>
           </div>
         </div>
       </main>
       <footer>
-        <i
-          class="social-icon fa-brands fa-xl fa-github"
-          onclick="openGitHub();"
-        ></i>
-        <div style="margin-left: 10px"></div>
-        <i
-          class="social-icon fa-xl fa-solid fa-question-circle"
-          onclick="openAbout();"
-        ></i>
+        <a href="https://github.com/reisxd/revanced-builder" target="_blank"
+          ><i class="social-icon fa-brands fa-xl fa-github"></i
+        ></a>
+        <a href="/about"
+          ><i class="social-icon fa-solid fa-xl fa-question-circle"></i
+        ></a>
         <span class="right"></span>
-        <button onclick="history.back()">Back</button>
+        <button onclick="location.href='/'">Home</button>
       </footer>
     </div>
   </body>
