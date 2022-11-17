@@ -1,9 +1,5 @@
-p {
-  color: white;
-}
-
 #content--wrapper {
-  background-color: transparent !important;
+  box-shadow: none !important;
 }
 
 #content {
@@ -21,6 +17,10 @@ p {
 .actions {
   display: flex;
   padding: 12px;
+}
+
+.actions a {
+  margin-right: 10px;
 }
 
 .theming.show {
@@ -46,11 +46,11 @@ p {
 
 .status {
   margin-top: 10px;
-  background-color: var(--contrastColor) !important;
   color: #ddd;
   font-family: fira code, source sans hw regular, monospace;
   padding: 8px;
   border-radius: 21px;
+  box-shadow: 0 0 0 2px var(--interactableColor);
 }
 
 .updater {

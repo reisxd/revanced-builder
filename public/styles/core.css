@@ -9,15 +9,23 @@
   --textColor: #ffffff;
   --accentColor: #4873b3;
   --primaryColor: #0f111a;
-  --secondaryColor: #00010a;
   --contrastColor: #1b1e29;
   --interactableColor: #2a2d3a;
   --buttonColor: #3d404f;
   --scrollbarColor: #3d404f;
   --icon-foreground: #686b76;
   --icon-background: #1b1e29;
-  /* --contrastColor */
   --border-radius: 10px;
+}
+
+html.black:root {
+  --primaryColor: black;
+}
+
+html.black
+  input[type='radio']
+  + label:not(input[type='radio']:checked + label) {
+  background-color: black;
 }
 
 /*
@@ -39,6 +47,10 @@ span {
   color: var(--textColor);
   font-family: 'Roboto', sans-serif;
   font-weight: 400;
+}
+
+p {
+  color: var(--textColor);
 }
 
 /* Fonts and styles for headers */
@@ -64,6 +76,12 @@ html {
   margin: 0;
 }
 
+body {
+  background-color: var(--primaryColor);
+  margin: auto;
+  max-width: 1300px;
+}
+
 /* Styles for container */
 
 div#container {
@@ -84,6 +102,12 @@ div#container > main {
 
 /* Main content */
 
+@media (min-width: 500px) {
+  div#content--wrapper {
+    padding: 13px !important;
+  }
+}
+
 div#content {
   height: 100%;
 }
@@ -95,7 +119,8 @@ div#content--wrapper {
   height: 100%;
   padding: 8px;
   margin-top: 5px;
-  background-color: var(--contrastColor);
+  background-color: var(--primaryColor);
+  box-shadow: 0 0 0 2px var(--interactableColor);
   overflow-x: auto;
   scroll-behavior: smooth;
 }
@@ -159,7 +184,14 @@ footer {
   display: flex;
   align-items: center;
   padding: 12px;
-  background-color: var(--secondaryColor);
+  background-color: var(--primaryColor);
+  overflow-y: hidden;
+  overflow-x: auto;
+  box-shadow: 0 -2px 0 0 var(--interactableColor);
+}
+
+footer a {
+  margin-right: 10px;
 }
 
 /* Header for title and optional buttons ( addressed per module ) */
@@ -190,7 +222,7 @@ i.social-icon {
   border-radius: 25px;
   line-height: 1em;
   color: var(--icon-foreground);
-  background-color: var(--icon-background);
+  box-shadow: 0 0 0 2px var(--interactableColor);
   cursor: pointer;
   transition: 200ms;
 }
@@ -207,7 +239,6 @@ i.social-icon::before {
   top: 8px;
   border-radius: 25px;
   color: var(--icon-foreground);
-  background-color: var(--icon-background);
 }
 
 .disabled {

@@ -15,102 +15,58 @@
     <div id="container">
       <main>
         <header>
-          <h1>Credits:</h1>
+          <h1>About</h1>
         </header>
         <div id="content--wrapper">
           <div id="content">
-            <ul>
-              <li>
-                <h4>Original UI Design</h4>
-                <div class="members">
-                  <span class="member">
-                    <span class="member-image sn"></span>
-                    <span class="member-name"
-                      ><a href="https://github.com/baiorett">sn</a></span
-                    >
-                  </span>
-                  <span class="member">
-                    <span class="member-image afn"></span>
-                    <span class="member-name"
-                      ><a href="https://github.com/afnzmn">afn</a></span
-                    >
-                  </span>
-                  <span class="member">
-                    <span class="member-image"></span>
-                    <span class="member-name"
-                      ><a
-                        href="https://www.figma.com/file/p9tO8LyUuPaovZ5tz40TzH/ReVanced-Desktop"
-                        >Original UI</a
-                      ></span
-                    >
-                  </span>
-                </div>
-              </li>
-              <li>
-                <h4>HTML UI Design</h4>
-                <div class="members">
-                  <span class="member">
-                    <span class="member-image"></span>
-                    <span class="member-name"
-                      ><a href="https://github.com/Elijah629"
-                        >Elijah629</a
-                      ></span
-                    >
-                  </span>
-                </div>
-              </li>
-              <li>
-                <h4>
-                  <a href="https://github.com/reisxd/revanced-builder"
-                    >ReVanced Builder</a
-                  >
-                </h4>
-                <div class="members" id="revanced-builder"></div>
-              </li>
-            </ul>
+            <h2>ReVanced Builder</h2>
+            <p>
+              ReVanced Builder is a simple tool built with NodeJS to patch
+              ReVanced-supported applications. It ships with a beginner-friendly
+              UI so that everyone can use it easily. Check out
+              <a
+                target="_blank"
+                href="https://github.com/reisxd/revanced-builder/blob/main/README.md"
+                >GitHub Readme</a
+              >
+              for more information.
+            </p>
+            <p>
+              Found a Bug?
+              <a
+                target="_blank"
+                href="https://github.com/reisxd/revanced-builder/issues"
+                >Report here!</a
+              >
+            </p>
+            <h2>Contributors</h2>
+            <p>We are highly grateful to them!</p>
+            <a
+              target="_blank"
+              href="https://github.com/reisxd/revanced-builder/graphs/contributors"
+            >
+              <img
+                class="desktop"
+                src="https://contrib.rocks/image?repo=reisxd/revanced-builder"
+              />
+              <img
+                class="mobile"
+                src="https://contrib.rocks/image?repo=reisxd/revanced-builder&columns=5"
+              />
+            </a>
           </div>
         </div>
       </main>
       <footer>
-        <i
-          class="social-icon fa-brands fa-xl fa-github"
-          onclick="openGitHub();"
-        ></i>
-        <div style="margin-left: 10px"></div>
-        <i
-          class="social-icon fa-xl fa-solid fa-gear"
-          onclick="openSettings();"
-        ></i>
+        <a href="https://github.com/reisxd/revanced-builder" target="_blank"
+          ><i class="social-icon fa-brands fa-xl fa-github"></i
+        ></a>
+        <a href="/settings"
+          ><i class="social-icon fa-xl fa-solid fa-gear"></i
+        ></a>
         <span class="right"></span>
-        <button onclick="history.back()">Back</button>
+        <button onclick="location.href='/'">Home</button>
       </footer>
     </div>
-    <script>
-      // Generate list of contributors
-      const contributors = [
-        { username: 'reisxd', name: 'Reis' },
-        { username: 'shrihanDev' },
-        { username: 'Elijah629' },
-        { username: 'victor141516', name: 'Víctor Fernández' },
-        { username: 'xemulat' },
-        { username: 'viperML', name: 'Fernando Ayats' },
-        { username: 'SebiAi' },
-        { username: 'CnC-Robert', name: 'Robert' },
-        { username: 'Aunali321' },
-        { username: 'Katrovsky', name: 'Кирилл Катровский' },
-        { username: 'JavaCafe01', name: 'Gokul Swaminathan' },
-        { username: 'naserkesetovic', name: 'Naser Kešetović' },
-        { username: 'j4k0xb' },
-        { username: 'sakya', name: 'Paolo Iommarini' }
-      ];
-      for (const e of contributors)
-        document.getElementById(
-          'revanced-builder'
-        ).innerHTML += `<span class="member"><span class="member-image" style="background-image:url('https://github.com/${
-          e.username
-        }.png')"></span><span class="member-name"><a href="https://github.com/${
-          e.username
-        }">${e.name || e.username}</a></span></span>`;
-    </script>
   </body>
 </html>

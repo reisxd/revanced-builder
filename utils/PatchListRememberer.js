@@ -74,7 +74,7 @@ function writePatches(pkgName, patches) {
   if (!existsSync('includedPatchesList.json')) {
     createRemembererFile();
   }
-  
+
   const patchesList = JSON.parse(
     readFileSync('includedPatchesList.json', 'utf8')
   );

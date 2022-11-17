@@ -1,12 +1,12 @@
 version: '3'
 services:
-    revanced-builder:
-        container_name: revanced-builder
-        restart: unless-stopped
-        build:
-            context: ./
-            dockerfile: Dockerfile
-        volumes:
-            - ./revanced/:/app/revanced-builder/revanced/
-        ports:
-            - 8000:8000
+  revanced-builder:
+    container_name: revanced-builder
+    restart: unless-stopped
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - ./revanced/:/app/revanced-builder/revanced/
+    ports:
+      - 8000:8000
