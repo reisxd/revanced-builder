@@ -32,7 +32,7 @@ const defaultPatchesList = JSON.stringify(
         patches: []
       },
       {
-        name: 'app',
+        name: 'android.app',
         patches: []
       }
     ]

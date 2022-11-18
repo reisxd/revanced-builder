@@ -143,7 +143,7 @@ module.exports = async function getAppVersion(ws, message) {
         `${APKMIRROR_UPLOAD_BASE}ticktick-to-do-list-with-reminder-day-planner`
       );
       break;
-    case 'app':
+    case 'android.app':
       versionsList = await getPage(`${APKMIRROR_UPLOAD_BASE}twitch`);
       break;
   }
