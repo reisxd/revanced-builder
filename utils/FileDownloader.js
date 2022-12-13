@@ -56,7 +56,17 @@ async function getDownloadLink(json) {
     const releasePage = await releasesPage.text();
     const $ = load(releasePage);
 
-    for (const downloadLink of $('a[data-skip-pjax=""]').get())
+    json_.version = $('span[class="ml-1"]').first().text().replace(/\s/g, '');
+
+    const expandedAssets = await fetch(
+      `https://github.com/${json.owner}/${json.repo}/releases/expanded_assets/${json_.version}`
+    );
+
+    const assetsPageText = await expandedAssets.text()
+    const assetsPage = load(assetsPageText);
+
+
+    for (const downloadLink of assetsPage('a[rel="nofollow"]').get())
       if (
         !downloadLink.attribs.href.endsWith('.tar.gz') &&
         !downloadLink.attribs.href.endsWith('.zip')
@@ -65,7 +75,6 @@ async function getDownloadLink(json) {
           browser_download_url: `https://github.com${downloadLink.attribs.href}`
         });
 
-    json_.version = $('span[class="ml-1"]').first().text().replace(/\s/g, '');
     json_.assets = assets;
   }
 
@@ -154,7 +163,7 @@ async function downloadFiles(repos, websocket) {
 
   for (const repo of repos) {
     const downloadLink = await getDownloadLink(repo);
-
+console.log(downloadLink)
     await downloadFile(downloadLink);
   }
 }
