@@ -34,11 +34,6 @@ async function downloadApp(ws) {
         `https://www.apkmirror.com/apk/redditinc/reddit/reddit-${apkMirrorVersionArg}-release/`
       );
       break;
-    case 'warnapp':
-      versionDownload = await fetch(
-        `https://www.apkmirror.com/apk/deutscher-wetterdienst/warnwetter/warnwetter-${apkMirrorVersionArg}-release/`
-      );
-      break;
     case 'trill':
       versionDownload = await fetch(
         `https://www.apkmirror.com/apk/tiktok-pte-ltd/tik-tok/tik-tok-${apkMirrorVersionArg}-release/`

@@ -88,9 +88,6 @@ async function reinstallReVanced() {
     case 'frontpage':
       pkgNameToGetUninstalled = 'com.reddit.frontpage';
       break;
-    case 'warnapp':
-      pkgNameToGetUninstalled = 'de.dwd.warnapp';
-      break;
     case 'trill':
       pkgNameToGetUninstalled = 'com.ss.android.ugc.trill';
       break;
@@ -129,9 +126,6 @@ function outputName() {
       break;
     case 'android':
       part2 = 'Twitter';
-      break;
-    case 'warnapp':
-      part2 = 'WarnWetter';
       break;
     case 'trill':
       part2 = 'TikTok';

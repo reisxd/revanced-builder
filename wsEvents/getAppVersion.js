@@ -132,9 +132,6 @@ module.exports = async function getAppVersion(ws, message) {
     case 'frontpage':
       versionsList = await getPage(`${APKMIRROR_UPLOAD_BASE}reddit`);
       break;
-    case 'warnapp':
-      versionsList = await getPage(`${APKMIRROR_UPLOAD_BASE}warnwetter`);
-      break;
     case 'trill':
       versionsList = await getPage(`${APKMIRROR_UPLOAD_BASE}tik-tok`);
       break;

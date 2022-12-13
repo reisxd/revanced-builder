@@ -20,10 +20,6 @@ const defaultPatchesList = JSON.stringify(
         patches: []
       },
       {
-        name: 'warnapp',
-        patches: []
-      },
-      {
         name: 'trill',
         patches: []
       },
