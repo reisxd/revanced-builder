@@ -163,7 +163,7 @@ async function downloadFiles(repos, websocket) {
 
   for (const repo of repos) {
     const downloadLink = await getDownloadLink(repo);
-console.log(downloadLink)
+
     await downloadFile(downloadLink);
   }
 }
