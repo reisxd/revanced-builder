@@ -9,7 +9,8 @@ module.exports = async function selectAppVersion(message, ws) {
   let arch = message.arch;
 
   if (
-    (global.jarNames.selectedApp === 'youtube.music' &&
+    (global.jarNames.selectedApp.packageName ===
+      'com.google.android.apps.youtube.music' &&
       global.jarNames.devices[0]) ||
     process.platform === 'android'
   ) {

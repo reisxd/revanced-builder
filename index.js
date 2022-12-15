@@ -22,7 +22,8 @@ const {
   checkForUpdates,
   getDevices,
   setDevice,
-  installReVanced
+  installReVanced,
+  getApp
 } = require('./wsEvents/index.js');
 
 const app = Express();
@@ -158,6 +159,9 @@ wsServer.on('connection', (ws) => {
     switch (message.event) {
       case 'checkForUpdates':
         await checkForUpdates(ws);
+        break;
+      case 'getAppList':
+        await getApp(ws);
         break;
       case 'updateFiles':
         await updateFiles(ws);

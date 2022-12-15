@@ -19,60 +19,7 @@
         </header>
         <div id="content--wrapper">
           <div id="content">
-            <ul>
-              <li>
-                <input
-                  type="radio"
-                  name="app"
-                  id="app-1"
-                  value="youtube"
-                /><label for="app-1">YouTube</label>
-              </li>
-              <li>
-                <input
-                  type="radio"
-                  name="app"
-                  id="app-2"
-                  value="youtube.music"
-                /><label for="app-2">YouTube Music</label>
-              </li>
-              <li>
-                <input
-                  type="radio"
-                  name="app"
-                  id="app-3"
-                  value="android"
-                /><label for="app-3">Twitter</label>
-              </li>
-              <li>
-                <input
-                  type="radio"
-                  name="app"
-                  id="app-4"
-                  value="frontpage"
-                /><label for="app-4">Reddit</label>
-              </li>
-              <li>
-                <input type="radio" name="app" id="app-6" value="trill" /><label
-                  for="app-6"
-                  >TikTok</label
-                >
-              </li>
-              <li>
-                <input type="radio" name="app" id="app-7" value="task" /><label
-                  for="app-7"
-                  >TickTick</label
-                >
-              </li>
-              <li>
-                <input
-                  type="radio"
-                  name="app"
-                  id="app-8"
-                  value="android.app"
-                /><label for="app-8">Twitch</label>
-              </li>
-            </ul>
+            <ul id="appList"></ul>
           </div>
         </div>
       </main>
@@ -93,4 +40,7 @@
       </footer>
     </div>
   </body>
+  <script>
+    ws.onopen = () => sendCommand({ event: 'getAppList' });
+  </script>
 </html>

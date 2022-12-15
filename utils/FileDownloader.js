@@ -62,9 +62,8 @@ async function getDownloadLink(json) {
       `https://github.com/${json.owner}/${json.repo}/releases/expanded_assets/${json_.version}`
     );
 
-    const assetsPageText = await expandedAssets.text()
+    const assetsPageText = await expandedAssets.text();
     const assetsPage = load(assetsPageText);
-
 
     for (const downloadLink of assetsPage('a[rel="nofollow"]').get())
       if (

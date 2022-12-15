@@ -10,6 +10,7 @@ const checkForUpdates = require('./checkForUpdates.js');
 const getDevices = require('./getDevices.js');
 const setDevice = require('./setDevice.js');
 const installReVanced = require('./installReVanced.js');
+const getApp = require('./getApp.js');
 
 module.exports = {
   patchApp,
@@ -23,5 +24,6 @@ module.exports = {
   checkForUpdates,
   getDevices,
   setDevice,
-  installReVanced
+  installReVanced,
+  getApp
 };

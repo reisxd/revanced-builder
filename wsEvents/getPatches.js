@@ -20,12 +20,17 @@ module.exports = async function getPatches(ws) {
         hasRoot = false;
     });
 
-  const rememberedPatchList = getPatchList(global.jarNames.selectedApp);
+  const rememberedPatchList = getPatchList(
+    global.jarNames.selectedApp.packageName
+  );
 
   ws.send(
     JSON.stringify({
       event: 'patchList',
-      patchList: await parsePatch(global.jarNames.selectedApp, hasRoot),
+      patchList: await parsePatch(
+        global.jarNames.selectedApp.packageName,
+        hasRoot
+      ),
       rememberedPatchList
     })
   );

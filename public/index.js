@@ -27,10 +27,14 @@ function setApp() {
 
   sendCommand({
     event: 'selectApp',
-    selectedApp: appChecked.value
+    selectedApp: {
+      packageName: appChecked.value,
+      link: appChecked.attributes.link.value,
+      appName: appChecked.attributes.appName.value
+    }
   });
 
-  location.href = '/dependencies';
+  location.href = '/patches';
 }
 
 function loadPatches() {
@@ -494,6 +498,27 @@ ws.onmessage = (msg) => {
       if (confirmVer)
         return sendCommand({ event: 'getAppVersion', useVer: true });
       else return sendCommand({ event: 'getAppVersion' });
+    }
+
+    case 'appList': {
+      let id = 0;
+      for (const app of message.list) {
+        const appName = app.appName.replace(' (Wear OS)', '');
+        const link = app.link.replace('-wear-os', '');
+        document.getElementById('appList').innerHTML += `
+              <li>
+                <input
+                  type="radio"
+                  name="app"
+                  id="app-${id}"
+                  value="${app.appPackage}"
+                  link="${link}"
+                  appName="${appName}"
+                /><label for="app-${id}">${appName} (${app.appPackage})</label>
+              </li>`;
+
+        id++;
+      }
     }
   }
 };

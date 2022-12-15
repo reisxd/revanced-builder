@@ -54,7 +54,9 @@ async function downloadApp(ws, message) {
  * @param {import('ws').WebSocket} ws
  */
 module.exports = async function getAppVersion(ws, message) {
-  let versionsList;
+  let versionsList = await getPage(
+    `${APKMIRROR_UPLOAD_BASE}${global.jarNames.selectedApp.link.split('/')[3]}`
+  );
 
   if (global.jarNames.isRooted) {
     if (process.platform !== 'android') {
@@ -87,20 +89,16 @@ module.exports = async function getAppVersion(ws, message) {
       }
     }
 
-    /** @type {string} */
-    let pkgName;
+    const appVersion = await getAppVersion_(
+      global.jarNames.selectedApp.packageName,
+      ws,
+      true
+    );
 
-    switch (global.jarNames.selectedApp) {
-      case 'youtube':
-        pkgName = 'com.google.android.youtube';
-        break;
-      case 'youtube.music':
-        pkgName = 'com.google.android.apps.youtube.music';
-    }
-
-    const appVersion = await getAppVersion_(pkgName, ws, true);
-
-    if (global.jarNames.selectedApp === 'youtube.music') {
+    if (
+      global.jarNames.selectedApp.packageName ===
+      'com.google.android.apps.youtube.music'
+    ) {
       const arch = await getDeviceArch(ws);
 
       global.apkInfo = {
@@ -119,79 +117,49 @@ module.exports = async function getAppVersion(ws, message) {
     }
   }
 
-  switch (global.jarNames.selectedApp) {
-    case 'youtube':
-      versionsList = await getPage(`${APKMIRROR_UPLOAD_BASE}youtube`);
-      break;
-    case 'youtube.music':
-      versionsList = await getPage(`${APKMIRROR_UPLOAD_BASE}youtube-music`);
-      break;
-    case 'android':
-      versionsList = await getPage(`${APKMIRROR_UPLOAD_BASE}twitter`);
-      break;
-    case 'frontpage':
-      versionsList = await getPage(`${APKMIRROR_UPLOAD_BASE}reddit`);
-      break;
-    case 'trill':
-      versionsList = await getPage(`${APKMIRROR_UPLOAD_BASE}tik-tok`);
-      break;
-    case 'task':
-      versionsList = await getPage(
-        `${APKMIRROR_UPLOAD_BASE}ticktick-to-do-list-with-reminder-day-planner`
-      );
-      break;
-    case 'android.app':
-      versionsList = await getPage(`${APKMIRROR_UPLOAD_BASE}twitch`);
-      break;
-  }
-
   /** @type {{ version: string; recommended: boolean; beta: boolean }[]} */
   const versionList = [];
   const $ = load(versionsList);
+  const regex = new RegExp(
+    `(?<=${global.jarNames.selectedApp.link.split('/')[3]}-)(.*)(?=-release)`
+  );
 
   for (const version of $(
     '#primary h5.appRowTitle.wrapText.marginZero.block-on-mobile'
   ).get()) {
-    const versionName = version.attribs.title
-      .replace('YouTube ', '')
-      .replace('Music ', '')
-      .replace('Twitter ', '')
-      .replace('Reddit ', '')
-      .replace('WarnWetter ', '')
-      .replace('TikTok ', '')
-      .replace('TickTick:To-do list & Tasks ', '')
-      .replace('Twitch: Live Game Streaming ', '')
-      .replace('_', ' ');
+    const versionTitle = version.attribs.title.toLowerCase();
+    const versionName = version.children[0].next.attribs.href
+      .match(regex)[0]
+      .replace(/-/g, '.');
 
     if (
-      (global.jarNames.selectedApp === 'android' &&
-        !versionName.includes('release')) ||
-      versionName.includes('(Wear OS)') ||
-      versionName.includes('CAR_RELEASE')
+      (global.jarNames.selectedApp.packageName === 'com.twitter.android' &&
+        !versionTitle.includes('release')) ||
+      versionTitle.includes('(Wear OS)') ||
+      versionTitle.includes('-car_release')
     )
       continue;
 
-    const splitVersion = versionName.split(' ');
-
     versionList.push({
-      version: splitVersion[0], // remove beta suffix if there is one.
+      version: versionName,
       recommended:
         global.versions !== 'NOREC'
-          ? global.versions.includes(splitVersion[0])
+          ? global.versions.includes(versionName)
           : 'NOREC',
-      beta: !!splitVersion[1]
+      beta: versionTitle.includes('beta')
     });
   }
-
-  versionList.sort((a, b) =>
-    semver.lt(sanitizeVersion(a.version), sanitizeVersion(b.version)) ? 1 : -1
-  );
+  if (/^[0-9.]*$/g.test(versionList[0].version)) {
+    versionList.sort((a, b) =>
+      semver.lt(sanitizeVersion(a.version), sanitizeVersion(b.version)) ? 1 : -1
+    );
+  }
 
   ws.send(
     JSON.stringify({
       event: 'appVersions',
       versionList,
-      selectedApp: global.jarNames.selectedApp,
+      selectedApp: global.jarNames.selectedApp.packageName,
       foundDevice: global.jarNames.devices[0]
         ? true
         : process.platform === 'android'

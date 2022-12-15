@@ -8,7 +8,10 @@ module.exports = function checkFileAlreadyExists(ws) {
   ws.send(
     JSON.stringify({
       event: existsSync(
-        join(global.revancedDir, `${global.jarNames.selectedApp}.apk`)
+        join(
+          global.revancedDir,
+          `${global.jarNames.selectedApp.packageName}.apk`
+        )
       )
         ? 'fileExists'
         : 'fileDoesntExist',

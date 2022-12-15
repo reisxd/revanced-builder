@@ -31,7 +31,7 @@ module.exports = async function parsePatch(packageName, hasRoot) {
     let compatibleVersion;
 
     for (const pkg of patch.compatiblePackages)
-      if (pkg.name.endsWith(packageName)) {
+      if (pkg.name === packageName) {
         isCompatible = true;
 
         if (pkg.versions.length !== 0) {

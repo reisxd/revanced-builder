@@ -1,37 +1,8 @@
-const { existsSync, readFileSync, writeFileSync, rmSync } = require('node:fs');
+const { existsSync, readFileSync, writeFileSync } = require('node:fs');
 
 const defaultPatchesList = JSON.stringify(
   {
-    packages: [
-      {
-        name: 'youtube',
-        patches: []
-      },
-      {
-        name: 'youtube.music',
-        patches: []
-      },
-      {
-        name: 'android',
-        patches: []
-      },
-      {
-        name: 'frontpage',
-        patches: []
-      },
-      {
-        name: 'trill',
-        patches: []
-      },
-      {
-        name: 'task',
-        patches: []
-      },
-      {
-        name: 'android.app',
-        patches: []
-      }
-    ]
+    packages: []
   },
   null,
   2
@@ -55,7 +26,6 @@ function getPatchesList(pkgName) {
   );
 
   if (!package) {
-    rmSync('includedPatchesList.json');
     return [];
   } else {
     return package.patches;
@@ -63,10 +33,10 @@ function getPatchesList(pkgName) {
 }
 
 /**
- * @param {string} pkgName
+ * @param {string} packageName
  * @param {Record<string, any>} patches
  */
-function writePatches(pkgName, patches) {
+function writePatches({ packageName }, patches) {
   if (!existsSync('includedPatchesList.json')) {
     createRemembererFile();
   }
@@ -76,10 +46,15 @@ function writePatches(pkgName, patches) {
   );
 
   const index = patchesList.packages.findIndex(
-    (package) => package.name === pkgName
+    (package) => package.name === packageName
   );
 
-  patchesList.packages[index].patches = patches;
+  if (index === -1) {
+    patchesList.packages.push({
+      name: packageName,
+      patches
+    });
+  } else patchesList.packages[index].patches = patches;
 
   writeFileSync(
     'includedPatchesList.json',

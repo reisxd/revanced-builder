@@ -10,46 +10,13 @@ const { dloadFromURL } = require('./FileDownloader.js');
 async function downloadApp(ws) {
   const { version, arch } = global.apkInfo;
   const apkMirrorVersionArg = version.replace(/\./g, '-');
+  const link = global.jarNames.selectedApp.link;
 
-  let versionDownload;
-
-  switch (global.jarNames.selectedApp) {
-    case 'youtube':
-      versionDownload = await fetch(
-        `https://www.apkmirror.com/apk/google-inc/youtube/youtube-${apkMirrorVersionArg}-release/`
-      );
-      break;
-    case 'youtube.music':
-      versionDownload = await fetch(
-        `https://www.apkmirror.com/apk/google-inc/youtube-music/youtube-music-${apkMirrorVersionArg}-release/`
-      );
-      break;
-    case 'android':
-      versionDownload = await fetch(
-        `https://www.apkmirror.com/apk/twitter-inc/twitter/twitter-${apkMirrorVersionArg}-release/`
-      );
-      break;
-    case 'frontpage':
-      versionDownload = await fetch(
-        `https://www.apkmirror.com/apk/redditinc/reddit/reddit-${apkMirrorVersionArg}-release/`
-      );
-      break;
-    case 'trill':
-      versionDownload = await fetch(
-        `https://www.apkmirror.com/apk/tiktok-pte-ltd/tik-tok/tik-tok-${apkMirrorVersionArg}-release/`
-      );
-      break;
-    case 'task':
-      versionDownload = await fetch(
-        `https://www.apkmirror.com/apk/appest-inc/ticktick-to-do-list-with-reminder-day-planner/ticktick-to-do-list-with-reminder-day-planner-${apkMirrorVersionArg}-release/`
-      );
-      break;
-    case 'android.app':
-      versionDownload = await fetch(
-        `https://www.apkmirror.com/apk/twitch-interactive-inc/twitch/twitch-${apkMirrorVersionArg}-release/`
-      );
-      break;
-  }
+  let versionDownload = await fetch(
+    `https://www.apkmirror.com${link}${
+      link.split('/')[3]
+    }-${apkMirrorVersionArg}-release/`
+  );
 
   if (!versionDownload.ok) {
     ws.send(
@@ -67,7 +34,9 @@ async function downloadApp(ws) {
   const $ = load(versionDownloadList);
 
   const dlLink =
-    arch && global.jarNames.selectedApp === 'youtube.music'
+    arch &&
+    global.jarNames.selectedApp.packageName ===
+      'com.google.android.apps.youtube.music'
       ? $(`div:contains("${arch}")`)
           .parent()
           .children('div[class^="table-cell rowheight"]')
@@ -107,7 +76,10 @@ async function downloadApp(ws) {
 
   await dloadFromURL(
     `https://www.apkmirror.com${apkLink}`,
-    `${joinPath(global.revancedDir, global.jarNames.selectedApp)}.apk`,
+    `${joinPath(
+      global.revancedDir,
+      global.jarNames.selectedApp.packageName
+    )}.apk`,
     ws
   );
 
