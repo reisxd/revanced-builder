@@ -26,15 +26,7 @@ async function runCommand(command, deviceId) {
  * @param {string} deviceId
  */
 module.exports = async function mountReVancedInstaller(deviceId) {
-  let pkg;
-
-  switch (global.jarNames.selectedApp) {
-    case 'youtube':
-      pkg = 'com.google.android.youtube';
-      break;
-    case 'youtube.music':
-      pkg = 'com.google.android.apps.youtube.music';
-  }
+  let pkg = global.jarNames.selectedApp.packageName;
 
   // Copy ReVanced APK to temp.
   await exec(

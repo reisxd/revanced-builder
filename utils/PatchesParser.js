@@ -40,11 +40,11 @@ module.exports = async function parsePatch(packageName, hasRoot) {
           global.versions.push(compatibleVersion);
         }
       }
-    
+
     if (!isCompatible) {
-      if (patch.compatiblePackages.length !== 0) continue; 
+      if (patch.compatiblePackages.length !== 0) continue;
     }
-    
+
     if (isRooted && !hasRoot) continue;
 
     for (const dependencyName of patch.dependencies) {

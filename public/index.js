@@ -344,13 +344,13 @@ ws.onmessage = (msg) => {
         for (let i = 0; i < len; i++) {
           const version = message.versionList[i];
           const noRec = version.recommended == 'NOREC';
-
+          const recommended = version.recommended ? 1 : 0;
           versionsElement.innerHTML += `
             <li>
             <input type="radio" name="version" id="app-${i}" value="${
             version.version
           }" data-beta="${version.beta ? '1' : '0'}" ${
-            !noRec ? ('data-recommended=' + version.recommended ? 1 : 0) : ''
+            !noRec ? 'data-recommended="' + recommended + '"' : ''
           }/>
             <label for="app-${i}">${version.version} ${
             version.beta ? ' (beta)' : ''
@@ -359,7 +359,10 @@ ws.onmessage = (msg) => {
           }</label></li>`;
         }
 
-        if (message.selectedApp === 'youtube.music' && !message.foundDevice)
+        if (
+          message.selectedApp === 'com.google.android.apps.youtube.music' &&
+          !message.foundDevice
+        )
           document.getElementById('continue').onclick = () => {
             const version = document.querySelector(
               'input[name="version"]:checked'
