@@ -11,6 +11,7 @@ let isDownloading = false;
 let hasFinished = false;
 let arch;
 let versionChoosen;
+let uploadedApk = false;
 
 if (localStorage.getItem('black-theme')) {
   document.documentElement.classList.add('black');
@@ -98,8 +99,9 @@ function setPatches() {
     selectedPatches: selectedPatchList,
     excludedPatches: excludedPatchList
   });
-
-  location.href = '/versions';
+  if (uploadedApk) {
+    location.href = '/patch';
+  } else location.href = '/versions';
 }
 
 /**
@@ -248,6 +250,7 @@ ws.onmessage = (msg) => {
   switch (message.event) {
     case 'patchList':
       {
+        uploadedApk = message.uploadedApk;
         const len = message.patchList.length;
 
         const patchListElement = document.getElementById('patchList');
@@ -522,6 +525,12 @@ ws.onmessage = (msg) => {
 
         id++;
       }
+      break;
+    }
+
+    case 'apkUploaded': {
+      location.href = '/patches';
+      break;
     }
   }
 };

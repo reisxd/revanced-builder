@@ -2,8 +2,10 @@ const { createServer } = require('node:http');
 const { join } = require('node:path');
 
 const exec = require('./utils/promisifiedExec.js');
+const uploadAPKFile = require('./utils/uploadAPKFile.js');
 
 const Express = require('express');
+const fileUpload = require('express-fileupload');
 const { WebSocketServer } = require('ws');
 const open_ = require('open');
 const pf = require('portfinder');
@@ -30,12 +32,20 @@ const app = Express();
 const server = createServer(app);
 const wsServer = new WebSocketServer({ server });
 const wsClients = [];
+let currentWSClient;
 
+app.use(fileUpload());
 app.use(Express.static(join(__dirname, 'public')));
 app.get('/revanced.apk', (_, res) => {
   const file = join(process.cwd(), 'revanced', global.outputName);
 
   res.download(file);
+});
+
+app.post('/uploadApk', (req, res) => {
+  req.socket.setTimeout(10 * 60 * 1000);
+  req.setTimeout(10 * 60 * 1000);
+  uploadAPKFile(req, res, wsClients);
 });
 
 /**

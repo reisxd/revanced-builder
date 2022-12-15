@@ -31,7 +31,8 @@ module.exports = async function getPatches(ws) {
         global.jarNames.selectedApp.packageName,
         hasRoot
       ),
-      rememberedPatchList
+      rememberedPatchList,
+      uploadedApk: global.jarNames.selectedApp.uploaded
     })
   );
 };
