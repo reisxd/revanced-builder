@@ -1,6 +1,19 @@
 ws.onopen = () => sendCommand({ event: 'getAppList' });
 const apkField = document.getElementById('apkUpload');
+apkField.addEventListener('change', () => {
+  if (!apkField.value == '') {
+    postFile();
+    const info = document.createElement('div');
+    info.className = 'inf';
+    info.innerHTML = '<h2>Please wait...</h2>';
+    document.getElementById('content').appendChild(info);
+  }
+});
 function postFile() {
+  document.querySelector('ul').style.display = 'none';
+  document.querySelector('.upl').style.display = 'none';
+  document.querySelector('#search').style.display = 'none';
+  document.querySelector('h1').style.display = 'none';
   const stat = document.querySelector('.prog');
   stat.style.display = 'block';
   // stackoverflow
@@ -26,14 +39,14 @@ function postFile() {
   request.timeout = 60 * 10 * 1000;
   request.send(formdata);
 }
-apkField.addEventListener('change', () => {
-  if (!apkField.value == '') {
-    postFile();
-    document.querySelector('ul').style.display = 'none';
-    document.querySelector('.upl').style.display = 'none';
-    const info = document.createElement('div');
-    info.className = 'inf';
-    info.innerHTML = '<h2>Please wait...</h2>';
-    document.getElementById('content').appendChild(info);
-  }
-});
+function oldState(e) {
+  e.style.display = 'none';
+  document.querySelector('ul').style.display = 'block';
+  document.querySelector('h1').style.display = 'block';
+  document.querySelector('.prog').style.display = 'none';
+  document.querySelector('#search').style.display = null;
+  document.querySelector('.upl').style.display = 'inline-flex';
+  document.querySelector('.inf').remove();
+  document.getElementById('continue').setAttribute('onClick', 'setApp()');
+  document.getElementById('uploadForm').reset();
+}

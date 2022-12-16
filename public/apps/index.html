@@ -24,20 +24,13 @@
           <button class="upl highlighted" onclick="apkField.click()">
             <i class="gg-software-upload"></i>Upload APK
           </button>
-          <div>
-            <input
-              class="searchBox"
-              id="search"
-              type="text"
-              placeholder="Search for an app..."
-            />
-          </div>
-          <button
-            class="shw"
-            onclick="this.style.display = 'none'; document.querySelector('ul').style.display = 'block';document.querySelector('.prog').style.display = 'none';document.querySelector('.upl').style.display = 'inline-flex'; document.querySelector('.inf').remove();document.getElementById('continue').setAttribute('onClick', 'setApp()');"
-          >
-            Back
-          </button>
+          <button class="shw" onclick="oldState(this)">Back</button>
+          <input
+            class="searchBox"
+            id="search"
+            type="text"
+            placeholder="Search for an app..."
+          />
         </header>
         <div id="content--wrapper">
           <div id="content">
