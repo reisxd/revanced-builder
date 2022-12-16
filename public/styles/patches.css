@@ -1,7 +1,6 @@
 html.black
   input[type='checkbox'].select
   + label:not(input[type='checkbox'].select:checked + label),
-
 input[type='checkbox'] {
   display: none;
 }

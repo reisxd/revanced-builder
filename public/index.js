@@ -245,9 +245,7 @@ function installReVanced() {
 
 function addSearch(isPatches) {
   document.getElementById('search').addEventListener('keyup', () => {
-    const searchText = document
-      .getElementById('search')
-      .value.toLowerCase();
+    const searchText = document.getElementById('search').value.toLowerCase();
 
     Array.from(document.getElementsByTagName('li')).forEach(
       (x) => (x.style.display = 'none')
@@ -255,16 +253,14 @@ function addSearch(isPatches) {
 
     if (isPatches) {
       Array.from(document.getElementsByClassName('patchName'))
-      .filter((x) => x.innerText.toLowerCase().includes(searchText))
-      .forEach(
-        (x) => (x.parentNode.parentNode.parentNode.style.display = 'flex')
-      );
+        .filter((x) => x.innerText.toLowerCase().includes(searchText))
+        .forEach(
+          (x) => (x.parentNode.parentNode.parentNode.style.display = 'flex')
+        );
     } else {
       Array.from(document.getElementsByClassName('appName'))
-      .filter((x) => x.innerText.toLowerCase().includes(searchText))
-      .forEach(
-        (x) => (x.parentNode.style.display = 'flex')
-      );
+        .filter((x) => x.innerText.toLowerCase().includes(searchText))
+        .forEach((x) => (x.parentNode.style.display = 'flex'));
     }
   });
 }
@@ -303,7 +299,7 @@ ws.onmessage = (msg) => {
   </label>
 </li>`;
         }
-        
+
         addSearch(true);
 
         Array.from(document.getElementsByClassName('select'))

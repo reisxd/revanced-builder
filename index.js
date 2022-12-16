@@ -32,7 +32,6 @@ const app = Express();
 const server = createServer(app);
 const wsServer = new WebSocketServer({ server });
 const wsClients = [];
-let currentWSClient;
 
 app.use(fileUpload());
 app.use(Express.static(join(__dirname, 'public')));

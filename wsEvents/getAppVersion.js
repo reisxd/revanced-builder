@@ -150,7 +150,7 @@ module.exports = async function getAppVersion(ws, message) {
       beta: versionTitle.includes('beta')
     });
   }
-  if (versionList.every(el => /^[0-9.]*$/g.test(el.version))) {
+  if (versionList.every((el) => /^[0-9.]*$/g.test(el.version))) {
     versionList.sort((a, b) =>
       semver.lt(sanitizeVersion(a.version), sanitizeVersion(b.version)) ? 1 : -1
     );

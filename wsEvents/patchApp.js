@@ -34,9 +34,10 @@ async function afterBuild(ws) {
 
   if (!global.jarNames.isRooted && process.platform === 'android') {
     await exec(
-      `cp "${join(global.revancedDir, global.outputName)}" "/storage/emulated/0/${
+      `cp "${join(
+        global.revancedDir,
         global.outputName
-      }"`
+      )}" "/storage/emulated/0/${global.outputName}"`
     );
     await exec(`cp "${global.jarNames.microG}" /storage/emulated/0/microg.apk`);
 
