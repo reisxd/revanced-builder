@@ -16,30 +16,23 @@
       <main>
         <header>
           <h1>Select the app you want to patch</h1>
+          <h2 class="prog"></h2>
+          <form ref="uploadForm" id="uploadForm">
+            <input id="apkUpload" type="file" name="apk" accept=".apk" hidden />
+            <input type="submit" id="submitButton" hidden />
+          </form>
+          <button class="upl highlighted" onclick="apkField.click()">
+            <i class="gg-software-upload"></i>Upload APK
+          </button>
+          <button
+            class="shw"
+            onclick="this.style.display = 'none'; document.querySelector('ul').style.display = 'block';document.querySelector('.prog').style.display = 'none';document.querySelector('.upl').style.display = 'inline-flex'; document.querySelector('.inf').remove();document.getElementById('continue').setAttribute('onClick', 'setApp()');"
+          >
+            Back
+          </button>
         </header>
         <div id="content--wrapper">
           <div id="content">
-            <form ref="uploadForm" id="uploadForm">
-              <input
-                id="apkUpload"
-                type="file"
-                name="apk"
-                accept=".apk"
-                hidden
-              />
-              <input type="submit" id="submitButton" hidden />
-            </form>
-            <button class="upl highlighted" onclick="apkField.click()">
-              Upload APK
-            </button>
-            <button
-              class="shw"
-              style="display: none"
-              onclick="this.style.display = 'none'; document.querySelector('ul').style.display = 'block';
-            document.querySelector('.upl').style.display = 'block'; document.querySelector('.inf').remove();document.querySelector('.stat').remove();document.getElementById('continue').setAttribute('onClick', 'setApp()');"
-            >
-              Back
-            </button>
             <ul id="appList"></ul>
           </div>
         </div>

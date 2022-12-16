@@ -2,6 +2,10 @@
   box-shadow: none !important;
 }
 
+div#content {
+  height: 100%;
+}
+
 #content {
   text-align: center;
   display: flex;
