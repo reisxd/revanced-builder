@@ -23,7 +23,7 @@ function postFile() {
   });
 
   request.open('post', '/uploadApk');
-  request.timeout = 45000;
+  request.timeout = 60 * 10 * 1000;
   request.send(formdata);
 }
 apkField.addEventListener('change', () => {
