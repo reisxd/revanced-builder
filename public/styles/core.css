@@ -245,3 +245,19 @@ i.social-icon::before {
 .log * {
   user-select: text;
 }
+
+html.black .searchBox {
+  background-color: black !important;
+}
+
+.searchBox {
+  width: 100%;
+  color: var(--textColor);
+  border-radius: var(--border-radius);
+  padding: 12px;
+  background-color: var(--interactableColor);
+  border: 2px solid #dddddd2e;
+  font-size: 14px;
+  margin-top: 5px;
+  user-select: auto;
+}

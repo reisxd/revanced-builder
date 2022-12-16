@@ -243,6 +243,32 @@ function installReVanced() {
   sendCommand({ event: 'installReVanced' });
 }
 
+function addSearch(isPatches) {
+  document.getElementById('search').addEventListener('keyup', () => {
+    const searchText = document
+      .getElementById('search')
+      .value.toLowerCase();
+
+    Array.from(document.getElementsByTagName('li')).forEach(
+      (x) => (x.style.display = 'none')
+    );
+
+    if (isPatches) {
+      Array.from(document.getElementsByClassName('patchName'))
+      .filter((x) => x.innerText.toLowerCase().includes(searchText))
+      .forEach(
+        (x) => (x.parentNode.parentNode.parentNode.style.display = 'flex')
+      );
+    } else {
+      Array.from(document.getElementsByClassName('appName'))
+      .filter((x) => x.innerText.toLowerCase().includes(searchText))
+      .forEach(
+        (x) => (x.parentNode.style.display = 'flex')
+      );
+    }
+  });
+}
+
 ws.onmessage = (msg) => {
   /** @type {Record<string, any>} */
   const message = JSON.parse(msg.data);
@@ -277,21 +303,8 @@ ws.onmessage = (msg) => {
   </label>
 </li>`;
         }
-        document.getElementById('search').addEventListener('keyup', () => {
-          const searchText = document
-            .getElementById('search')
-            .value.toLowerCase();
-
-          Array.from(document.getElementsByTagName('li')).forEach(
-            (x) => (x.style.display = 'none')
-          );
-
-          Array.from(document.getElementsByClassName('patchName'))
-            .filter((x) => x.innerText.toLowerCase().includes(searchText))
-            .forEach(
-              (x) => (x.parentNode.parentNode.parentNode.style.display = 'flex')
-            );
-        });
+        
+        addSearch(true);
 
         Array.from(document.getElementsByClassName('select'))
           .filter((patch) =>
@@ -520,11 +533,13 @@ ws.onmessage = (msg) => {
                   value="${app.appPackage}"
                   link="${link}"
                   appName="${appName}"
-                /><label for="app-${id}">${appName} (${app.appPackage})</label>
+                /><label class="appName" for="app-${id}">${appName} (${app.appPackage})</label>
               </li>`;
 
         id++;
       }
+
+      addSearch(false);
       break;
     }
 

@@ -1,9 +1,6 @@
 html.black
   input[type='checkbox'].select
   + label:not(input[type='checkbox'].select:checked + label),
-html.black .searchBox {
-  background-color: black !important;
-}
 
 input[type='checkbox'] {
   display: none;
@@ -49,18 +46,6 @@ ul {
 li {
   display: flex;
   margin-bottom: 15px;
-}
-
-.searchBox {
-  width: 100%;
-  color: var(--textColor);
-  border-radius: var(--border-radius);
-  padding: 12px;
-  background-color: var(--interactableColor);
-  border: 2px solid #dddddd2e;
-  font-size: 14px;
-  margin-top: 5px;
-  user-select: auto;
 }
 
 .no-root {
