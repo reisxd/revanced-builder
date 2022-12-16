@@ -120,8 +120,9 @@ module.exports = async function getAppVersion(ws, message) {
   /** @type {{ version: string; recommended: boolean; beta: boolean }[]} */
   const versionList = [];
   const $ = load(versionsList);
+  const link = global.jarNames.selectedApp.link;
   const regex = new RegExp(
-    `(?<=${global.jarNames.selectedApp.link.split('/')[3]}-)(.*)(?=-release)`
+    `(?<=${link}${link.split('/')[3]}-)(.*)(?=-release/)`
   );
 
   for (const version of $(
@@ -149,7 +150,7 @@ module.exports = async function getAppVersion(ws, message) {
       beta: versionTitle.includes('beta')
     });
   }
-  if (/^[0-9.]*$/g.test(versionList[0].version)) {
+  if (versionList.every(el => /^[0-9.]*$/g.test(el.version))) {
     versionList.sort((a, b) =>
       semver.lt(sanitizeVersion(a.version), sanitizeVersion(b.version)) ? 1 : -1
     );
