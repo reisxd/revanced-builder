@@ -1,9 +1,8 @@
 ws.onopen = () => sendCommand({ event: 'getAppList' });
 const apkField = document.getElementById('apkUpload');
 function postFile() {
-  const stat = document.createElement('h2');
-  stat.className = 'stat';
-  document.querySelector('header').appendChild(stat);
+  const stat = document.querySelector('.prog');
+  stat.style.display = 'block';
   // stackoverflow
   let formdata = new FormData();
 
@@ -15,7 +14,7 @@ function postFile() {
 
     if (e.loaded <= file1Size) {
       let percent = Math.round((e.loaded / file1Size) * 100);
-      stat.innerHTML = `${percent + '%'} Uploading APK. Please wait.`;
+      stat.innerHTML = `${percent + '%'} Uploading APK...`;
     }
 
     if (e.loaded == e.total) {

@@ -531,7 +531,7 @@ ws.onmessage = (msg) => {
     case 'apkUploaded': {
       document.querySelector(
         '.inf'
-      ).innerHTML = `<h2>${message.package}</h2><span>v${message.versionName}</span>`;
+      ).innerHTML = `<div><img src="${message.icon}"/><h2>${message.appName}</h2></div><p>${message.package}<br>v${message.versionName}</p>`;
       document.querySelector('.shw').style.display = 'block';
       document
         .getElementById('continue')

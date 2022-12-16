@@ -19,6 +19,8 @@ function uploadAPKFile(req, res, ws) {
     const resp = await app.parse();
     const { package } = resp;
     const { versionName } = resp;
+    const appName = resp.application.label[0];
+    const { icon } = resp;
 
     await renameSync('./revanced/temp.apk', `./revanced/${package}.apk`);
 
@@ -32,7 +34,9 @@ function uploadAPKFile(req, res, ws) {
         JSON.stringify({
           event: 'apkUploaded',
           package,
-          versionName
+          versionName,
+          appName,
+          icon
         })
       );
     }
