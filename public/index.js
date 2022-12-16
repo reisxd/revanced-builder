@@ -529,7 +529,13 @@ ws.onmessage = (msg) => {
     }
 
     case 'apkUploaded': {
-      location.href = '/patches';
+      document.querySelector(
+        '.inf'
+      ).innerHTML = `<h2>${message.package}</h2><span>v${message.versionName}</span>`;
+      document.querySelector('.shw').style.display = 'block';
+      document
+        .getElementById('continue')
+        .setAttribute('onClick', "location.href = '/patches'");
       break;
     }
   }
