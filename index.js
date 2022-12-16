@@ -43,8 +43,8 @@ app.get('/revanced.apk', (_, res) => {
 });
 
 app.post('/uploadApk', (req, res) => {
-  req.socket.setTimeout(10 * 60 * 1000);
-  req.setTimeout(10 * 60 * 1000);
+  req.socket.setTimeout(60000 * 60);
+  req.setTimeout(60000 * 60);
   uploadAPKFile(req, res, wsClients);
 });
 

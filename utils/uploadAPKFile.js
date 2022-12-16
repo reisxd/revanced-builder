@@ -17,10 +17,8 @@ function uploadAPKFile(req, res, ws) {
 
     const app = new AppInfoParser('./revanced/temp.apk');
     const resp = await app.parse();
-    const { package } = resp;
-    const { versionName } = resp;
+    const { package, versionName, icon } = resp;
     const appName = resp.application.label[0];
-    const { icon } = resp;
 
     await renameSync('./revanced/temp.apk', `./revanced/${package}.apk`);
 
