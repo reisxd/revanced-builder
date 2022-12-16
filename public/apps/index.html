@@ -19,16 +19,28 @@
         </header>
         <div id="content--wrapper">
           <div id="content">
-            <body>
-              <form ref='uploadForm' 
-                id='uploadForm' 
-                action='/uploadApk' 
-                method='post' 
-                encType="multipart/form-data">
-                <input id="apkUpload" type="file" name="apk" accept=".apk" hidden>
-                <input type='submit' id="submitButton" hidden/>
-              </form>     
-            <button onclick="document.getElementById('apkUpload').click()" class="highlighted">Upload APK</button>
+            <form ref="uploadForm" id="uploadForm">
+              <input
+                id="apkUpload"
+                type="file"
+                name="apk"
+                accept=".apk"
+                hidden
+              />
+              <input type="submit" id="submitButton" hidden />
+            </form>
+            <button class="upl" onclick="apkField.click()" class="highlighted">
+              Upload APK
+            </button>
+            <button
+              class="shw"
+              style="display: none"
+              onclick="this.style.display = 'none'; document.querySelector('ul').style.display = 'block';
+            document.querySelector('.upl').style.display = 'block'; document.querySelector('.inf').remove();document.querySelector('.stat').remove();document.getElementById('continue').setAttribute('onClick', 'setApp()');"
+              class="highlighted"
+            >
+              Back
+            </button>
             <ul id="appList"></ul>
           </div>
         </div>
@@ -50,12 +62,5 @@
       </footer>
     </div>
   </body>
-  <script>
-    ws.onopen = () => sendCommand({ event: 'getAppList' });
-   
-   document.getElementById('apkUpload').addEventListener('change', () => {
-    document.getElementById('submitButton').click();
-    document.getElementsByTagName('header')[0].innerHTML += `<h2>Uploading APK. Please wait.</h2>`
-   });
-  </script>
+  <script src="../apps.js"></script>
 </html>
