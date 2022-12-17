@@ -1,3 +1,5 @@
+/* global ws, sendCommand */
+
 ws.onopen = () => sendCommand({ event: 'getAppList' });
 const apkField = document.getElementById('apkUpload');
 apkField.addEventListener('change', () => {
@@ -39,6 +41,8 @@ function postFile() {
   request.timeout = 60 * 10 * 1000;
   request.send(formdata);
 }
+
+// eslint-disable-next-line no-unused-vars
 function oldState(e) {
   e.style.display = 'none';
   document.querySelector('ul').style.display = 'block';

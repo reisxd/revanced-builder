@@ -20,7 +20,7 @@ For developers, see [this](https://github.com/reisxd/revanced-builder/blob/main/
 
 ## How to use (Docker)
 
-Required [docker](https://docs.docker.com/get-docker/) and [docker-compose (for *nix cli)](https://docs.docker.com/compose/install/linux/) must be installed
+Required [docker](https://docs.docker.com/get-docker/) and [docker-compose (for \*nix cli)](https://docs.docker.com/compose/install/linux/) must be installed
 
 **Note:** If you're using Docker Desktop, `docker-compose` will be pre-installed.
 
