@@ -60,7 +60,7 @@ module.exports = async function getAppVersion(ws, message) {
 
   if (global.jarNames.isRooted) {
     if (process.platform !== 'android') {
-      if (!global.jarNames.devices[0]) {
+      if (!(global.jarNames.devices && global.jarNames.devices[0])) {
         ws.send(
           JSON.stringify({
             event: 'error',
@@ -161,9 +161,10 @@ module.exports = async function getAppVersion(ws, message) {
       event: 'appVersions',
       versionList,
       selectedApp: global.jarNames.selectedApp.packageName,
-      foundDevice: global.jarNames.devices[0]
-        ? true
-        : process.platform === 'android'
+      foundDevice:
+        global.jarNames.devices && global.jarNames.devices[0]
+          ? true
+          : process.platform === 'android'
     })
   );
 };

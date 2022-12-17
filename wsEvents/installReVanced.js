@@ -7,7 +7,11 @@ const { getDownloadLink } = require('../utils/FileDownloader.js');
 const mountReVancedInstaller = require('../utils/mountReVancedInstaller.js');
 
 module.exports = async function installReVanced(ws) {
-  if (!global.jarNames.isRooted && global.jarNames.devices[0]) {
+  if (
+    !global.jarNames.isRooted &&
+    global.jarNames.devices &&
+    global.jarNames.devices[0]
+  ) {
     for (const deviceId of global.jarNames.devices) {
       ws.send(
         JSON.stringify({
@@ -40,7 +44,11 @@ module.exports = async function installReVanced(ws) {
         throw e;
       }
     }
-  } else if (global.jarNames.isRooted && global.jarNames.devices[0]) {
+  } else if (
+    global.jarNames.isRooted &&
+    global.jarNames.devices &&
+    global.jarNames.devices[0]
+  ) {
     for (const deviceId of global.jarNames.devices) {
       ws.send(
         JSON.stringify({
@@ -72,6 +80,7 @@ module.exports = async function installReVanced(ws) {
 
   if (
     !global.jarNames.isRooted &&
+    global.jarNames.devices &&
     global.jarNames.devices[0] &&
     (global.jarNames.selectedApp.packageName === 'com.google.android.youtube' ||
       global.jarNames.selectedApp.packageName ===
