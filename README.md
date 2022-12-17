@@ -20,58 +20,57 @@ For developers, see [this](https://github.com/reisxd/revanced-builder/blob/main/
 
 ## How to use (Docker)
 
-Required [docker](https://docs.docker.com/get-docker/) and [docker-compose(for linux cli)](https://docs.docker.com/compose/install/linux/) must be installed
+Required [docker](https://docs.docker.com/get-docker/) and [docker-compose (for *nix cli)](https://docs.docker.com/compose/install/linux/) must be installed
 
-**Note: If using docker desktop docker-compose will be pre-installed**
+**Note:** If you're using Docker Desktop, `docker-compose` will be pre-installed.
 
-Clone the repository and cd into the directory `revanced-builder`
+Clone the repository and `cd` into the directory `revanced-builder`
 
-Build using docker-compose
+### Build using `docker-compose`
 
-```
+```bash
 docker-compose build --no-cache
 ```
 
-this is to build the docker image ( `--no-cache` is used to build the image from scratch otherwise without this creates version conflicts)
-after building
+This builds the Docker image (`--no-cache` is used to build the image from scratch; sometimes the cache might cause version conflicts).
 
-```
+After building, launch the container (runs at `localhost:8000`):
+
+```bash
 docker-compose up -d
 ```
 
-this will make your container up and running on `http://localhost:8000`
+To stop the container:
 
-To stop your container
-
-```
+```bash
 docker-compose down
 ```
 
 **Note: docker-compose uses docker-compose.yml so make sure you are in the same directory `revanced-builder`**
 
-To update to newer version of builder, stop existing container if running and build the image again and start the container again
+To update to a newer version, stop the existing container if it is running, build the image and start it again.
 
-Build using docker only
+### Build using only `docker`
 
-```
+```bash
 docker build . -t <name_of_the_image> --no-cache
 ```
 
-this will create a docker image
+Run the newly built container:
 
-```
+```bash
 docker run -d --name <name_of_container> -p 8000:8000 --restart unless-stopped -v ./revanced/:/app/revanced-builder/revanced/ <name_of_the_image>
 ```
 
-this will make container up and running on `http://localhost:8000`
+This launches the container on `http://localhost:8000`
 
-to stop the container
+To stop the container:
 
-```
+```bash
 docker rm <name_of_container> -f
 docker rmi <name_of_the_image> -f
 ```
 
-To update to newer version of builder, stop existing container if running and build the image again and start the container again
+To update to a newer version of Builder, stop the existing container if it is running, build the container start it again.
 
-In both the build a persistent storage is kept so all the build are stored in `revanced-builder/revanced/`
+In both the builds, a persistent storage is kept. All the builds are stored in `<path/to>/revanced-builder/revanced/`.
