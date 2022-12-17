@@ -172,7 +172,7 @@ module.exports = async function patchApp(ws) {
 
   args.push(...global.jarNames.patches.split(' '));
 
-  const buildProcess = spawn('java', args);
+  const buildProcess = spawn(global.javaCmd, args);
 
   buildProcess.stdout.on('data', async (data) => {
     ws.send(
