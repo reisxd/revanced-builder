@@ -6,6 +6,7 @@ const checkJDKAndAapt2 = require('../utils/checkJDKAndAapt2.js');
 const checkJDkAndADB = require('../utils/checkJDKAndADB.js');
 
 global.revancedDir = joinPath(process.cwd(), 'revanced');
+global.javaCmd = 'java';
 global.jarNames = {
   cli: '',
   patchesJar: global.revancedDir,
