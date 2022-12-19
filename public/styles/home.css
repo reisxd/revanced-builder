@@ -14,17 +14,14 @@ main {
 
 #content--wrapper {
   box-shadow: none !important;
-}
-
-div#content {
-  height: 100%;
+  text-align: center;
+  display: flex;
+  justify-content: center;
 }
 
 #content {
-  text-align: center;
   display: flex;
   align-items: center;
-  justify-content: center;
   flex-direction: column;
 }
 
