@@ -53,7 +53,7 @@ main {
   align-items: center;
 }
 svg {
-  min-height: 120px;
+  min-height: 160px;
   max-height: 250px;
   margin-bottom: 17px;
 }
