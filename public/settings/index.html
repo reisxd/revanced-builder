@@ -16,15 +16,16 @@
     <div id="container">
       <main>
         <header>
-          <h1>Settings</h1>
+          <h1><i aria-hidden="true" class="fa-solid fa-gear"></i>Settings</h1>
         </header>
         <div id="content--wrapper">
           <div id="content">
             <div class="option">
-              <div class="opt">
-                <i class="social-icon fa-xl fa-solid fa-palette"></i>
-                <h3>Accent Color:</h3>
-              </div>
+              <h3><i class="fa-solid fa-brush"></i>Accent Color</h3>
+              <p>
+                Customize the Accent color of the builder. Use the palette
+                option to use a custom color.
+              </p>
               <div id="themecolor-picker">
                 <span
                   style="background: #4873b3 none repeat scroll 0% 0%"
@@ -52,7 +53,27 @@
             </div>
 
             <div class="option">
-              <h3>Automatically proceed to next page</h3>
+              <h3>
+                <i class="fa-solid fa-circle-half-stroke"></i>Pure Black Theme
+              </h3>
+              <p>
+                The pure black theme uses a black background and helps reduce
+                battery usage on AMOLED devices or maybe you can just turn it on
+                when the dark theme is not enough.
+              </p>
+              <label class="switch"
+                ><input
+                  class="check"
+                  id="blackBtn"
+                  type="checkbox"
+                  autocomplete="off" /><span class="slider"></span
+              ></label>
+            </div>
+            <div class="option">
+              <h3>
+                <i class="fa-solid fa-circle-chevron-right"></i>Automatically
+                proceed to next page
+              </h3>
 
               <p>
                 This helps save time by proceeding automatically to the next
@@ -63,21 +84,6 @@
                 ><input
                   class="check"
                   id="autoBtn"
-                  type="checkbox"
-                  autocomplete="off" /><span class="slider"></span
-              ></label>
-            </div>
-            <div class="option">
-              <h3>Pure Black Theme</h3>
-              <p>
-                The pure black theme uses a black background and helps reduce
-                battery usage on AMOLED devices or maybe you can just turn it on
-                when the dark theme is not enough.
-              </p>
-              <label class="switch"
-                ><input
-                  class="check"
-                  id="blackBtn"
                   type="checkbox"
                   autocomplete="off" /><span class="slider"></span
               ></label>

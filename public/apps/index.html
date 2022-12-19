@@ -15,14 +15,16 @@
     <div id="container">
       <main>
         <header>
-          <h1>Select the app you want to patch</h1>
+          <h1>
+            <i class="fa-solid fa-square-check"></i>Select the app to patch
+          </h1>
           <h2 class="prog"></h2>
           <form ref="uploadForm" id="uploadForm">
             <input id="apkUpload" type="file" name="apk" accept=".apk" hidden />
             <input type="submit" id="submitButton" hidden />
           </form>
           <button class="upl highlighted" onclick="apkField.click()">
-            <i class="gg-software-upload"></i>Upload APK
+            <i class="fa-solid fa-upload"></i>Upload APK
           </button>
           <button class="shw" onclick="oldState(this)">Back</button>
           <input

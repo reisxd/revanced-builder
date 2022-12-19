@@ -147,7 +147,7 @@ function setAppVersion(arch, version) {
     });
 
     document.getElementsByTagName('header')[0].innerHTML =
-      '<h1>Downloading APK...</h1>';
+      '<h1><i class="fa-solid fa-download"></i>Downloading APK</h1>';
     document.getElementById('content').innerHTML = '<span class="log"></span>';
     document.getElementsByTagName('main')[0].innerHTML +=
       '<progress value="0"></progress>';
@@ -164,7 +164,7 @@ function setAppVersion(arch, version) {
  */
 function getAppVersions(isRooted) {
   document.getElementsByTagName('header')[0].innerHTML = `
-    <h1>Select the version you want to download</h1>
+    <h1><i class="fa-solid fa-file-arrow-down"></i>Select the version you want to download</h1>
     <span>Versions marked as beta might have bugs or can be unstable, unless marked as recommended<span>
     ${
       isRooted
@@ -381,7 +381,7 @@ ws.onmessage = (msg) => {
             ).value;
 
             document.getElementsByTagName('header')[0].innerHTML = `
-          <h1>Please select the architecture</h1>
+          <h1><i class="fa-solid fa-rectangle-list"></i>Please select the architecture</h1>
           <span>YouTube Music APKs only have specific architecture APKs.
           <br>If you don't know which one to choose, either look at your devices architecture using CPU-Z or select Arm64.</span>`;
             document.getElementById('versions').innerHTML = `
@@ -424,7 +424,7 @@ ws.onmessage = (msg) => {
       {
         // TODO: on a root install, if the file already exists and the user selects yes it skips checking if a device is plugged in
         document.getElementsByTagName('header')[0].innerHTML = `
-            <h1>Use already downloaded APK?</h1>
+            <h1><i class="fa-solid fa-file-arrow-down"></i>Use already downloaded APK?</h1>
             <span>The APK already exists in the revanced folder.${
               message.isRooted ? ' ' : '<br>'
             }Do you want to use it?${
@@ -451,7 +451,7 @@ ws.onmessage = (msg) => {
       {
         if (message.install) location.href = '/installer';
         document.getElementsByTagName('header')[0].innerHTML =
-          '<h1>Finished.</h1>';
+          '<h1><i class="fa-solid fa-square-check"></i>Finished</h1>';
 
         const firstFooterElement = document.getElementsByTagName('footer')[0];
 

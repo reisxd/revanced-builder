@@ -23,8 +23,75 @@
   content: '';
 }
 
-.fa-palette:before {
-  content: '\f53f';
+.fa-brush:before {
+  content: '\f55d';
+}
+
+.fa-arrow-right:before {
+  content: '\f061';
+}
+
+.fa-circle-half-stroke:before {
+  content: '\f042';
+}
+
+.fa-upload:before {
+  content: '\f093';
+}
+
+.fa-circle-chevron-right:before {
+  content: '\f138';
+}
+
+.fa-download:before {
+  content: '\f019';
+}
+
+.fa-square-check:before {
+  content: '\f14a';
+}
+
+.fa-rectangle-list:before {
+  content: '\f022';
+}
+
+.fa-file-arrow-down:before {
+  content: '\f56d';
+}
+
+.fa-terminal:before {
+  content: '\f120';
+}
+
+.fa-spinner:before {
+  content: '\f110';
+}
+
+.fa-spin {
+  animation-name: spin;
+  animation-duration: 1500ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.fa-right-from-bracket:before {
+  content: '\f2f5';
+}
+
+.fa-circle-exclamation:before {
+  content: '\f06a';
+}
+
+.fa-tablet-screen-button:before {
+  content: '\f3fa';
 }
 
 .fa-gear:before {
