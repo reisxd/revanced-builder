@@ -1,14 +1,13 @@
-.opt {
-  display: flex;
-  align-items: center;
+h3 {
+  font-size: 1.22em;
 }
-
-.opt i,
-.opt i:hover {
-  box-shadow: 0 0;
-  cursor: default;
+h3 i {
+  margin-right: 8px;
+  vertical-align: revert;
 }
-
+p {
+  margin-top: 10px;
+}
 .option {
   padding: 20px 8px 20px 8px;
   border-bottom: 2px solid var(--interactableColor);
@@ -23,7 +22,7 @@
   display: flex;
   flex-wrap: wrap;
   padding: 0;
-  margin-left: 4px;
+  margin-left: -4px;
 }
 
 #themecolor-picker span {

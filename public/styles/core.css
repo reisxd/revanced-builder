@@ -68,6 +68,11 @@ h6 {
   margin: 0;
 }
 
+h1 i {
+  vertical-align: revert;
+  margin-right: 8px;
+}
+
 /* Make BODY and HTML elements inherit :root properies */
 
 body,
