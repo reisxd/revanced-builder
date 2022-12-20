@@ -1,3 +1,19 @@
+body {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+main {
+  padding: 20px;
+  text-align: center;
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+}
+
 #go {
   font-size: 15px;
   display: inline-flex;
@@ -6,23 +22,6 @@
 
 #go i {
   margin-left: 8px;
-}
-
-main {
-  padding: 0 !important;
-}
-
-#content--wrapper {
-  box-shadow: none !important;
-  text-align: center;
-  display: flex;
-  justify-content: center;
-}
-
-#content {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
 }
 
 .social-icon {
@@ -57,9 +56,11 @@ svg {
   max-height: 250px;
   margin-bottom: 17px;
 }
+
 h1 span {
   font-weight: bold;
 }
+
 h1 .accent-fun {
   color: var(--accentColor);
   filter: brightness(160%);
