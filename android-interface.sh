@@ -27,8 +27,8 @@ Commands:
                                preserving keystore file.
     --delete-cache-after
     --dca                      Deletes revanced/ after running builder.
-    --delete-cache-no-keystore-after
-    --dcnka                    Deletes revanced/ after running builder, but
+    --delete-cache-after-no-keystore
+    --dcank                    Deletes revanced/ after running builder, but
                                preserving keystore file.
 
   reinstall                    Delete everything and start from scratch.
@@ -129,7 +129,7 @@ run_builder() {
   if [[ $1 == "--delete-cache-after" || $1 == "--dca" ]]; then
     delete_cache
   fi
-  if [[ $1 == "--delete-cache-no-keystore-after" || $1 == "--dcnka" ]]; then
+  if [[ $1 == "--delete-cache-after-no-keystore" || $1 == "--dcank" ]]; then
     delete_cache_no_keystore
   fi
 }
