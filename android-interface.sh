@@ -25,6 +25,11 @@ Commands:
     --delete-cache-no-keystore
     --dcnk                     Deletes revanced/ before running builder, but
                                preserving keystore file.
+    --delete-cache-after
+    --dca                      Deletes revanced/ after running builder.
+    --delete-cache-after-no-keystore
+    --dcank                    Deletes revanced/ after running builder, but
+                               preserving keystore file.
 
   reinstall                    Delete everything and start from scratch.
     --delete-keystore          Delete the signature file also. This will
@@ -114,19 +119,33 @@ run_builder() {
   preflight
   echo
   if [[ $1 == "--delete-cache" || $1 == "--dc" ]]; then
-    # Is this even called a cache?
-    log "Deleting builder cache..."
-    rm -rf $RVB_DIR/revanced
+    delete_cache
   fi
   if [[ $1 == "--delete-cache-no-keystore" || $1 == "--dcnk" ]]; then
-    log "Deleting builder cache preserving keystore..."
-    mv $RVB_DIR/revanced/revanced.keystore $HOME/revanced.keystore
-    rm -rf $RVB_DIR/revanced
-    mkdir -p $RVB_DIR/revanced
-    mv $HOME/revanced.keystore $RVB_DIR/revanced/revanced.keystore
+    delete_cache_no_keystore
   fi
   cd $RVB_DIR
   node .
+  if [[ $1 == "--delete-cache-after" || $1 == "--dca" ]]; then
+    delete_cache
+  fi
+  if [[ $1 == "--delete-cache-after-no-keystore" || $1 == "--dcank" ]]; then
+    delete_cache_no_keystore
+  fi
+}
+
+delete_cache() {
+  # Is this even called a cache?
+  log "Deleting builder cache..."
+  rm -rf $RVB_DIR/revanced
+}
+
+delete_cache_no_keystore() {
+  log "Deleting builder cache preserving keystore..."
+  mv $RVB_DIR/revanced/revanced.keystore $HOME/revanced.keystore
+  rm -rf $RVB_DIR/revanced
+  mkdir -p $RVB_DIR/revanced
+  mv $HOME/revanced.keystore $RVB_DIR/revanced/revanced.keystore
 }
 
 reinstall_builder() {
