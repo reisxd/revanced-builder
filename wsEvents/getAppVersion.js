@@ -54,7 +54,7 @@ async function installRecommendedStock(ws, dId) {
       JSON.stringify({
         event: 'error',
         error: `An error occured while trying to install the stock app${
-          dId ? `for device ID ${dId}` : ''
+          dId !== 'CURRENT_DEVICE' ? ` for device ID ${dId}` : ''
         }.\nPlease install the recommended version manually and run Builder again.`
       })
     );
