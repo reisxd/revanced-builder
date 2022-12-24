@@ -34,22 +34,52 @@ async function installRecommendedStock(ws, dId) {
   try {
     const latestVer = global.versions[global.versions.length - 1];
     global.apkInfo.version = latestVer;
+    ws.send(
+      JSON.stringify({
+        event: 'installingStockApp',
+        status: 'DOWNLOAD_STARTED'
+      })
+    );
     await downloadApp_(ws);
     const downloadedApkPath = `${joinPath(
       global.revancedDir,
       global.jarNames.selectedApp.packageName
     )}.apk`;
+    ws.send(
+      JSON.stringify({
+        event: 'installingStockApp',
+        status: 'DOWNLOAD_COMPLETE'
+      })
+    );
     if (dId === 'CURRENT_DEVICE') {
       await exec(
         `su -c pm uninstall ${global.jarNames.selectedApp.packageName}`
       );
+      ws.send(
+        JSON.stringify({
+          event: 'installingStockApp',
+          status: 'UNINSTALL_COMPLETE'
+        })
+      );
       await exec(`su -c pm install ${downloadedApkPath}`);
     } else {
+      ws.send(
+        JSON.stringify({
+          event: 'installingStockApp',
+          status: 'UNINSTALL_COMPLETE'
+        })
+      );
       await exec(
         `adb -s ${dId} uninstall ${global.jarNames.selectedApp.packageName}`
       );
       await exec(`adb -s ${dId} install ${downloadedApkPath}`);
     }
+    ws.send(
+      JSON.stringify({
+        event: 'installingStockApp',
+        status: 'ALL_DONE'
+      })
+    );
   } catch (_) {
     return ws.send(
       JSON.stringify({

@@ -404,6 +404,32 @@ ws.onmessage = (msg) => {
           };
       }
       break;
+    case 'installingStockApp': {
+      if (message.status === 'DOWNLOAD_STARTED') {
+        document.getElementsByTagName('header')[0].innerHTML =
+          '<h1><i class="fa-solid fa-download"></i>Downloading APK</h1>';
+        document.getElementById('content').innerHTML =
+          '<span class="log"></span>';
+        document.getElementsByTagName('main')[0].innerHTML +=
+          '<progress value="0"></progress>';
+        isDownloading = true;
+        document.getElementById('continue').classList.add('disabled');
+      } else if (message.status === 'DOWNLOAD_COMPLETE') {
+        isDownloading = false;
+        document.getElementsByClassName(
+          'log'
+        )[0].innerHTML += `<span class="log-line info"><strong>[builder]</strong> Uninstalling the stock app...</span><br>`;
+      } else if (message.status === 'UNINSTALL_COMPLETE') {
+        document.getElementsByClassName(
+          'log'
+        )[0].innerHTML += `<span class="log-line info"><strong>[builder]</strong> Installing the downloaded (stock) APK...</span><br>`;
+      } else if (message.status === 'ALL_DONE') {
+        document.getElementsByClassName(
+          'log'
+        )[0].innerHTML += `<span class="log-line info"><strong>[builder]</strong> Uninstalling the stock app...</span><br>`;
+        document.getElementById('continue').classList.remove('disabled');
+      }
+    }
     case 'patchLog':
       {
         const logLevel = message.log.includes('WARNING')
