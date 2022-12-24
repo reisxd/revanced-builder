@@ -39,8 +39,16 @@ async function installRecommendedStock(ws, dId) {
       global.jarNames.selectedApp.packageName
     )}.apk`;
     if (dId === 'CURRENT_DEVICE') {
+      await exec(
+        `su -c pm uninstall ${global.jarNames.selectedApp.packageName}`
+      );
       await exec(`su -c pm install ${downloadedApkPath}`);
-    } else await exec(`adb -s ${dId} install ${downloadedApkPath}`);
+    } else {
+      await exec(
+        `adb -s ${dId} uninstall ${global.jarNames.selectedApp.packageName}`
+      );
+      await exec(`adb -s ${dId} install ${downloadedApkPath}`);
+    }
   } catch (_) {
     return ws.send(
       JSON.stringify({
