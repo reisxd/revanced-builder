@@ -507,16 +507,21 @@ ws.onmessage = (msg) => {
     }
     case 'askRootVersion': {
       const confirmVer = confirm(
-        `**Non Recommended Version**\nYour device has a non recommended version. This means you either have to downgrade/upgrade the stock YouTube or let the builder replace the stock YouTube with a recommended version.\n"Yes" if you want to continue; "No" if you want Builder to install a recommended stock version.`
+        `**Non Recommended Version**\nYour device has a non recommended version. This means you have to let the builder replace the stock YouTube with a recommended version.\nContinue?`
       );
 
       if (confirmVer)
-        return sendCommand({ event: 'getAppVersion', useVer: true });
-      else
         return sendCommand({
           event: 'getAppVersion',
           installLatestRecommended: true
         });
+      else {
+        if (confirm('Alright, proceed with the non-recommended version?'))
+          return sendCommand({
+            event: 'getAppVersion',
+            useVer: true
+          });
+      }
     }
 
     case 'appList': {
