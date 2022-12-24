@@ -29,6 +29,30 @@ async function getPage(url) {
   return fetch(url).then((res) => res.text());
 }
 
+async function installRecommendedStock(ws, dId) {
+  try {
+    const latestVer = global.versions[global.versions.length - 1];
+    global.apkInfo.version = latestVer;
+    await downloadApp_(ws);
+    const downloadedApkPath = `${joinPath(
+      global.revancedDir,
+      global.jarNames.selectedApp.packageName
+    )}.apk`;
+    if (dId === 'CURRENT_DEVICE') {
+      await exec(`su -c pm install ${downloadedApkPath}`);
+    } else await exec(`adb -s ${dId} install ${downloadedApkPath}`);
+  } catch (_) {
+    return ws.send(
+      JSON.stringify({
+        event: 'error',
+        error: `An error occured while trying to install the stock app${
+          dId ? `for device ID ${dId}` : ''
+        }.\nPlease install the recommended version manually and run Builder again.`
+      })
+    );
+  }
+}
+
 async function downloadApp(ws, message) {
   if (message.useVer) return await downloadApp_(ws);
   else if (message.checkVer) {
@@ -40,6 +64,12 @@ async function downloadApp(ws, message) {
         event: 'askRootVersion'
       })
     );
+  } else if (message.installLatestRecommended) {
+    const useAdb =
+      process.platform !== 'android' && global.jarNames?.devices.length !== 0;
+    if (useAdb) {
+      for (const id of global.jarNames.devices) installRecommendedStock(ws, id);
+    } else installRecommendedStock(ws, 'CURRENT_DEVICE');
   } else
     return ws.send(
       JSON.stringify({
