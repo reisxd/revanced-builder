@@ -415,6 +415,7 @@ ws.onmessage = (msg) => {
         isDownloading = true;
         document.getElementById('continue').classList.add('disabled');
       } else if (message.status === 'DOWNLOAD_COMPLETE') {
+        document.getElementById('continue').classList.add('disabled');
         isDownloading = false;
         document.getElementsByClassName(
           'log'
@@ -426,8 +427,11 @@ ws.onmessage = (msg) => {
       } else if (message.status === 'ALL_DONE') {
         document.getElementsByClassName(
           'log'
-        )[0].innerHTML += `<span class="log-line info"><strong>[builder]</strong> Uninstalling the stock app...</span><br>`;
+        )[0].innerHTML += `<span class="log-line info"><strong>[builder]</strong> Complete.</span><br>`;
         document.getElementById('continue').classList.remove('disabled');
+        document.getElementById('continue').onclick = () => {
+          location.href = '/patch';
+        };
       }
     }
     case 'patchLog':
