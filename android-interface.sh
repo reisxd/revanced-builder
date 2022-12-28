@@ -112,7 +112,6 @@ Possible reasons (in the order of commonality):
     log "revanced-builder found."
     log "All checks done."
   fi
-  termux-wake-lock
 }
 
 run_builder() {
