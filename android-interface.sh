@@ -112,11 +112,11 @@ Possible reasons (in the order of commonality):
     log "revanced-builder found."
     log "All checks done."
   fi
-  termux-wake-lock
 }
 
 run_builder() {
   preflight
+  termux-wake-lock
   echo
   if [[ $1 == "--delete-cache" || $1 == "--dc" ]]; then
     delete_cache
@@ -132,6 +132,7 @@ run_builder() {
   if [[ $1 == "--delete-cache-after-no-keystore" || $1 == "--dcank" ]]; then
     delete_cache_no_keystore
   fi
+  termux-wake-unlock
 }
 
 delete_cache() {
