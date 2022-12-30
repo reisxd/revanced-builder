@@ -1,4 +1,4 @@
-const { writePatches } = require('../utils/PatchListRememberer.js');
+const { writePatches } = require('../utils/Settings.js');
 
 /**
  * @param {Record<string, any>} message

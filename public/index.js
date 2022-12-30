@@ -265,6 +265,24 @@ function addSearch(isPatches) {
   });
 }
 
+function setSources() {
+  const patchesOrg = document.getElementById('patch-org').value;
+  const patchesSrc = document.getElementById('patch-src').value;
+  const patches = `${patchesOrg}/${patchesSrc}`;
+
+  const integrationsOrg = document.getElementById('integrations-org').value;
+  const integrationsSrc = document.getElementById('integrations-src').value;
+  const integrations = `${integrationsOrg}/${integrationsSrc}`;
+
+  sendCommand({
+    event: 'setSettings',
+    settings: {
+      patches,
+      integrations
+    }
+  });
+}
+
 ws.onmessage = (msg) => {
   /** @type {Record<string, any>} */
   const message = JSON.parse(msg.data);
@@ -548,6 +566,23 @@ ws.onmessage = (msg) => {
         .getElementById('continue')
         .setAttribute('onClick', "location.href = '/patches'");
       break;
+    }
+
+    case 'settings': {
+      const patches = message.settings.patches.split('/');
+      const integrations = message.settings.integrations.split('/');
+
+      const patchesOrg = document.getElementById('patch-org');
+      const patchesSrc = document.getElementById('patch-src');
+
+      patchesOrg.value = patches[0];
+      patchesSrc.value = patches[1];
+
+      const integrationsOrg = document.getElementById('integrations-org');
+      const integrationsSrc = document.getElementById('integrations-src');
+
+      integrationsOrg.value = integrations[0];
+      integrationsSrc.value = integrations[1];
     }
   }
 };

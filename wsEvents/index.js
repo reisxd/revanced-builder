@@ -11,6 +11,8 @@ const getDevices = require('./getDevices.js');
 const setDevice = require('./setDevice.js');
 const installReVanced = require('./installReVanced.js');
 const getApp = require('./getApp.js');
+const getSettings = require('./getSettings.js');
+const setSettings = require('./setSettings.js');
 
 module.exports = {
   patchApp,
@@ -25,5 +27,7 @@ module.exports = {
   getDevices,
   setDevice,
   installReVanced,
-  getApp
+  getApp,
+  getSettings,
+  setSettings
 };

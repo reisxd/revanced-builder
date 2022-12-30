@@ -88,6 +88,30 @@
                   autocomplete="off" /><span class="slider"></span
               ></label>
             </div>
+            <div class="option">
+              <h3>Sources</h3>
+
+              <p>Configure your custom sources.</p>
+              <div class="option">
+                <div id="themecolor-picker">
+                  <h3>Patches Organization</h3>
+                  <input id="patch-org" class="searchBox" />
+                  <h3>Patches Source</h3>
+                  <input id="patch-src" class="searchBox" />
+                </div>
+              </div>
+              <div class="option">
+                <div id="themecolor-picker">
+                  <h3>Integrations Organization</h3>
+                  <input id="integrations-org" class="searchBox" />
+                  <h3>Integrations Source</h3>
+                  <input id="integrations-src" class="searchBox" />
+                </div>
+              </div>
+              <button class="highlighted" onclick="setSources();">
+                Set Sources
+              </button>
+            </div>
           </div>
         </div>
       </main>
@@ -116,4 +140,9 @@
       </footer>
     </div>
   </body>
+  <script>
+    ws.onopen = () => {
+      sendCommand({ event: 'getSettings' });
+    };
+  </script>
 </html>

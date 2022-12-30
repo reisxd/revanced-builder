@@ -1,6 +1,6 @@
 const { existsSync, mkdirSync, rmSync } = require('node:fs');
 const { join: joinPath } = require('node:path');
-
+const { getSources } = require('../utils/Settings.js');
 const { downloadFiles } = require('../utils/FileDownloader.js');
 const checkJDKAndAapt2 = require('../utils/checkJDKAndAapt2.js');
 const checkJDkAndADB = require('../utils/checkJDKAndADB.js');
@@ -26,6 +26,10 @@ global.jarNames = {
  * @param {import('ws').WebSocket} ws
  */
 module.exports = async function updateFiles(ws) {
+  const source = getSources();
+  const patches = source.patches.split('/');
+  const integrations = source.integrations.split('/');
+
   if (!existsSync(global.revancedDir)) mkdirSync(global.revancedDir);
   if (existsSync('revanced-cache'))
     rmSync('revanced-cache', { recursive: true, force: true });
@@ -36,12 +40,12 @@ module.exports = async function updateFiles(ws) {
       repo: 'revanced-cli'
     },
     {
-      owner: 'revanced',
-      repo: 'revanced-patches'
+      owner: patches[0],
+      repo: patches[1]
     },
     {
-      owner: 'revanced',
-      repo: 'revanced-integrations'
+      owner: integrations[0],
+      repo: integrations[1]
     },
     {
       owner: 'TeamVanced',

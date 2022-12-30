@@ -10,3 +10,4 @@ dist/
 revanced-cache/
 index-old.js
 options.toml
+settings.json

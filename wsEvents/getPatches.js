@@ -1,6 +1,6 @@
 const exec = require('../utils/promisifiedExec.js');
 
-const { getPatchList } = require('../utils/PatchListRememberer.js');
+const { getPatchList } = require('../utils/Settings.js');
 const parsePatch = require('../utils/PatchesParser.js');
 
 /**
