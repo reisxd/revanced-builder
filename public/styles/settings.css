@@ -86,3 +86,11 @@ p {
 .check:checked + .slider {
   background-color: var(--accentColor);
 }
+
+.option#src div {
+  padding: 0 8px 0 8px;
+}
+
+.option#src div input {
+  margin-bottom: 15px;
+}
