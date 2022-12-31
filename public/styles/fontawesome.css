@@ -98,6 +98,10 @@
   content: '\f013';
 }
 
+.fa-server:before {
+  content: '\f233';
+}
+
 .fa-brands {
   font-family: 'Font Awesome 6 Brands';
   font-size: 400;
