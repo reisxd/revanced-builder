@@ -29,7 +29,7 @@ Clone the repository and `cd` into the directory `revanced-builder`
 ### Build using `docker-compose`
 
 ```bash
-docker-compose build --no-cache
+docker-compose build --pull --no-cache
 ```
 
 This builds the Docker image (`--no-cache` is used to build the image from scratch; sometimes the cache might cause version conflicts).
@@ -53,7 +53,7 @@ To update to a newer version, stop the existing container if it is running, buil
 ### Build using only `docker`
 
 ```bash
-docker build . -t <name_of_the_image> --no-cache
+docker build . --pull -t <name_of_the_image> --no-cache
 ```
 
 Run the newly built container:
