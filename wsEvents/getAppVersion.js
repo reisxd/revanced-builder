@@ -3,6 +3,7 @@ const exec = require('../utils/promisifiedExec.js');
 const fetch = require('node-fetch');
 const { load } = require('cheerio');
 const semver = require('semver');
+const { join: joinPath } = require('path');
 
 const { getAppVersion: getAppVersion_ } = require('../utils/getAppVersion.js');
 const { downloadApp: downloadApp_ } = require('../utils/downloadApp.js');
@@ -29,6 +30,68 @@ async function getPage(url) {
   return fetch(url).then((res) => res.text());
 }
 
+async function installRecommendedStock(ws, dId) {
+  try {
+    const latestVer = global.versions[global.versions.length - 1];
+    global.apkInfo.version = latestVer;
+    ws.send(
+      JSON.stringify({
+        event: 'installingStockApp',
+        status: 'DOWNLOAD_STARTED'
+      })
+    );
+    await downloadApp_(ws);
+    const downloadedApkPath = `${joinPath(
+      global.revancedDir,
+      global.jarNames.selectedApp.packageName
+    )}.apk`;
+    ws.send(
+      JSON.stringify({
+        event: 'installingStockApp',
+        status: 'DOWNLOAD_COMPLETE'
+      })
+    );
+    if (dId === 'CURRENT_DEVICE') {
+      await exec(
+        `su -c pm uninstall ${global.jarNames.selectedApp.packageName}`
+      );
+      ws.send(
+        JSON.stringify({
+          event: 'installingStockApp',
+          status: 'UNINSTALL_COMPLETE'
+        })
+      );
+      await exec(`su -c pm install ${downloadedApkPath}`);
+    } else {
+      ws.send(
+        JSON.stringify({
+          event: 'installingStockApp',
+          status: 'UNINSTALL_COMPLETE'
+        })
+      );
+      await exec(
+        `adb -s ${dId} uninstall ${global.jarNames.selectedApp.packageName}`
+      );
+      await exec(`adb -s ${dId} install ${downloadedApkPath}`);
+    }
+    ws.send(
+      JSON.stringify({
+        event: 'installingStockApp',
+        status: 'ALL_DONE'
+      })
+    );
+  } catch (_) {
+    return ws.send(
+      JSON.stringify({
+        event: 'error',
+        error: `An error occured while trying to install the stock app${
+          dId !== 'CURRENT_DEVICE' ? ` for device ID ${dId}` : ''
+        }.\nPlease install the recommended version manually and run Builder again.`
+      })
+    );
+  }
+}
+
 async function downloadApp(ws, message) {
   if (message.useVer) return await downloadApp_(ws);
   else if (message.checkVer) {
@@ -40,6 +103,12 @@ async function downloadApp(ws, message) {
         event: 'askRootVersion'
       })
     );
+  } else if (message.installLatestRecommended) {
+    const useAdb =
+      process.platform !== 'android' && global.jarNames?.devices.length !== 0;
+    if (useAdb) {
+      for (const id of global.jarNames.devices) installRecommendedStock(ws, id);
+    } else installRecommendedStock(ws, 'CURRENT_DEVICE');
   } else
     return ws.send(
       JSON.stringify({
