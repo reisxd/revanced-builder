@@ -124,7 +124,7 @@ run_builder() {
   [[ "$1" == "--delete-cache-no-keystore" ]] || [[ "$1" == "--dcnk" ]] && {
     delete_cache_no_keystore
   }
-  cd "$RVB_DIR || exit"
+  cd "$RVB_DIR"
   node .
   [[ "$1" == "--delete-cache-after" ]] || [[ "$1" == "--dca" ]] && {
     delete_cache
@@ -166,7 +166,7 @@ reinstall_builder() {
     mv "$HOME"/revanced.keystore "$RVB_DIR"/revanced/revanced.keystore
   }
   log "Reinstalling..."
-  cd "$RVB_DIR || exit"
+  cd "$RVB_DIR"
   dload_and_install
 }
 
@@ -191,7 +191,7 @@ update_builder() {
     mv "$HOME"/settings.json "$RVB_DIR"/settings.json
   }
   log "Updating revanced-builder..."
-  cd "$RVB_DIR || exit"
+  cd "$RVB_DIR"
   dload_and_install n
   run_self_update
 }
@@ -223,7 +223,7 @@ mv "$SCR_NAME_EXEC_FP.tmp" "$SCR_NAME_EXEC_FP" && {
   }
 EOF
 
-  log "Inserting update process..."
+  log "Running update process..."
   exec /bin/bash updateScript.sh
 }
 
