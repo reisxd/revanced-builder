@@ -3,8 +3,8 @@
 shopt -s extglob
 
 SCR_NAME_EXEC=$0
-SCR_NAME_EXEC_FP=$(realpath $0)
-SCR_NAME=$(basename $SCR_NAME_EXEC)
+SCR_NAME_EXEC_FP=$(realpath "$0")
+SCR_NAME=$(basename "$SCR_NAME_EXEC")
 SCR_NAME=${SCR_NAME%.*}
 RVB_DIR=$HOME/revanced-builder
 
@@ -19,28 +19,28 @@ Commands:
   run                          Launches the revanced-builder.
                                Running $SCR_NAME_EXEC without arguments will
                                assume this command (i.e. will run the
-                               builder).
+                               builder)
     --delete-cache
-    --dc                       Deletes revanced/ before running builder.
+    --dc                       Deletes revanced/ before running builder
     --delete-cache-no-keystore
     --dcnk                     Deletes revanced/ before running builder, but
                                preserving keystore file.
     --delete-cache-after
-    --dca                      Deletes revanced/ after running builder.
+    --dca                      Deletes revanced/ after running builder
     --delete-cache-after-no-keystore
     --dcank                    Deletes revanced/ after running builder, but
-                               preserving keystore file.
+                               preserving keystore file
 
   reinstall                    Delete everything and start from scratch.
-    --delete-keystore          Delete the signature file also. This will
+    --delete-keystore          Also delete the signature file. This will
                                make ReVanced use a different signature,
                                which will not allow you to install an
                                updated build over the previously installed
-                               one (you'll need to uninstall that first).
+                               one (you'll need to uninstall that first)
 
-  update                       Update the builder to the latest version.
+  update                       Update the builder to the latest version
 
-  help                         Show this help info.
+  help                         Display this help info
 EOF
 }
 
@@ -51,7 +51,7 @@ log() {
 error() {
   log "$1"
   [[ "$2" == y ]] && help_info
-  exit ${3:-1}
+  exit "${3:-1}"
 }
 
 dload_and_install() {
@@ -69,24 +69,24 @@ dload_and_install() {
 
 preflight() {
   setup_storage() {
-    if [[ ! -d $HOME/storage ]]; then
+    [[ ! -d "$HOME"/storage ]] && {
       log "You will now get a permission dialog to allow access to storage."
-      log "This is needed in order to move the built APK (+ MicroG) to Internal Storage."
+      log "This is needed in order to move the built APK (+ MicroG) to internal storage."
       sleep 5
       termux-setup-storage
-    else
+    } || {
       log "Already gotten storage access."
-    fi
+    }
   }
 
   install_dependencies() {
     local JAVA_NF NODE_NF
     which java >/dev/null || JAVA_NF=1
     which node >/dev/null || NODE_NF=1
-    if [[ $JAVA_NF != 1 ]] && [[ $NODE_NF != 1 ]]; then
+    [[ -z "$JAVA_NF" ]] && [[ -z "$NODE_NF" ]] && {
       log "Node.js and JDK already installed."
       return
-    fi
+    }
     log "Updating Termux and installing dependencies..."
     pkg update -y
     pkg install nodejs-lts openjdk-17 -y || {
@@ -103,95 +103,95 @@ Possible reasons (in the order of commonality):
   setup_storage
   install_dependencies
 
-  if [[ ! -d $RVB_DIR ]]; then
+  [[ ! -d "$RVB_DIR" ]] && {
     log "revanced-builder not installed. Installing..."
-    mkdir -p $RVB_DIR
-    cd $RVB_DIR
+    mkdir -p "$RVB_DIR"
+    cd "$RVB_DIR"
     dload_and_install n
-  else
+  } || {
     log "revanced-builder found."
     log "All checks done."
-  fi
+    }
 }
 
 run_builder() {
   preflight
   termux-wake-lock
   echo
-  if [[ $1 == "--delete-cache" || $1 == "--dc" ]]; then
+  [[ "$1" == "--delete-cache" ]] || [[ "$1" == "--dc" ]] && {
     delete_cache
-  fi
-  if [[ $1 == "--delete-cache-no-keystore" || $1 == "--dcnk" ]]; then
+  }
+  [[ "$1" == "--delete-cache-no-keystore" ]] || [[ "$1" == "--dcnk" ]] && {
     delete_cache_no_keystore
-  fi
-  cd $RVB_DIR
+  }
+  cd "$RVB_DIR || exit"
   node .
-  if [[ $1 == "--delete-cache-after" || $1 == "--dca" ]]; then
+  [[ "$1" == "--delete-cache-after" ]] || [[ "$1" == "--dca" ]] && {
     delete_cache
-  fi
-  if [[ $1 == "--delete-cache-after-no-keystore" || $1 == "--dcank" ]]; then
+  }
+  [[ "$1" == "--delete-cache-after-no-keystore" ]] || [[ "$1" == "--dcank" ]] && {
     delete_cache_no_keystore
-  fi
+  }
   termux-wake-unlock
 }
 
 delete_cache() {
   # Is this even called a cache?
   log "Deleting builder cache..."
-  rm -rf $RVB_DIR/revanced
+  rm -rf "$RVB_DIR"/revanced
 }
 
 delete_cache_no_keystore() {
   log "Deleting builder cache preserving keystore..."
-  mv $RVB_DIR/revanced/revanced.keystore $HOME/revanced.keystore
-  rm -rf $RVB_DIR/revanced
-  mkdir -p $RVB_DIR/revanced
-  mv $HOME/revanced.keystore $RVB_DIR/revanced/revanced.keystore
+  mv "$RVB_DIR"/revanced/revanced.keystore "$HOME"/revanced.keystore
+  rm -rf "$RVB_DIR"/revanced
+  mkdir -p "$RVB_DIR"/revanced
+  mv "$HOME"/revanced.keystore "$RVB_DIR"/revanced/revanced.keystore
 }
 
 reinstall_builder() {
   log "Deleting revanced-builder..."
-  if [[ $1 != "--delete-keystore" ]]; then
-    if [ -f "$RVB_DIR/revanced/revanced.keystore" ]; then
-      mv $RVB_DIR/revanced/revanced.keystore $HOME/revanced.keystore
+  [[ "$1" != "--delete-keystore" ]] && {
+    [[ -f "$RVB_DIR/revanced/revanced.keystore" ]] && {
+      mv "$RVB_DIR"/revanced/revanced.keystore "$HOME"/revanced.keystore
       log "Preserving the keystore. If you do not want this, use the --delete-keystore flag."
       log "Execute \`$SCR_NAME_EXEC help\` for more info."
-    fi
-  fi
-  rm -r $RVB_DIR
-  mkdir -p $RVB_DIR
-  if [ -f "$HOME/revanced.keystore" ]; then
+    }
+  }
+  rm -r "$RVB_DIR"
+  mkdir -p "$RVB_DIR"
+  [[ -f "$HOME/revanced.keystore" ]] && {
     log "Restoring the keystore..."
-    mkdir -p $RVB_DIR/revanced
-    mv $HOME/revanced.keystore $RVB_DIR/revanced/revanced.keystore
-  fi
+    mkdir -p "$RVB_DIR"/revanced
+    mv "$HOME"/revanced.keystore "$RVB_DIR"/revanced/revanced.keystore
+  }
   log "Reinstalling..."
-  cd $RVB_DIR
+  cd "$RVB_DIR || exit"
   dload_and_install
 }
 
 update_builder() {
   log "Backing up some stuff..."
-  if [ -d "$RVB_DIR/revanced" ]; then
-    mkdir -p $HOME/revanced_backup
-    mv $RVB_DIR/revanced/* $HOME/revanced_backup
-  fi
-  if [ -f "$RVB_DIR/settings.json" ]; then
-    mv $RVB_DIR/settings.json $HOME/settings.json
-  fi
+  [[ -d "$RVB_DIR/revanced" ]] && {
+    mkdir -p "$HOME"/revanced_backup
+    mv "$RVB_DIR"/revanced/* "$HOME"/revanced_backup
+  }
+  [[ -f "$RVB_DIR/settings.json" ]] && {
+    mv "$RVB_DIR"/settings.json "$HOME"/settings.json
+  }
   log "Deleting revanced-builder..."
-  rm -r $RVB_DIR
+  rm -r "$RVB_DIR"
   log "Restoring the backup..."
-  mkdir -p $RVB_DIR
-  if [ -d "$HOME/revanced_backup" ]; then
-    mkdir -p $RVB_DIR/revanced
-    mv $HOME/revanced_backup/* $RVB_DIR/revanced
-  fi
-  if [ -f "$HOME/settings.json" ]; then
-    mv $HOME/settings.json $RVB_DIR/settings.json
-  fi
+  mkdir -p "$RVB_DIR"
+  [[ -d "$HOME/revanced_backup" ]] && {
+    mkdir -p "$RVB_DIR"/revanced
+    mv "$HOME"/revanced_backup/* "$RVB_DIR"/revanced
+  }
+  [[ -f "$HOME/settings.json" ]] && {
+    mv "$HOME"/settings.json "$RVB_DIR"/settings.json
+  }
   log "Updating revanced-builder..."
-  cd $RVB_DIR
+  cd "$RVB_DIR || exit"
   dload_and_install n
   run_self_update
 }
@@ -201,29 +201,26 @@ run_self_update() {
 
   # Download new version
   log "Downloading latest version..."
-  if ! curl -sLo $SCR_NAME_EXEC_FP.tmp https://raw.githubusercontent.com/reisxd/revanced-builder/main/android-interface.sh ; then
+  ! curl -sLo "$SCR_NAME_EXEC_FP".tmp https://raw.githubusercontent.com/reisxd/revanced-builder/main/android-interface.sh && {
     log "Failed: Error while trying to download new version!"
     error "File requested: https://raw.githubusercontent.com/reisxd/revanced-builder/main/android-interface.sh" n
-  fi
-  log "Done."
+  } || log "Done."
 
   # Copy over modes from old version
-  OCTAL_MODE=$(stat -c '%a' $SCR_NAME_EXEC_FP)
-  if ! chmod $OCTAL_MODE "$SCR_NAME_EXEC_FP.tmp" ; then
-    error "Failed: Error while trying to set mode on $SCR_NAME_EXEC.tmp." n
-  fi
+  OCTAL_MODE=$(stat -c '%a' "$SCR_NAME_EXEC_FP")
+  ! chmod "$OCTAL_MODE" "$SCR_NAME_EXEC_FP.tmp" && error "Failed: Error while trying to set mode on $SCR_NAME_EXEC.tmp." n
 
   # Spawn update script
   cat > updateScript.sh << EOF
 #!/bin/bash
 
 # Overwrite old file with new
-if mv "$SCR_NAME_EXEC_FP.tmp" "$SCR_NAME_EXEC_FP"; then
+mv "$SCR_NAME_EXEC_FP.tmp" "$SCR_NAME_EXEC_FP" && {
   echo -e "[$SCR_NAME] Done. Execute '$SCR_NAME_EXEC run' to launch the builder."
   rm \$0
-else
+  } || {
   echo "[$SCR_NAME] Failed!"
-fi
+  }
 EOF
 
   log "Inserting update process..."
@@ -238,10 +235,10 @@ main() {
   else
     case $1 in
       run)
-        run_builder $2
+        run_builder "$2"
       ;;
       reinstall)
-        reinstall_builder $2
+        reinstall_builder "$2"
       ;;
       update)
         update_builder
