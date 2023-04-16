@@ -9,7 +9,6 @@ const { getAppVersion: getAppVersion_ } = require('../utils/getAppVersion.js');
 const { downloadApp: downloadApp_ } = require('../utils/downloadApp.js');
 const getDeviceArch = require('../utils/getDeviceArch.js');
 
-const APKMIRROR_UPLOAD_BASE = 'https://www.apkmirror.com/uploads/?appcategory=';
 
 /**
  * @param {string} ver
@@ -123,10 +122,6 @@ async function downloadApp(ws, message) {
  * @param {import('ws').WebSocket} ws
  */
 module.exports = async function getAppVersion(ws, message) {
-  let versionsList = await getPage(
-    `${APKMIRROR_UPLOAD_BASE}${global.jarNames.selectedApp.link.split('/')[3]}`
-  );
-
   if (global.jarNames.isRooted) {
     if (process.platform !== 'android') {
       if (!(global.jarNames.devices && global.jarNames.devices[0])) {
@@ -186,39 +181,51 @@ module.exports = async function getAppVersion(ws, message) {
     }
   }
 
+
+  const link = global.jarNames.selectedApp.link;
+  // prettier-ignore
+  const regex = new RegExp(`(?<=${link}${link.split('/')[3]}-)(.*)(?=-release/)`);
+  let nextPage = 1
+
   /** @type {{ version: string; recommended: boolean; beta: boolean }[]} */
   const versionList = [];
-  const $ = load(versionsList);
-  const link = global.jarNames.selectedApp.link;
-  const regex = new RegExp(
-    `(?<=${link}${link.split('/')[3]}-)(.*)(?=-release/)`
-  );
 
-  for (const version of $(
-    '#primary h5.appRowTitle.wrapText.marginZero.block-on-mobile'
-  ).get()) {
-    const versionTitle = version.attribs.title.toLowerCase();
-    const versionName = version.children[0].next.attribs.href
-      .match(regex)[0]
-      .replace(/-/g, '.');
+  while (nextPage && !versionList.some(v => v.recommended)) {
+    // prettier-ignore
+    const html = await getPage(
+        `https://www.apkmirror.com/uploads/page/${nextPage}/?appcategory=` +
+        global.jarNames.selectedApp.link.split('/')[3]
+    );
+    const $ = load(html);
 
-    if (
-      (global.jarNames.selectedApp.packageName === 'com.twitter.android' &&
-        !versionTitle.includes('release')) ||
-      versionTitle.includes('(Wear OS)') ||
-      versionTitle.includes('-car_release')
-    )
-      continue;
+    // prettier-ignore
+    for (const version of $('#primary h5.appRowTitle.wrapText.marginZero.block-on-mobile').get()) {
+      const versionTitle = version.attribs.title.toLowerCase();
+      const versionName = version.children[0].next.attribs.href
+        .match(regex)[0]
+        .replace(/-/g, '.');
 
-    versionList.push({
-      version: versionName,
-      recommended:
-        global.versions !== 'NOREC'
-          ? global.versions.includes(versionName)
-          : 'NOREC',
-      beta: versionTitle.includes('beta')
-    });
+      if (
+        (global.jarNames.selectedApp.packageName === 'com.twitter.android' &&
+          !versionTitle.includes('release')) ||
+        versionTitle.includes('(Wear OS)') ||
+        versionTitle.includes('-car_release')
+      )
+        continue;
+
+      versionList.push({
+        version: versionName,
+        recommended:
+          global.versions !== 'NOREC'
+            ? global.versions.includes(versionName)
+            : 'NOREC',
+        beta: versionTitle.includes('beta')
+      });
+    }
+
+    nextPage = parseInt($(".nextpostslink")?.attr("href")?.match(/page\/(\d+)/)?.[1] ?? 0, 10)
   }
+
   if (versionList.every((el) => /^[0-9.]*$/g.test(el.version))) {
     versionList.sort((a, b) =>
       semver.lt(sanitizeVersion(a.version), sanitizeVersion(b.version)) ? 1 : -1
