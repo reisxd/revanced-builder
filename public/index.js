@@ -162,7 +162,7 @@ function setAppVersion(arch, version) {
 /**
  * @param {boolean} isRooted
  */
-function getAppVersions(isRooted) {
+function getAppVersions(isRooted, page = 1) {
   document.getElementsByTagName('header')[0].innerHTML = `
     <h1><i class="fa-solid fa-file-arrow-down"></i>Select the version you want to download</h1>
     <span>Versions marked as beta might have bugs or can be unstable, unless marked as recommended<span>
@@ -181,7 +181,9 @@ function getAppVersions(isRooted) {
   backButton.innerHTML = 'Back';
   backButton.onclick = () => history.back();
 
-  sendCommand({ event: 'getAppVersion', checkVer: true });
+  if (page < 1) page = 1;
+
+  sendCommand({ event: 'getAppVersion', checkVer: true, page });
 }
 
 function buildReVanced() {
@@ -370,6 +372,13 @@ ws.onmessage = (msg) => {
         const len = message.versionList.length;
 
         const versionsElement = document.getElementById('versions');
+        versionsElement.innerHTML = '';
+
+        versionsElement.innerHTML += `
+          <li>
+          ${message.page != 1 ? `<button id="prevPage" onclick="getAppVersions(${message.isRooted}, ${message.page - 1})">Previous Page</button>` : ""}
+          <button id="nextPage" onclick="getAppVersions(${message.isRooted}, ${message.page + 1})">Next Page</button>
+        </li>`;
 
         for (let i = 0; i < len; i++) {
           const version = message.versionList[i];

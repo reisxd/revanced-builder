@@ -9,7 +9,7 @@ const { getAppVersion: getAppVersion_ } = require('../utils/getAppVersion.js');
 const { downloadApp: downloadApp_ } = require('../utils/downloadApp.js');
 const getDeviceArch = require('../utils/getDeviceArch.js');
 
-const APKMIRROR_UPLOAD_BASE = 'https://www.apkmirror.com/uploads/?appcategory=';
+const APKMIRROR_UPLOAD_BASE = (page) => `https://www.apkmirror.com/uploads/page/${page}/?appcategory=`;
 
 /**
  * @param {string} ver
@@ -124,7 +124,7 @@ async function downloadApp(ws, message) {
  */
 module.exports = async function getAppVersion(ws, message) {
   let versionsList = await getPage(
-    `${APKMIRROR_UPLOAD_BASE}${global.jarNames.selectedApp.link.split('/')[3]}`
+    `${APKMIRROR_UPLOAD_BASE(message.page || 1)}${global.jarNames.selectedApp.link.split('/')[3]}`
   );
 
   if (global.jarNames.isRooted) {
@@ -229,11 +229,13 @@ module.exports = async function getAppVersion(ws, message) {
     JSON.stringify({
       event: 'appVersions',
       versionList,
+      page: message.page || 1,
       selectedApp: global.jarNames.selectedApp.packageName,
       foundDevice:
         global.jarNames.devices && global.jarNames.devices[0]
           ? true
-          : process.platform === 'android'
+          : process.platform === 'android',
+      isRooted: global.jarNames.isRooted
     })
   );
 };
