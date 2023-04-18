@@ -7,6 +7,8 @@ const exec = require('../utils/promisifiedExec.js');
 
 const mountReVanced = require('../utils/mountReVanced.js');
 
+const fkill = require('fkill');
+
 /**
  * @param {import('ws').WebSocket} ws
  */
@@ -25,6 +27,8 @@ async function mount(ws) {
  * @param {import('ws').WebSocket} ws
  */
 async function afterBuild(ws) {
+  // HACK: Kill Java after build is done to prevent EBUSY errors while deleting the cache
+  await fkill('java', { forceAfterTimeout: 5000, silent: true });
   rmSync('revanced-cache', { recursive: true, force: true });
   outputName();
   renameSync(
