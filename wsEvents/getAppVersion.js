@@ -9,7 +9,8 @@ const { getAppVersion: getAppVersion_ } = require('../utils/getAppVersion.js');
 const { downloadApp: downloadApp_ } = require('../utils/downloadApp.js');
 const getDeviceArch = require('../utils/getDeviceArch.js');
 
-const APKMIRROR_UPLOAD_BASE = (page) => `https://www.apkmirror.com/uploads/page/${page}/?appcategory=`;
+const APKMIRROR_UPLOAD_BASE = (page) =>
+  `https://www.apkmirror.com/uploads/page/${page}/?appcategory=`;
 
 /**
  * @param {string} ver
@@ -124,7 +125,9 @@ async function downloadApp(ws, message) {
  */
 module.exports = async function getAppVersion(ws, message) {
   let versionsList = await getPage(
-    `${APKMIRROR_UPLOAD_BASE(message.page || 1)}${global.jarNames.selectedApp.link.split('/')[3]}`
+    `${APKMIRROR_UPLOAD_BASE(message.page || 1)}${
+      global.jarNames.selectedApp.link.split('/')[3]
+    }`
   );
 
   if (global.jarNames.isRooted) {

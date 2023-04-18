@@ -376,8 +376,16 @@ ws.onmessage = (msg) => {
 
         versionsElement.innerHTML += `
           <li>
-          ${message.page != 1 ? `<button id="prevPage" onclick="getAppVersions(${message.isRooted}, ${message.page - 1})">Previous Page</button>` : ""}
-          <button id="nextPage" onclick="getAppVersions(${message.isRooted}, ${message.page + 1})">Next Page</button>
+          ${
+            message.page != 1
+              ? `<button id="prevPage" onclick="getAppVersions(${
+                  message.isRooted
+                }, ${message.page - 1})">Previous Page</button>`
+              : ''
+          }
+          <button id="nextPage" onclick="getAppVersions(${message.isRooted}, ${
+          message.page + 1
+        })">Next Page</button>
         </li>`;
 
         for (let i = 0; i < len; i++) {
@@ -431,36 +439,38 @@ ws.onmessage = (msg) => {
           };
       }
       break;
-    case 'installingStockApp': {
-      if (message.status === 'DOWNLOAD_STARTED') {
-        document.getElementsByTagName('header')[0].innerHTML =
-          '<h1><i class="fa-solid fa-download"></i>Downloading APK</h1>';
-        document.getElementById('content').innerHTML =
-          '<span class="log"></span>';
-        document.getElementsByTagName('main')[0].innerHTML +=
-          '<progress value="0"></progress>';
-        isDownloading = true;
-        document.getElementById('continue').classList.add('disabled');
-      } else if (message.status === 'DOWNLOAD_COMPLETE') {
-        document.getElementById('continue').classList.add('disabled');
-        isDownloading = false;
-        document.getElementsByClassName(
-          'log'
-        )[0].innerHTML += `<span class="log-line info"><strong>[builder]</strong> Uninstalling the stock app...</span><br>`;
-      } else if (message.status === 'UNINSTALL_COMPLETE') {
-        document.getElementsByClassName(
-          'log'
-        )[0].innerHTML += `<span class="log-line info"><strong>[builder]</strong> Installing the downloaded (stock) APK...</span><br>`;
-      } else if (message.status === 'ALL_DONE') {
-        document.getElementsByClassName(
-          'log'
-        )[0].innerHTML += `<span class="log-line info"><strong>[builder]</strong> Complete.</span><br>`;
-        document.getElementById('continue').classList.remove('disabled');
-        document.getElementById('continue').onclick = () => {
-          location.href = '/patch';
-        };
+    case 'installingStockApp':
+      {
+        if (message.status === 'DOWNLOAD_STARTED') {
+          document.getElementsByTagName('header')[0].innerHTML =
+            '<h1><i class="fa-solid fa-download"></i>Downloading APK</h1>';
+          document.getElementById('content').innerHTML =
+            '<span class="log"></span>';
+          document.getElementsByTagName('main')[0].innerHTML +=
+            '<progress value="0"></progress>';
+          isDownloading = true;
+          document.getElementById('continue').classList.add('disabled');
+        } else if (message.status === 'DOWNLOAD_COMPLETE') {
+          document.getElementById('continue').classList.add('disabled');
+          isDownloading = false;
+          document.getElementsByClassName(
+            'log'
+          )[0].innerHTML += `<span class="log-line info"><strong>[builder]</strong> Uninstalling the stock app...</span><br>`;
+        } else if (message.status === 'UNINSTALL_COMPLETE') {
+          document.getElementsByClassName(
+            'log'
+          )[0].innerHTML += `<span class="log-line info"><strong>[builder]</strong> Installing the downloaded (stock) APK...</span><br>`;
+        } else if (message.status === 'ALL_DONE') {
+          document.getElementsByClassName(
+            'log'
+          )[0].innerHTML += `<span class="log-line info"><strong>[builder]</strong> Complete.</span><br>`;
+          document.getElementById('continue').classList.remove('disabled');
+          document.getElementById('continue').onclick = () => {
+            location.href = '/patch';
+          };
+        }
       }
-    }
+      break;
     case 'patchLog':
       {
         const logLevel = message.log.includes('WARNING')
@@ -562,25 +572,26 @@ ws.onmessage = (msg) => {
       }
       break;
     }
-    case 'askRootVersion': {
-      const confirmVer = confirm(
-        `**Non Recommended Version**\nYour device has a non recommended version. This means you have to let the builder replace the stock YouTube with a recommended version.\nContinue?`
-      );
+    case 'askRootVersion':
+      {
+        const confirmVer = confirm(
+          `**Non Recommended Version**\nYour device has a non recommended version. This means you have to let the builder replace the stock YouTube with a recommended version.\nContinue?`
+        );
 
-      if (confirmVer)
-        return sendCommand({
-          event: 'getAppVersion',
-          installLatestRecommended: true
-        });
-      else {
-        if (confirm('Alright, proceed with the non-recommended version?'))
+        if (confirmVer)
           return sendCommand({
             event: 'getAppVersion',
-            useVer: true
+            installLatestRecommended: true
           });
+        else {
+          if (confirm('Alright, proceed with the non-recommended version?'))
+            return sendCommand({
+              event: 'getAppVersion',
+              useVer: true
+            });
+        }
       }
-    }
-
+      break;
     case 'appList': {
       let id = 0;
       for (const app of message.list) {
