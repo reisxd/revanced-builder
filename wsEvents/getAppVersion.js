@@ -19,8 +19,9 @@ const sanitizeVersion = (ver) => {
   while (ver.match(/\./g).length > 2) ver = ver.replace(/.([^.]*)$/, '$1');
 
   return ver
-    .replace(/\.0(\d+)/gi, '.$1') // because apparently x.0y.z (ex. 5.09.51) isn't a valid version
-    .replace(/^(\d+)\.(\d+)$/gi, '$1.$2.0'); // nor are versions without a patch (ex. 2.3)
+    .replace(/\.0+(\d+)/g, '.$1') // replace leading zeroes with a single period
+    .replace(/^(\d+)\.(\d+)$/g, '$1.$2.0'); // add trailing ".0" if needed
+
 };
 
 /**
@@ -85,9 +86,8 @@ async function installRecommendedStock(ws, dId) {
     return ws.send(
       JSON.stringify({
         event: 'error',
-        error: `An error occured while trying to install the stock app${
-          dId !== 'CURRENT_DEVICE' ? ` for device ID ${dId}` : ''
-        }.\nPlease install the recommended version manually and run Builder again.`
+        error: `An error occured while trying to install the stock app${dId !== 'CURRENT_DEVICE' ? ` for device ID ${dId}` : ''
+          }.\nPlease install the recommended version manually and run Builder again.`
       })
     );
   }
@@ -125,8 +125,7 @@ async function downloadApp(ws, message) {
  */
 module.exports = async function getAppVersion(ws, message) {
   let versionsList = await getPage(
-    `${APKMIRROR_UPLOAD_BASE(message.page || 1)}${
-      global.jarNames.selectedApp.link.split('/')[3]
+    `${APKMIRROR_UPLOAD_BASE(message.page || 1)}${global.jarNames.selectedApp.link.split('/')[3]
     }`
   );
 
