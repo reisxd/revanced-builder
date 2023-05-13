@@ -22,7 +22,7 @@
     "cheerio": "^1.0.0-rc.12",
     "express": "^4.18.2",
     "express-fileupload": "^1.4.0",
-    "fkill": "^7.2.1",
+    "kill-process-by-name": "^1.0.5",
     "node-fetch": "^2.6.7",
     "node-fetch-progress": "^1.0.2",
     "open": "^8.4.0",
