@@ -1,5 +1,11 @@
 # ReVanced Builder
 
+## NOTICE
+
+This repository has been archived in favour of [ReVanced Builder v4](https://github.com/reisxd/revanced-builder-next), a rewrite of the same builder from scratch using better technologies. At the time of writing, v4 is not yet available for the public, but it will be soon once the core features are finished. In the meantime, you can [download](https://github.com/reisxd/revanced-builder/releases/latest) the latest version of Builder v3, which, at the moment, works just fine. If ReVanced changes anything about the patching process in the upstream, or APKMirror modifies its API to disallow APK downloads, Builder may fail in ways nobody can really predict accurately. No support, hereafter, will be given for this version, however.
+
+---
+
 This project will allow you to download the APK of any of the [officially supported](https://github.com/revanced/revanced-patches#-patches) apps and build ReVanced easily!
 
 ## Required
